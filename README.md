@@ -1,0 +1,1 @@
+# maa-flutter-app-self
