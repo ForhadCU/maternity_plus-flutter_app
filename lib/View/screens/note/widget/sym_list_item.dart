@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:splash_screen/Controller/utils/util.custom_text.dart';
 import 'package:splash_screen/View/screens/note/widget/sym_block.dart';
@@ -23,13 +22,18 @@ class _SympListItemState extends State<SympListItem> {
   Color blockColor1 = Colors.grey;
   Color blockColor2 = Colors.grey;
   Color blockColor3 = Colors.grey;
+  final String low = "L";
+  final String medium = "M";
+  final String high = "H";
+  String? key;
+
   @override
   void initState() {
     // ignore: todo
     // TODO: implement initState
     super.initState();
+    key = widget.sympIntesity;
     mLoadBlockColor(widget.sympIntesity);
-
   }
 
   @override
@@ -55,8 +59,16 @@ class _SympListItemState extends State<SympListItem> {
                   child: InkWell(
                 onTap: () {
                   setState(() {
-                    mLoadBlockColor("L");
-                    widget.callback("L");
+                    if (key != low) {
+                      mLoadBlockColor(low);
+                      widget.callback(low);
+                      key = low;
+                    } else {
+                      key = null;
+                      //reset
+                      mLoadBlockColor("");
+                      widget.callback("");
+                    }
                   });
                 },
                 child: Container(
@@ -69,8 +81,16 @@ class _SympListItemState extends State<SympListItem> {
                   child: InkWell(
                 onTap: () {
                   setState(() {
-                    mLoadBlockColor("M");
-                    widget.callback("M");
+                    if (key != medium) {
+                      mLoadBlockColor(medium);
+                      widget.callback(medium);
+                      key = medium;
+                    } else {
+                      key = null;
+                      //reset
+                      mLoadBlockColor("");
+                      widget.callback("");
+                    }
                   });
                 },
                 child: Container(
@@ -84,8 +104,16 @@ class _SympListItemState extends State<SympListItem> {
                   child: InkWell(
                 onTap: () {
                   setState(() {
-                    mLoadBlockColor("H");
-                    widget.callback("H");
+                    if (key != high) {
+                      mLoadBlockColor(high);
+                      widget.callback(high);
+                      key = high;
+                    } else {
+                      key = null;
+                      //reset
+                      mLoadBlockColor("");
+                      widget.callback("");
+                    }
                   });
                 },
                 child: Container(
@@ -114,6 +142,10 @@ class _SympListItemState extends State<SympListItem> {
       blockColor1 = MyColors.sympBlock3;
       blockColor2 = MyColors.sympBlock3;
       blockColor3 = MyColors.sympBlock3;
+    } else {
+      blockColor1 = Colors.grey;
+      blockColor2 = Colors.grey;
+      blockColor3 = Colors.grey;
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:splash_screen/Controller/services/service.my_service.dart';
 import 'package:splash_screen/Model/model.ojon.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -27,6 +28,8 @@ class OjonGraphChartState extends State<OjonGraphChart> {
   final List<OjonModel> ojonData1 = MyServices.mGetOjonDataForGraph1();
   final List<OjonModel> ojonData2 = [];
   late OjonModel ojon;
+  var logger = Logger();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -38,7 +41,7 @@ class OjonGraphChartState extends State<OjonGraphChart> {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: (() {
-          print("Clicked");
+          logger.d("Clicked");
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -73,6 +76,7 @@ class OjonGraphChartState extends State<OjonGraphChart> {
                         double.parse(ojon.yAxisValue)),
                 LineSeries<OjonModel, num>(
                     name: 'বর্তমান ওজন',
+                    color: Colors.green,
                     dataSource: widget.currentOjonList,
                     xValueMapper: (OjonModel ojon, _) =>
                         int.parse(ojon.xAxisValue),

@@ -1,7 +1,7 @@
-
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen/Controller/services/service.my_service.dart';
@@ -36,6 +36,7 @@ class _InputOjonDialogState extends State<InputOjonDialog> {
   late int _currentFrucValueAsInt = 0; */
 
   late SharedPreferences sharedPreferences;
+  var logger = Logger();
 
   @override
   void initState() {
@@ -53,7 +54,7 @@ class _InputOjonDialogState extends State<InputOjonDialog> {
             priWeight: _priWeight,
             callback: (int value) {
               _currentFrucValueAsInt = value;
-              print(_currentFrucValueAsInt);
+              logger.d(_currentFrucValueAsInt);
             });
       });
     }); */
@@ -93,8 +94,7 @@ class _InputOjonDialogState extends State<InputOjonDialog> {
             children: [
               const CustomText(text: MaaData.weekNo),
               //get week no from sharedpref and convert it into Bangla font
-              CustomText(
-                  text: MyServices.mGenerateBangNum(widget.runningWeeks))
+              CustomText(text: MyServices.mGenerateBangNum(widget.runningWeeks))
             ],
           ),
           const SizedBox(

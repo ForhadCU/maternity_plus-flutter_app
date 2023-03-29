@@ -4,6 +4,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen/consts/const.data.bn.dart';
+import 'package:splash_screen/consts/const.keywords.dart';
 
 class SlideTile0 extends StatefulWidget {
   final FocusNode focusNode1;
@@ -157,7 +158,7 @@ class _SlideTile0State extends State<SlideTile0> with TickerProviderStateMixin {
                                     }, */
                                     onChanged: (value) {
                                       sharedPreferences.setString(
-                                          "phone", value);
+                                          MyKeywords.phone, value);
                                     },
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
@@ -216,8 +217,8 @@ class _SlideTile0State extends State<SlideTile0> with TickerProviderStateMixin {
   void mLoadData() async {
     sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      userName = sharedPreferences.getString("username")!;
-      email = sharedPreferences.getString("email")!;
+      userName = sharedPreferences.getString(MyKeywords.username)!;
+      email = sharedPreferences.getString(MyKeywords.email)!;
       _editingControllerEmail = TextEditingController(text: email ?? "");
     });
 

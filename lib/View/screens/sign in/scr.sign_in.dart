@@ -198,10 +198,11 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void mSaveCradential(User user) {
-    print("Display Name: ${user.displayName}");
-    _pref.setString('username', user.displayName.toString());
-    _pref.setString('email', user.email.toString());
-    _pref.setString('uid', user.uid.toString());
+    // print("Display Name: ${user.displayName}");
+    _pref.setString(MyKeywords.username, user.displayName.toString());
+    _pref.setString(MyKeywords.email, user.email.toString());
+    _pref.setString(MyKeywords.uid, user.uid.toString());
+    _pref.setString(MyKeywords.userImageUrl, user.photoURL.toString());
     // _pref.setString(MyKeywords.loggedin, "y");
   }
 }

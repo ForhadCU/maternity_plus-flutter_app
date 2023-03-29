@@ -32,7 +32,7 @@ class ShaptahikPoribortonView extends StatefulWidget {
 
 class _ShaptahikPoribortonViewState extends State<ShaptahikPoribortonView> {
   late String shortDesc;
-  late String shortDescAudio;
+  String? shortDescAudio;
   String initImgUrl = 'lib/assets/images/summary.png';
   late String postImgUrl;
   late bool isConnected;
@@ -46,6 +46,8 @@ class _ShaptahikPoribortonViewState extends State<ShaptahikPoribortonView> {
   void initState() {
     super.initState();
     mCheckNetworkConnection();
+
+    print(widget.runningDays + widget.runningWeeks + widget.totalRunningDays);
 
     postImgUrl = '';
     isConnected = false;
@@ -128,14 +130,30 @@ class _ShaptahikPoribortonViewState extends State<ShaptahikPoribortonView> {
                     padding: EdgeInsets.all(8),
                     splashColor: Colors.blue,
                     onPressed: (() async {
-                      await audioPlayer.setSource(AssetSource(shortDescAudio));
-                      if (!isPlaying) {
-                        await audioPlayer.resume();
+                      if (shortDescAudio != null) {
+                        await audioPlayer
+                            .setSource(AssetSource(shortDescAudio!));
+                        if (!isPlaying) {
+                          await audioPlayer.resume();
+                        } else {
+                          await audioPlayer.stop();
+                        }
                       } else {
-                        await audioPlayer.stop();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                "দুঃখিত! তৃতীয় সপ্তাহ হতে এখানে তথ্য শুনতে পাবেন")));
                       }
                     }),
-                    icon: isPlaying ? Icon(Icons.volume_up) : Icon(Icons.mic),
+                    // icon: isPlaying ? Icon(Icons.volume_up) : Icon(Icons.mic),
+                    icon: isPlaying
+                        ? Image(
+                            image: AssetImage(
+                                "lib/assets/images/anim_playsound.gif"),
+                                color: MyColors.pink3,
+                            width: 24,
+                            height: 24,
+                          )
+                        : Icon(Icons.volume_up),
                     iconSize: 28,
                     color: Colors.red,
                     splashRadius: 4,

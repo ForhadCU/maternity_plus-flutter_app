@@ -7,6 +7,7 @@ import 'package:splash_screen/Controller/utils/util.custom_text.dart';
 import 'package:splash_screen/View/screens/shaptahik%20poriborton/widget/custom_tab_view.dart';
 import 'package:splash_screen/consts/const.colors.dart';
 import 'package:splash_screen/consts/const.data.bn.dart';
+import 'package:splash_screen/consts/const.keywords.dart';
 
 class ShaptahikPoribortonScreen extends StatefulWidget {
   final int presentWeeks;
@@ -51,7 +52,7 @@ class _ShaptahikPoribortonScreenState extends State<ShaptahikPoribortonScreen>
 
       if (_tabController.index == 3) {
         SqfliteServices.mFetchTabsData(
-                MyServices.mGetWeekNoFromString(tab4Data['week_no']))
+                MyServices.mGetWeekNoFromString(tab4Data[MyKeywords.weekNo]))
             .then((value) {
           _tabController.animation;
           setState(() {
@@ -60,7 +61,7 @@ class _ShaptahikPoribortonScreenState extends State<ShaptahikPoribortonScreen>
         });
       } else if (_tabController.index == 0) {
         SqfliteServices.mFetchTabsData(
-                MyServices.mGetWeekNoFromString(tab1Data['week_no']))
+                MyServices.mGetWeekNoFromString(tab1Data[MyKeywords.weekNo]))
             .then((value) {
           setState(() {
             mapTabData = value;
@@ -78,7 +79,7 @@ class _ShaptahikPoribortonScreenState extends State<ShaptahikPoribortonScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (tab1Data['week_no'] != mapTabData[0]['week_no']) {
+    if (tab1Data[MyKeywords.weekNo] != mapTabData[0][MyKeywords.weekNo]) { 
       _updateTabData();
     }
     return Scaffold(
@@ -110,7 +111,7 @@ class _ShaptahikPoribortonScreenState extends State<ShaptahikPoribortonScreen>
                   if (index == 3) {
                     SqfliteServices.mFetchTabsData(
                             MyServices.mGetWeekNoFromString(
-                                tab4Data['week_no']))
+                                tab4Data[MyKeywords.weekNo]))
                         .then((value) {
                       // _tabController.animation;
                       setState(() {
@@ -120,7 +121,7 @@ class _ShaptahikPoribortonScreenState extends State<ShaptahikPoribortonScreen>
                   } else if (index == 0) {
                     SqfliteServices.mFetchTabsData(
                             MyServices.mGetWeekNoFromString(
-                                tab1Data['week_no']))
+                                tab1Data[MyKeywords.weekNo]))
                         .then((value) {
                       setState(() {
                         mapTabData = value;
@@ -133,7 +134,7 @@ class _ShaptahikPoribortonScreenState extends State<ShaptahikPoribortonScreen>
                   Tab(
                     text: MyServices.getBangNumFormat(
                             MyServices.mGetWeekNoFromString(
-                                tab1Data['week_no'])) +
+                                tab1Data[MyKeywords.weekNo])) +
                         ' ' +
                         MaaData.week,
                     height: 24,
@@ -141,16 +142,16 @@ class _ShaptahikPoribortonScreenState extends State<ShaptahikPoribortonScreen>
                   Tab(
                     text: MyServices.getBangNumFormat(
                             MyServices.mGetWeekNoFromString(
-                                tab2Data['week_no'])) +
+                                tab2Data[MyKeywords.weekNo])) +
                         ' ' +
                         MaaData.week,
-                    // text: tab2Data['week_no'],
+                    // text: tab2Data[MyKeywords.weekNo],
                     height: 24,
                   ),
                   Tab(
                     text: MyServices.getBangNumFormat(
                             MyServices.mGetWeekNoFromString(
-                                tab3Data['week_no'])) +
+                                tab3Data[MyKeywords.weekNo])) +
                         ' ' +
                         MaaData.week,
                     height: 24,
@@ -158,7 +159,7 @@ class _ShaptahikPoribortonScreenState extends State<ShaptahikPoribortonScreen>
                   Tab(
                     text: MyServices.getBangNumFormat(
                             MyServices.mGetWeekNoFromString(
-                                tab4Data['week_no'])) +
+                                tab4Data[MyKeywords.weekNo])) +
                         ' ' +
                         MaaData.week,
                     height: 24,

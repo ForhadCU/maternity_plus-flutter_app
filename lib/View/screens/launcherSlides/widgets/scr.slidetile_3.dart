@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen/Controller/services/service.my_service.dart';
 import 'package:splash_screen/Controller/utils/util.custom_text.dart';
@@ -7,8 +8,6 @@ import 'package:splash_screen/consts/const.keywords.dart';
 
 import '../../../../consts/const.colors.dart';
 import '../../../../consts/const.data.bn.dart';
-
-
 
 class SlideTile3 extends StatefulWidget {
   const SlideTile3({Key? key}) : super(key: key);
@@ -23,6 +22,7 @@ class _SlideTile3State extends State<SlideTile3> {
   late int remainingWeek;
   late int remainingDay;
   late int totalDay;
+  var logger = Logger();
 
   @override
   void initState() {
@@ -107,13 +107,14 @@ class _SlideTile3State extends State<SlideTile3> {
 
   void _calDayWeek() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
+
     setState(() {
       DateTime today = DateTime.now();
-      String? sDateStr = _pref.getString(MyKeywords.startdate);
-      String? eDateStr = _pref.getString(MyKeywords.enddate);
+      String? sDateStr = _pref.getString(MyKeywords.sessionStart);
+      String? eDateStr = _pref.getString(MyKeywords.expectedSessionEnd);
       DateTime from = DateTime.parse(sDateStr!);
       DateTime to = DateTime.parse(eDateStr!);
-
+// e: ...........
       // int totalDaysBetween = _mDiffBetweenDates(sDate, eDate);
       totalDay = MyServices.mGettotalDaysBtween(DateTime.now(), to);
       //Save totalday for later

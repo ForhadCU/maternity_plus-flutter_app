@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:splash_screen/Controller/services/service.my_service.dart';
 import 'package:splash_screen/Controller/utils/util.custom_text.dart';
 import 'package:splash_screen/consts/const.colors.dart';
+import 'package:splash_screen/consts/const.keywords.dart';
 
 class CustomTavView extends StatefulWidget {
   // final int weekNo;
@@ -267,17 +268,17 @@ class _CustomTavViewState extends State<CustomTavView> {
   void _mInitData() {
     mapTabData = widget.mapTabData;
     // c: convert week number into int from string
-    weekNo = MyServices.mGetWeekNoFromString(mapTabData['week_no']);
+    weekNo = MyServices.mGetWeekNoFromString(mapTabData[MyKeywords.weekNo]);
     changeInChildTitle =
-        MyServices.mGetParagraphTitle(mapTabData['changes_in_child']);
+        MyServices.mGetParagraphTitle(mapTabData[MyKeywords.changesInMom]);
     changeInChildDesc =
-        MyServices.mGetParagraphDesc(mapTabData['changes_in_child']);
+        MyServices.mGetParagraphDesc(mapTabData[MyKeywords.changesInMom]); 
     changeInChildImgurl = MyServices.mGenerateImgUrl(
-        MyServices.mGetWeekNoFromString(mapTabData['week_no']));
+        MyServices.mGetWeekNoFromString(mapTabData[MyKeywords.weekNo]));
     changeInMomTitle =
-        MyServices.mGetParagraphTitle(mapTabData['changes_in_mom']);
+        MyServices.mGetParagraphTitle(mapTabData[MyKeywords.changesInChild]);
     changeInMomDesc =
-        MyServices.mGetParagraphDesc(mapTabData['changes_in_mom']);
+        MyServices.mGetParagraphDesc(mapTabData[MyKeywords.changesInChild]);
     symptomsTitle = MyServices.mGetParagraphTitle(mapTabData['symptoms']);
     symptomsDesc = MyServices.mGetParagraphDesc(mapTabData['symptoms']);
     instructionTitle =

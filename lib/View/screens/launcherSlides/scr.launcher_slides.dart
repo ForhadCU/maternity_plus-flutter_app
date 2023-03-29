@@ -1,13 +1,15 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_logger.d
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen/Controller/services/service.my_service.dart';
 import 'package:splash_screen/Controller/services/sqflite_services.dart';
+import 'package:splash_screen/Model/model.mom_info.dart';
+import 'package:splash_screen/Model/model.mom_weight.dart';
 import 'package:splash_screen/Model/model.splash_slides.dart';
-import 'package:splash_screen/View/widgets/dot_blink_loader.dart';
 import 'package:splash_screen/consts/const.colors.dart';
 import 'package:splash_screen/consts/const.data.bn.dart';
 import 'package:splash_screen/consts/const.keywords.dart';
@@ -33,11 +35,12 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
   late List<SliderModel> mySLides;
   int slideIndex = 0;
   late PageController controller;
-  late int _babyId;
+  late int _momId;
 
   bool _isSaving = false;
   FocusNode focusNode1 = FocusNode();
   FocusNode focusNode2 = FocusNode();
+  var logger = Logger();
 
   Widget _buildPageIndicator(bool isCurrentPage) {
     return Container(
@@ -67,7 +70,6 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Tap aaa");
         focusNode1.unfocus();
         focusNode2.unfocus();
       },
@@ -219,51 +221,87 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
 
   _mRouteToMain() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
+    final db = await MySqfliteServices.dbInit();
+    bool quesDataExisted;
 
-    _pref.setString(MyKeywords.loggedin, 'y');
-    String? session_start = _pref.getString(MyKeywords.startdate);
+    String sessionStart = _pref.getString(MyKeywords.sessionStart)!;
+    String email = _pref.getString(MyKeywords.email)!;
+    String uid = _pref.getString(MyKeywords.uid)!;
+    String expectedSessionEnd = _pref.getString(MyKeywords.expectedSessionEnd)!;
+    String? phone = _pref.getString(MyKeywords.phone);
 
-    await MySqfliteServices.mIsDbTableEmpty(tableName: MaaData.TABLE_NAMES[6])
+    await MySqfliteServices.mIsDbTableEmpty(
+            tableName: MyKeywords.momprimaryTable)
         .then((value) async => {
-              await MySqfliteServices.mAddBabyPrimaryDetails(
-                      session_start: session_start)
-                  .then((value) async => {
-                        // print('Data inserted into BabyDetails Table: $value'),
-                        if (value > 0)
-                          {
-                            _babyId = value,
-                            print('\x1b[33m Baby id: $_babyId \x1b[0m'),
-                            for (var babyGrowthModel
-                                in MyServices.mGetInitialQuesDataOfBabyGrowth(
-                                    babyId: value))
-                              {
-                                await MySqfliteServices
+              await MySqfliteServices.mAddMomPrimaryDetails(
+                sessionStart: sessionStart,
+                expectedSessionEnd: expectedSessionEnd,
+                email: email,
+                uid: uid,
+                phone: phone,
+              ).then((value) async => {
+                    // logger.d('Data inserted into BabyDetails Table: $value'),
+                    if (value != null)
+                      {
+                        _momId = value,
+                        // logger.d("Current momId: $value"),
+                        /*  _babyId =
+                                await MySqfliteServices.mFetchActiveBabyId(
+                                    email: email, momId: value),
+                            logger.d('\x1b[33m Baby id: $_babyId \x1b[0m'), */
+
+                        quesDataExisted = await MySqfliteServices
+                            .mCheckExistedQuesDataOfBabyGrowth(),
+                        quesDataExisted
+                            ? null
+                            : {
+                                for (var babyGrowthModel in MyServices
+                                    .mGetInitialQuesDataOfBabyGrowth())
+                                  {
+                                    await MySqfliteServices
                                         .mAddInitialQuesDataOfBabyGrowth(
-                                            babyGrowthModel: babyGrowthModel)
-                                    .then((value) => {
-                                          print(
-                                              "\x1b[33m Num of Baby Question data is Added: $value \x1b[0m"),
-                                        })
-                                    .onError(
-                                        (error, stackTrace) => {print(error)}),
+                                            babyGrowthModel: babyGrowthModel),
+                                  },
                               },
 
-                            Navigator.pop(context),
-                            //Go to Shagotom Screen
-                            Navigator.pushReplacement(
-                                context,
-                                PageTransition(
-                                    child: ShagotomScreen(
-                                      babyId: _babyId,
-                                    ),
-                                    type: PageTransitionType.rightToLeft))
-                          }
-                        else
+                        // add dummy mom-weights
+                        for (var i = 0; i <= 40; i++)
                           {
-                            print(
-                                'Error: BabyPrimaryDetails not added in sqflite')
-                          }
-                      })
+                            await MySqfliteServices.mAddInitialMomWeights(
+                                momWeight: MomWeight.weight(
+                                    email: email,
+                                    momId: /* momId */ value,
+                                    weekNo: i,
+                                    weight: 0.00,
+                                    timestamp:
+                                        DateTime.now().millisecondsSinceEpoch))
+                          },
+
+                        Navigator.pop(context),
+
+                        // c: Save current status and momId
+                        _pref.setString(MyKeywords.loggedin, 'y'),
+                        _pref.setInt(MyKeywords.momId, value),
+
+                        // c: Clear previous SharedPreference data
+                        _pref.remove(MyKeywords.sessionStart),
+                        _pref.remove(MyKeywords.expectedSessionEnd),
+
+                        //Go to Shagotom Screen
+                        Navigator.pushReplacement(
+                            context,
+                            PageTransition(
+                                child: ShagotomScreen(
+                                  momInfo: MomInfo(
+                                      momId: value,
+                                      email: email,
+                                      phone: phone,
+                                      expectedSessionEnd: expectedSessionEnd,
+                                      sessionStart: sessionStart),
+                                ),
+                                type: PageTransitionType.rightToLeft))
+                      }
+                  })
             });
   }
 

@@ -14,6 +14,8 @@ class BabyWeightsHeightsForAge {
   late List<double> maxFirstStdDeviationOfHeightList; //[+1 SD]
   late List<double> medianOfHeightList; //[+1 SD]
 
+  BabyWeightsHeightsForAge();
+
   BabyWeightsHeightsForAge.cWeightsForAge(
       {required this.minThirdStdDeviationOfWeightList,
       required this.maxThirdStdDeviationOfWeightList,

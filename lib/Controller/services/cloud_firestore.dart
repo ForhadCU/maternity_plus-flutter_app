@@ -47,12 +47,12 @@ class FirestoreProvider {
 
     for (var element in querySnapshot.docs) {
       _listImageDetailModel.add(ImageDetailsModel.fromJson(element.data()));
-      // print("address: ${element['imgUrl']}");
+      // Logger().d("address: ${element['imgUrl']}");
 /*       _listImageDetailModel[i].strgImgUri =
           await FirebaseStorageProvider.mGetImgUrl(element['imgUrl']);
       i++; */
 
-      // print('Json: ' + jsonDecode(element.data().toString()));
+      // Logger().d('Json: ' + jsonDecode(element.data().toString()));
     }
 
     for (var i = 0; i < _listImageDetailModel.length; i++) {
@@ -61,7 +61,7 @@ class FirestoreProvider {
               _listImageDetailModel[i].imgUrl!);
     }
 
-    print('out');
+    Logger().d('out');
 
     return _listImageDetailModel;
   } */

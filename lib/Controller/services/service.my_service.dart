@@ -7,7 +7,9 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,14 +26,13 @@ import 'package:splash_screen/Model/model.image_details.dart';
 import 'package:splash_screen/Model/model.jiggasha.dart';
 import 'package:splash_screen/Model/model.kahbar.dart';
 import 'package:splash_screen/Model/model.max_min_weightlist.dart';
-import 'package:splash_screen/Model/model.note.dart';
 import 'package:splash_screen/Model/model.ojon.dart';
 import 'package:splash_screen/Model/model.symp.dart';
-import 'package:splash_screen/Model/model.symp_details.dart';
 import 'package:splash_screen/consts/const.data.bn.dart';
 import 'package:splash_screen/consts/const.keywords.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
+
+import '../../Model/model.mom_info.dart';
 
 class MyServices {
   static String mMakeDoubleDigitNumString({required int inputNum}) {
@@ -42,9 +43,7 @@ class MyServices {
     return s;
   }
 
-  static List<BabyGrowthModel> mGetInitialQuesDataOfBabyGrowth({
-    required int babyId,
-  }) {
+  static List<BabyGrowthModel> mGetInitialQuesDataOfBabyGrowth() {
     var _listInitialQuesDataModel = <BabyGrowthModel>[];
     // const _totalTimestar = 5;
     const _numOfQuesInEachTimestar = 8;
@@ -61,29 +60,32 @@ class MyServices {
       '60',
       '72',
     ];
-    print(_timestarList.length);
+    // Logger().d(_timestarList.length);
     for (var t = 1; t <= _timestarList.length; t++) {
       late String quesId;
       const ansStatus = 0;
       final timestar = t;
       /*  final timestarNumMap =
           MaaData.babyGrowthJsonData['month_${_timestarList[t - 1]}']; */
-      // print('month_${_timestarList[t - 1]}');
-      print(t);
+      // Logger().d('month_${_timestarList[t - 1]}');
+      // Logger().d(t);
 
       for (var element
           in MaaData.babyGrowthJsonData['month_${_timestarList[t - 1]}']) {
-        /* print(element['ques_id']);
-        print(element['ques_id']); */
+        /* Logger().d(element['ques_id']);
+        Logger().d(element['ques_id']); */
 
         BabyGrowthModel babyGrowthModel = BabyGrowthModel.initialQuesData(
+          // momId: element[MyKeywords.momId],
+          // email: element[MyKeywords.email],
           question: element['question'],
           quesId: element['ques_id'],
-          ansStatus: ansStatus,
-          babyId: babyId,
           timestar: timestar,
+          // ansStatus: ansStatus,
+          // babyId: babyId,
+          /*      
           timestamp: '',
-          options: element['options'],
+          options: element['options'], */
         );
 
         _listInitialQuesDataModel.add(babyGrowthModel);
@@ -95,7 +97,7 @@ class MyServices {
         quesId =
             "M${t < 10 && t > 0 ? MyServices.mMakeDoubleDigitNumString(inputNum: t) : t}"
             "Q${q < 10 && q > 0 ? MyServices.mMakeDoubleDigitNumString(inputNum: q) : q}";
-        // print("Month $t: ${timestarNumMap['$q']['question']}");
+        // Logger().d("Month $t: ${timestarNumMap['$q']['question']}");
         BabyGrowthModel babyGrowthModel = BabyGrowthModel.initialQuesData(
             question: timestarNumMap[q.toString()]['question'],
             quesId: quesId,
@@ -107,9 +109,9 @@ class MyServices {
         _listInitialQuesDataModel.add(babyGrowthModel);
       } */
     }
-    for (var element in _listInitialQuesDataModel) {
-      print(element.ques_id);
-    }
+/*     for (var element in _listInitialQuesDataModel) {
+      Logger().d(element.ques_id);
+    } */
 
     return _listInitialQuesDataModel;
   }
@@ -218,7 +220,7 @@ class MyServices {
       }
       return imageDetailsModelList;
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      Logger().d('Failed to pick image: $e');
       return null;
     }
   }
@@ -242,7 +244,7 @@ class MyServices {
         _imageString = imgString;
       }); */
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      Logger().d('Failed to pick image: $e');
     }
   }
 
@@ -265,7 +267,7 @@ class MyServices {
 
       return {MyKeywords.singleImgUrls: imgUrl};
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      Logger().d('Failed to pick image: $e');
       return null;
     }
   }
@@ -322,14 +324,14 @@ class MyServices {
     try {
       final result = await InternetAddress.lookup('example.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        print('connected');
+        Logger().d('connected');
 
         return true;
       } else {
         return false;
       }
     } on SocketException catch (_) {
-      print('not connected');
+      Logger().d('not connected');
       return false;
     }
   }
@@ -410,7 +412,7 @@ class MyServices {
     return list;
   }
 
-  static Future<Map<String, dynamic>> mUpdateNoteSympScreen(
+  /* static Future<Map<String, dynamic>> mUpdateNoteSympScreen(
       NoteModel noteModel,
       String note,
       String currentDate,
@@ -422,12 +424,12 @@ class MyServices {
     //note part
     if (noteModel.note != note) {
       int n = await MySqfliteServices.addNote(noteModel);
-      // print("Num of Inserted note item: $n");
+      // Logger().d("Num of Inserted note item: $n");
       /*   List<NoteModel> noteModelList =
                               await SqfliteServices.mFetchNotes(); */
       List<NoteModel> currentNote =
           await MySqfliteServices.mFetchCurrentNote(currentDate);
-      // print(noteModelList.length);
+      // Logger().d(noteModelList.length);
       if (currentNote.isNotEmpty) {
         note = currentNote[0].note;
       } else {
@@ -449,7 +451,7 @@ class MyServices {
         actualSympIntensity = MyServices.mGetSympIntensityStr(
             sympDataModelList)['actualSympIntensity'];
       });
-      // print(sympIntenSityModel.symptoms);
+      // Logger().d(sympIntenSityModel.symptoms);
     }
     return {
       "note": note,
@@ -458,7 +460,7 @@ class MyServices {
       "actualSympNames": actualSympNames,
       "actualSympIntensity": actualSympIntensity
     };
-  }
+  } */
 
   static Map<String, dynamic> mGetSympIntensityStr(
       List<SympDataModel> sympDataList) {
@@ -478,7 +480,7 @@ class MyServices {
       }
     }
     // List<String> strlist = sympIntensityStr.split(",");
-    // print(strlist);
+    // Logger().d(strlist);
     return {
       "symptoms": sympIntensityStr,
       "actualSympIntensity": actualSympIntensity,
@@ -491,7 +493,7 @@ class MyServices {
     List<SympDataModel> list = [];
     List<String> symptomNames = MaaData.Symptoms;
     List<String> sympIntensities = sympIntensityStr.split(",");
-    // print(sympIntensities.length);
+    // Logger().d(sympIntensities.length);
     SympDataModel model;
     for (var i = 0; i < symptomNames.length; i++) {
       list.add(new SympDataModel(
@@ -513,19 +515,19 @@ class MyServices {
     currentOjonList.add(currentOjon);
 
     List<double> updatedCurrentList = oldWeightList..insert(0, primaryWeight);
-    // print(updatedCurrentList.toString());
+    // Logger().d(updatedCurrentList.toString());
     double currentWeightLastValue = primaryWeight;
     //c: Algorithm to fill the blank weeks(steps) for graph value
     for (var i = 1; i <= runningWeeks; i++) {
       Map<String, dynamic> weekValuMap =
           getWeekValue(i, updatedCurrentList, currentWeightLastValue);
       currentWeightLastValue = weekValuMap['lastValue'] ?? 0;
-      // print(weekValuMap['step']);
+      // Logger().d(weekValuMap['step']);
       int times = 1;
       for (var j = 0; j < weekValuMap['step']; j++) {
         updatedCurrentList[i + j] = ((weekValuMap['inc']) * 2.2) * times++ +
             (i == 0 ? updatedCurrentList[i] : updatedCurrentList[i - 1]);
-        // print('Up: ${updatedCurrentList[i + j]}');
+        // Logger().d('Up: ${updatedCurrentList[i + j]}');
         currentOjonList.add(OjonModel(
             xAxisValue: (i + j).toString(),
             yAxisValue: (updatedCurrentList[i + j]).toStringAsFixed(2)));
@@ -553,19 +555,19 @@ class MyServices {
     currentOjonList.add(currentOjon);
 
     List<double> updatedCurrentList = oldWeightList..insert(0, primaryWeight);
-    // print(updatedCurrentList.toString());
+    // Logger().d(updatedCurrentList.toString());
     double currentWeightLastValue = primaryWeight;
     //Currrent Weights
     for (var i = 1; i <= positionOfCurrentEntry; i++) {
       Map<String, dynamic> weekValuMap =
           getWeekValue(i, updatedCurrentList, currentWeightLastValue);
       currentWeightLastValue = weekValuMap['lastValue'] ?? 0;
-      // print(weekValuMap['step']);
+      // Logger().d(weekValuMap['step']);
       int times = 1;
       for (var j = 0; j < weekValuMap['step']; j++) {
         updatedCurrentList[i + j] = ((weekValuMap['inc']) * 2.2) * times++ +
             (i == 0 ? updatedCurrentList[i] : updatedCurrentList[i - 1]);
-        // print('Up: ${updatedCurrentList[i + j]}');
+        // Logger().d('Up: ${updatedCurrentList[i + j]}');
         currentOjonList.add(OjonModel(
             xAxisValue: (i + j).toString(),
             yAxisValue: (updatedCurrentList[i + j]).toStringAsFixed(2)));
@@ -594,19 +596,19 @@ class MyServices {
     currentOjonList.add(currentOjon);
 
     List<double> updatedCurrentList = oldWeightList..insert(0, primaryWeight);
-    // print(updatedCurrentList.toString());
+    // Logger().d(updatedCurrentList.toString());
     double currentWeightLastValue = primaryWeight;
     //Currrent Weights
     for (var i = 1; i <= runningWeeks; i++) {
       Map<String, dynamic> weekValuMap =
           getWeekValue(i, updatedCurrentList, currentWeightLastValue);
       currentWeightLastValue = weekValuMap['lastValue'] ?? 0;
-      // print(weekValuMap['step']);
+      // Logger().d(weekValuMap['step']);
       int times = 1;
       for (var j = 0; j < weekValuMap['step']; j++) {
         updatedCurrentList[i + j] = ((weekValuMap['inc']) * 2.2) * times++ +
             (i == 0 ? updatedCurrentList[i] : updatedCurrentList[i - 1]);
-        // print('Up: ${updatedCurrentList[i + j]}');
+        // Logger().d('Up: ${updatedCurrentList[i + j]}');
         currentOjonList.add(OjonModel(
             xAxisValue: (i + j).toString(),
             yAxisValue: (updatedCurrentList[i + j]).toStringAsFixed(2)));
@@ -729,11 +731,11 @@ class MyServices {
     maxWeightList.add(maxOjon);
     // currentWeightList.add(currentOjon);
 
-    print("Current BMI: " + bmi.toString());
+    Logger().d("Current BMI: " + bmi.toString());
 
     if (bmi < 18.5) {
       //Under Weight
-      print("Under");
+      Logger().d("Under");
       List<double> updatedMaxList = MaaData.underWtMx..insert(0, primaryWeight);
       List<double> updatedMinList = MaaData.underWtMn..insert(0, primaryWeight);
       // List<double> updatedCurrentList = oldWeightList..insert(0, primaryWeight);
@@ -808,19 +810,19 @@ class MyServices {
 
       /*   int j = 0;
       for (var element in updatedMaxList) {
-        print("Index ${j} Updated maxWeight: $element");
+        Logger().d("Index ${j} Updated maxWeight: $element");
         j++;
       }
 
-      print("final value: ");
+      Logger().d("final value: ");
       for (var i = 0; i < maxWeightList.length; i++) {
         Ojon ojon = maxWeightList[i];
-        print("Point $i :  (X, Y) = (${ojon.week}, ${ojon.weight}), ");
+        Logger().d("Point $i :  (X, Y) = (${ojon.week}, ${ojon.weight}), ");
       } */
     } else if (bmi >= 18.5 && bmi < 25.0) {
       //Normal weight
-      print("Normal");
-/*           print(
+      Logger().d("Normal");
+/*           Logger().d(
         "primaryWeight : $primaryWeight, runningWeeks: $runningWeeks, oldWeightList: $oldWeightList, ");
  */
       List<double> updatedMaxList = MaaData.normalWtMx
@@ -871,18 +873,18 @@ class MyServices {
 
       /*   int j = 0;
       for (var element in updatedMaxList) {
-        print("Index ${j} Updated maxWeight: $element");
+        Logger().d("Index ${j} Updated maxWeight: $element");
         j++;
       }
 
-      print("final value: ");
+      Logger().d("final value: ");
       for (var i = 0; i < maxWeightList.length; i++) {
         Ojon ojon = maxWeightList[i];
-        print("Point $i :  (X, Y) = (${ojon.week}, ${ojon.weight}), ");
+        Logger().d("Point $i :  (X, Y) = (${ojon.week}, ${ojon.weight}), ");
       } */
     } else if (bmi >= 25.0 && bmi < 30.0) {
       //Over Weight
-      print("OVer");
+      Logger().d("OVer");
       List<double> updatedMaxList = MaaData.overWtMx..insert(0, primaryWeight);
       List<double> updatedMinList = MaaData.overWtMn..insert(0, primaryWeight);
       double maxlastValue = 0;
@@ -930,18 +932,18 @@ class MyServices {
 
       /*   int j = 0;
       for (var element in updatedMaxList) {
-        print("Index ${j} Updated maxWeight: $element");
+        Logger().d("Index ${j} Updated maxWeight: $element");
         j++;
       }
 
-      print("final value: ");
+      Logger().d("final value: ");
       for (var i = 0; i < maxWeightList.length; i++) {
         Ojon ojon = maxWeightList[i];
-        print("Point $i :  (X, Y) = (${ojon.week}, ${ojon.weight}), ");
+        Logger().d("Point $i :  (X, Y) = (${ojon.week}, ${ojon.weight}), ");
       } */
     } else if (bmi >= 30.0) {
       //Obess
-      print("Obess");
+      Logger().d("Obess");
 
       List<double> updatedMaxList = MaaData.obeseWtMx..insert(0, primaryWeight);
       List<double> updatedMinList = MaaData.obeseWtMn..insert(0, primaryWeight);
@@ -1011,14 +1013,14 @@ class MyServices {
       /* 
       int j = 0;
       for (var element in updatedMaxList) {
-        print("Index ${j} Updated maxWeight: $element");
+        Logger().d("Index ${j} Updated maxWeight: $element");
         j++;
       }
 
-      print("final value: ");
+      Logger().d("final value: ");
       for (var i = 0; i < maxWeightList.length; i++) {
         Ojon ojon = maxWeightList[i];
-        print("Point $i :  (X, Y) = (${ojon.week}, ${ojon.weight}), ");
+        Logger().d("Point $i :  (X, Y) = (${ojon.week}, ${ojon.weight}), ");
       } */
     }
 
@@ -1089,7 +1091,7 @@ class MyServices {
     oldList[actRunningWeek] = updatedWeight.toStringAsFixed(2);
     sharedPreferences.setStringList(MyKeywords.babyWeightList, oldList);
     oldList = sharedPreferences.getStringList(MyKeywords.babyWeightList)!;
-    // print("OjonList" + oldList.toString());
+    // Logger().d("OjonList" + oldList.toString());
     List<double> oldListDoubleFormat = [];
     for (var i = 0; i < oldList.length; i++) {
       oldListDoubleFormat.add(double.parse(oldList[i]));
@@ -1106,7 +1108,7 @@ class MyServices {
     oldList[actRunningWeek] = updatedWeight.toStringAsFixed(2);
     sharedPreferences.setStringList(MyKeywords.weightList, oldList);
     oldList = sharedPreferences.getStringList(MyKeywords.weightList)!;
-    // print("OjonList" + oldList.toString());
+    // Logger().d("OjonList" + oldList.toString());
     List<double> oldListDoubleFormat = [];
     for (var i = 0; i < oldList.length; i++) {
       oldListDoubleFormat.add(double.parse(oldList[i]));
@@ -1119,7 +1121,7 @@ class MyServices {
       {required SharedPreferences sharedPreferences}) {
     List<String> weightList;
     if (sharedPreferences.getStringList(MyKeywords.babyWeightList) != null) {
-      // print("weightlist is not null");
+      // Logger().d("weightlist is not null");
       // List<double> weightListDoubleFormat = [];
       /* List<String> weightListDoubleFormat = [];
       weihtList = sharedPreferences.getStringList(MyKeywords.weightList)!;
@@ -1132,7 +1134,7 @@ class MyServices {
       return weightList;
     } else {
       weightList = MyServices.mGetDummyBabyOjons();
-      // print("weightList is null");
+      // Logger().d("weightList is null");
       sharedPreferences.setStringList(MyKeywords.babyWeightList, weightList);
 
       /*  List<double> weightListDoubleFormat = [];
@@ -1149,7 +1151,7 @@ class MyServices {
       {required SharedPreferences sharedPreferences}) {
     List<String> weightList;
     if (sharedPreferences.getStringList(MyKeywords.weightList) != null) {
-      // print("weightlist is not null");
+      // Logger().d("weightlist is not null");
       // List<double> weightListDoubleFormat = [];
       /* List<String> weightListDoubleFormat = [];
       weihtList = sharedPreferences.getStringList(MyKeywords.weightList)!;
@@ -1162,7 +1164,7 @@ class MyServices {
       return weightList;
     } else {
       weightList = MyServices.mGetDummyOjons();
-      // print("weightList is null");
+      // Logger().d("weightList is null");
       sharedPreferences.setStringList(MyKeywords.weightList, weightList);
       /*  List<double> weightListDoubleFormat = [];
       for (var i = 0; i < weightList.length; i++) {
@@ -1201,7 +1203,7 @@ class MyServices {
     sharedPreferences.setDouble(MyKeywords.primaryHeight, height);
     sharedPreferences.setDouble(MyKeywords.lastUpdatedWeight, weight);
     if (sharedPreferences.getDouble(MyKeywords.primaryBMI) != null) {
-      print("Data Entry successfull");
+      Logger().d("Data Entry successfull");
     }
   }
 
@@ -1460,7 +1462,7 @@ class MyServices {
       if (list[i] != 0.00) {
         double value = list[i] - lastValue;
         double stepInc = ((value / 2.2) / step);
-        /*   print(
+        /*   Logger().d(
             'Start pos: $startPosition & Value is: ${value / 2.2} & step size: $step & Inc value: $stepInc'); */
 
         return {"inc": stepInc, "step": step, "lastValue": list[i]};
@@ -1472,7 +1474,7 @@ class MyServices {
 
   static Future<Map<String, dynamic>> mSendFinalDataToApi(
       String jsonReportDataModel) async {
-    // print(jsonReportDataModel);
+    // Logger().d(jsonReportDataModel);
     final response = await http.post(
       Uri.parse('https://maa.agamilabs.com/api/generate_report.php'),
       headers: <String, String>{
@@ -1489,7 +1491,7 @@ class MyServices {
       return res;
     } else {
       throw Exception("Failed to send data to Api");
-      /*   print("Failed");
+      /*   Logger().d("Failed");
       return {}; */
     }
   }
@@ -1505,7 +1507,7 @@ class MyServices {
       }
       _list.add(i);
     }
-    // print(_list);
+    // Logger().d(_list);
     return _list;
   }
 
@@ -1533,7 +1535,7 @@ class MyServices {
           num: MyServices.mGenerateBangNum(constList[i]), text: text));
       // _listOfOnlyNum.add(constList[i].toString());
       _listOfOnlyNum.add(constList[i].toString() + text2);
-      // print("${_list[i].num}  ${_list[i].text}");
+      // Logger().d("${_list[i].num}  ${_list[i].text}");
     }
 
     return {
@@ -1542,11 +1544,18 @@ class MyServices {
     };
   }
 
-  static Future<Map<String, dynamic>> mGetLastGivenWeight() async {
+/*   static Future<double> mGetLastGivenMomWeight({required MomInfo momInfo}){
+
+  } */
+
+  static Future<Map<String, dynamic>> mGetLastGivenWeight(
+      {required int babyId, required String email, required int momId}) async {
     late double lastWeight;
     late double lastHeight;
     late int index;
-    await MySqfliteServices.mGetBabyCurrentWeightHeightList().then((value) {
+    await MySqfliteServices.mGetBabyCurrentWeightHeightList(
+            email: email, momId: momId, babyId: babyId)
+        .then((value) {
       for (var element in value[MyKeywords.babyWeight]) {
         if (element == '0') {
           continue;
@@ -1573,7 +1582,7 @@ class MyServices {
     Duration diff = DateTime.now().difference(dob);
     int result = diff.inDays + 1;
     return result;
-    // print("Running Day: " + runningday.toString());
+    // Logger().d("Running Day: " + runningday.toString());
   }
 
   static Map<String, dynamic> mGetBabyAge({required int runningday}) {
@@ -1582,7 +1591,7 @@ class MyServices {
     // runningday = 24; //test
     if (runningday <= (7 * 13)) {
       ageNum = (runningday / 7).floor();
-      // print(runningday / 7);
+      // Logger().d(runningday / 7);
       ageTag = 'w';
     } else {
       ageNum = runningday % 30 != 0
@@ -1592,7 +1601,7 @@ class MyServices {
     }
     return {MyKeywords.ageNum: ageNum, MyKeywords.ageTag: ageTag};
   }
- 
+
   static List<double> mMakeCurrentWeightsToDouble(
       {required List<String> currentWeightsList}) {
     List<double> list = [];
@@ -1606,7 +1615,7 @@ class MyServices {
       {required List<String> currentWeightsStringList,
       required List<String> babyWeekMonthNumStringList}) {
     List<OjonModel> _list = [];
-    // print("CurrentWeightsStringLIst: $currentWeightsStringList");
+    // Logger().d("CurrentWeightsStringLIst: $currentWeightsStringList");
     for (int i = 0; i < currentWeightsStringList.length; i++) {
       var item = currentWeightsStringList[i];
       if (item != "0") {
@@ -1621,11 +1630,12 @@ class MyServices {
 
     return _list;
   }
+
   static List<HeightModel> mMakeCurrentHeightsForGraph(
       {required List<String> currentHeightsStringList,
       required List<String> babyWeekMonthNumStringList}) {
     List<HeightModel> _list = [];
-    // print("CurrentWeightsStringLIst: $currentWeightsStringList");
+    // Logger().d("CurrentWeightsStringLIst: $currentWeightsStringList");
     for (int i = 0; i < currentHeightsStringList.length; i++) {
       var item = currentHeightsStringList[i];
       if (item != "0") {
@@ -1640,6 +1650,4 @@ class MyServices {
 
     return _list;
   }
-
-
 }

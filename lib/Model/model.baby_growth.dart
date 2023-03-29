@@ -1,15 +1,18 @@
+import 'package:splash_screen/consts/const.keywords.dart';
+
 class BabyGrowthModel {
   late String _question;
 
   //newly added
   late String _quesId;
-  late int _ansStatus;
-  late int _babyId;
+  late int _momId;
+  late String _email;
+  late int? _ansStatus;
+  late int? _babyId;
   late int _timestar;
   late String _timeStamp;
   late String _options;
 
-  
   BabyGrowthModel();
 
   BabyGrowthModel.initialQuesOnly({required String question}) {
@@ -19,29 +22,38 @@ class BabyGrowthModel {
   BabyGrowthModel.initialQuesData(
       {required String question,
       required String quesId,
-      required int ansStatus,
+       required int timestar,
+        int? ansStatus,
+     /*  
       required int babyId,
-      required int timestar,
+      required int momId,
+      required String email, */
+  /*    
       required String timestamp,
-      required String options}) {
+      required String options */}) {
+    // _momId = momId;
+    // _email = email;
     _quesId = quesId;
     _ansStatus = ansStatus;
-    _babyId = babyId;
+    // _babyId = babyId;
     _timestar = timestar;
     _question = question;
-    _timeStamp = timestamp;
-    _options = options;
+
+/*     _timeStamp = timestamp;
+    _options = options; */
   }
 
   Map<String, dynamic> toJsonInitialQuesData() {
     var map = <String, dynamic>{};
-    map['baby_id'] = _babyId;
+    // map[MyKeywords.momId] = _momId;
+    // map[MyKeywords.email] = _email;
+    // map['baby_id'] = _babyId;
     map['timestar'] = _timestar;
     map['ques_id'] = _quesId;
     map['question'] = _question;
-    map['status'] = _ansStatus;
-    map['timestamp'] = _timeStamp;
-    map['options'] = _options;
+    // map['status'] = _ansStatus;
+  /*   map['timestamp'] = _timeStamp;
+    map['options'] = _options; */
 
     return map;
   }
@@ -50,7 +62,7 @@ class BabyGrowthModel {
 
   get options => this._options;
 
- set options( value) => this._options = value;
+  set options(value) => this._options = value;
   get question => this._question;
 
   set question(value) => this._question = value;

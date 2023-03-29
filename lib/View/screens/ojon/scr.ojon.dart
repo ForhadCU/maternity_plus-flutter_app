@@ -1,10 +1,15 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen/Controller/services/service.my_service.dart';
+import 'package:splash_screen/Controller/services/sqflite_services.dart';
 import 'package:splash_screen/Controller/utils/util.custom_text.dart';
 import 'package:splash_screen/Model/model.max_min_weightlist.dart';
+import 'package:splash_screen/Model/model.mom_info.dart';
+import 'package:splash_screen/Model/model.mom_weight.dart';
 import 'package:splash_screen/Model/model.ojon.dart';
 import 'package:splash_screen/View/screens/ojon/widgets/dlg_input_ojon.dart';
 import 'package:splash_screen/View/screens/ojon/widgets/dlg_input_primary_ojon.dart';
@@ -14,9 +19,15 @@ import 'package:splash_screen/consts/const.colors.dart';
 import 'package:splash_screen/consts/const.keywords.dart';
 
 class OjonScreen extends StatefulWidget {
-  const OjonScreen({
-    Key? key,
-  }) : super(key: key);
+  final int momId;
+  final String email;
+  final MomInfo momInfo;
+  const OjonScreen(
+      {Key? key,
+      required this.momId,
+      required this.email,
+      required this.momInfo})
+      : super(key: key);
 
   @override
   State<OjonScreen> createState() => _OjonScreenState();
@@ -41,6 +52,7 @@ class _OjonScreenState extends State<OjonScreen> {
   late String encodedMinWeightList;
   late String encodedMaxWeightList;
   late String? encodedCurrentWeightList;
+  var logger = Logger();
 
   @override
   void initState() {
@@ -49,16 +61,18 @@ class _OjonScreenState extends State<OjonScreen> {
       setState(() {
         encodedMinWeightList = '';
         sharedPreferences = value;
-        currentWeightsList =
-            MyServices.mGetWeightList(sharedPreferences: sharedPreferences);
+        /*  currentWeightsList =
+          MyServices.mGetWeightList(sharedPreferences: sharedPreferences); */
+        mLoadWeights();
         // _priWeight = sharedPreferences.getDouble(MyKeywords.primaryWeight)!;
         _actualWeeks = sharedPreferences.getInt(MyKeywords.actualRunningWeeks)!;
         _runningWeeks = _actualWeeks + 1;
 
         //check initially primary weight existed or not
+        // e:  ...............................
         isSetPrimaryWeight = MyServices.mCheckPrimaryWeight(
             sharedPreferences: sharedPreferences);
-        print(isSetPrimaryWeight);
+        // logger.d(isSetPrimaryWeight);
         if (!isSetPrimaryWeight) {
           showDialog(
               context: context,
@@ -69,8 +83,9 @@ class _OjonScreenState extends State<OjonScreen> {
                   ));
         } else {
           setState(() {
-            _lastUpdatedWeight = MyServices.mGetLastUpdatedWeight(
-                sharedPreferences: sharedPreferences);
+            /* _lastUpdatedWeight = MyServices.mGetLastUpdatedWeight(
+                sharedPreferences: sharedPreferences); */
+            _lastUpdatedWeight = mGetLastUpdatedWeight();
             _currentRoundValue = _lastUpdatedWeight.floor();
             MyServices.mSetFrucValueAsInt(
                 priWeight: _lastUpdatedWeight,
@@ -87,10 +102,10 @@ class _OjonScreenState extends State<OjonScreen> {
             encodedMaxWeightList = MyServices.mGetEncodedMaxMinWeightList(
                 sharedPreferences)['max'];
             /* encodedCurrentWeightList =
-                MyServices.mGetEncodedCurrentWeightList(sharedPreferences) == ''
-                    ? '[{}]'
-                    : MyServices.mGetEncodedCurrentWeightList(
-                        sharedPreferences); */
+              MyServices.mGetEncodedCurrentWeightList(sharedPreferences) == ''
+                  ? '[{}]'
+                  : MyServices.mGetEncodedCurrentWeightList(
+                      sharedPreferences); */
             encodedCurrentWeightList =
                 MyServices.mGetEncodedCurrentWeightList(sharedPreferences);
 
@@ -114,14 +129,14 @@ class _OjonScreenState extends State<OjonScreen> {
             }
 
             // Ojon ojon = Ojon.fromJson(decodedMinWeightList);
-            // print("decoded: ${decodedMinWeightList[0]}");
-            // print("Ojon ${ojon.week}");
+            // logger.d("decoded: ${decodedMinWeightList[0]}");
+            // logger.d("Ojon ${ojon.week}");
             /*    encodedMinWeightList =
                 sharedPreferences.getString('encodedMinWeightList')!;
             encodedMaxWeightList =
                 sharedPreferences.getString('encodedMaxWeightList')!; */
 
-            /*   print(
+            /*   logger.d(
                 "data: $data"); */ /*  sharedPreferences.getString('encodedMinWeightList') */
             /*  final List<MaxMinWeightListModel> list =
                 MyServices.mGetMaxMinWeihtList(
@@ -137,21 +152,21 @@ class _OjonScreenState extends State<OjonScreen> {
               minOjonList = listModel.minWeightList;
               currentOjonList = listModel.currentOjonList;
               /* for (var element in currentOjonList) {
-                print(element.week + ": " + element.weight);
+                logger.d(element.week + ": " + element.weight);
               } */
             } */
 
-            /*  print('maxOjon: ${maxOjonList[0].weight}');
-            print('minOjon: ${minOjonList[0].weight}');
-            print('currentOjon: ${currentOjonList[0].weight}'); */
+            /*  logger.d('maxOjon: ${maxOjonList[0].weight}');
+            logger.d('minOjon: ${minOjonList[0].weight}');
+            logger.d('currentOjon: ${currentOjonList[0].weight}'); */
           });
 
           /*   setState(() {
             
           }); */
-/* 
+          /*
           for (var element in maxOjonList) {
-            print("${element.week} - ${element.weight}");
+            logger.d("${element.week} - ${element.weight}");
           } */
         }
       });
@@ -160,7 +175,6 @@ class _OjonScreenState extends State<OjonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // print("after build: $encodedMinWeightList");
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -172,58 +186,71 @@ class _OjonScreenState extends State<OjonScreen> {
         ),
         backgroundColor: MyColors.pink2,
         actions: [
-          IconButton(
-              onPressed: () {
-                //show ojon input dialog
-                showDialog(
-                    context: context,
-                    builder: (context) => isSetPrimaryWeight
-                        ? InputOjonDialog(
-                            currentRoundValue: _currentRoundValue,
-                            currentFrucValueAsInt: _currentFrucValueAsInt,
-                            runningWeeks: _runningWeeks,
-                            callback: (double w) async {
-                              _lastUpdatedWeight = w;
-                              _currentRoundValue = _lastUpdatedWeight.floor();
-                              MyServices.mSetFrucValueAsInt(
-                                  priWeight: _lastUpdatedWeight,
-                                  callback: (int value) {
-                                    _currentFrucValueAsInt = value;
-                                  });
-                              MyServices.mSetLastUpdatedWeight(
-                                  sharedPreferences: sharedPreferences, w: w);
-                              currentWeightsListForGraph =
-                                  MyServices.mUpdateCurrentWeightList(
+          widget.momInfo.sessionEnd != null
+              ? Container()
+              : IconButton(
+                  onPressed: () {
+                    //show ojon input dialog
+                    showDialog(
+                        context: context,
+                        builder: (context) => isSetPrimaryWeight
+                            ? InputOjonDialog(
+                                currentRoundValue: _currentRoundValue,
+                                currentFrucValueAsInt: _currentFrucValueAsInt,
+                                runningWeeks: _runningWeeks,
+                                callback: (double w) async {
+                                  _lastUpdatedWeight = w;
+                                  _currentRoundValue =
+                                      _lastUpdatedWeight.floor();
+                                  MyServices.mSetFrucValueAsInt(
+                                      priWeight: _lastUpdatedWeight,
+                                      callback: (int value) {
+                                        _currentFrucValueAsInt = value;
+                                      });
+                                  MySqfliteServices.mUpdateMomWeight(
+                                      momWeight: MomWeight.weight(
+                                          email: widget.email,
+                                          momId: widget.momId,
+                                          weekNo: _runningWeeks,
+                                          weight: w,
+                                          timestamp: DateTime.now()
+                                              .millisecondsSinceEpoch));
+                                  MyServices.mSetLastUpdatedWeight(
                                       sharedPreferences: sharedPreferences,
-                                      updatedWeight: w,
-                                      actRunningWeek: _actualWeeks);
-                              /*  print("Current weightlist : " +
+                                      w: w);
+                                  currentWeightsListForGraph =
+                                      MyServices.mUpdateCurrentWeightList(
+                                          sharedPreferences: sharedPreferences,
+                                          updatedWeight: w,
+                                          actRunningWeek: _actualWeeks);
+                                  /*  logger.d("Current weightlist : " +
                                   currentWeightsListDoubleformat.toString()); */
-                              // print(list.toString());
+                                  // logger.d(list.toString());
 
-                              //get graph data
-                              currentOjonList =
-                                  await MyServices.mGetCurrentMomWeightList(
-                                      sharedPreferences: sharedPreferences,
-                                      primaryWeight: primaryWeight,
-                                      oldWeightList: currentWeightsListForGraph,
-                                      runningWeeks: _runningWeeks);
+                                  //get graph data
+                                  currentOjonList =
+                                      await MyServices.mGetCurrentMomWeightList(
+                                          sharedPreferences: sharedPreferences,
+                                          primaryWeight: primaryWeight,
+                                          oldWeightList:
+                                              currentWeightsListForGraph,
+                                          runningWeeks: _runningWeeks);
 
-                              //print currentOjonList
-                              /*  for (var i = 0;
+                                  //logger.d currentOjonList
+                                  /*  for (var i = 0;
                                     i < currentOjonList.length;
                                     i++) {
                                   Ojon ojon = currentOjonList[i];
-                                  print("Ojon " + ojon.weight);
+                                  logger.d("Ojon " + ojon.weight);
                                 } */
 
-                              currentWeightsList =
-                                  /* sharedPreferences
+                                  currentWeightsList =
+                                      /* sharedPreferences
                                       .getStringList(MyKeywords.weightList)!; */
-                                  MyServices.mGetWeightList(
-                                      sharedPreferences: sharedPreferences);
+                                      MyServices.mGetWeightList(
+                                          sharedPreferences: sharedPreferences);
 
-                              /*  final List<MaxMinWeightListModel> list =
+                                  /*  final List<MaxMinWeightListModel> list =
                                     MyServices.mGetMaxMinWeihtList(
                                         oldWeightList: currentWeightsList,
                                         bmi: sharedPreferences
@@ -236,13 +263,13 @@ class _OjonScreenState extends State<OjonScreen> {
                                   currentOjonList = listModel.currentWeightList;
                                 } */
 
-                              setState(() {});
-                            },
-                          )
-                        : InputPrimaryOjonDialog(
-                            callBack: (double w, double h) {
-                              mPrimaryScreenUpdate(w, h);
-                              /* 
+                                  setState(() {});
+                                },
+                              )
+                            : InputPrimaryOjonDialog(
+                                callBack: (double w, double h) {
+                                  mPrimaryScreenUpdate(w, h);
+                                  /* 
                               setState(() {
                                 MyServices.mCalcAndSavePriBMI(
                                     sharedPreferences: sharedPreferences,
@@ -264,71 +291,94 @@ class _OjonScreenState extends State<OjonScreen> {
                                     });
                               });
                              */
-                            },
-                          ));
-              },
-              icon: Image.asset(
-                'lib/assets/images/add_note_weight_icon.png',
-                color: Colors.white,
-              )),
+                                },
+                              ));
+                  },
+                  icon: Image.asset(
+                    'lib/assets/images/add_note_weight_icon.png',
+                    color: Colors.white,
+                  )),
           const SizedBox(
             width: 8,
           ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.all(8),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              //v: Ojon and Week List
-              OjonAndWeekListWidget(
-                  primaryWeight: primaryWeight,
-                  currentWeights: currentWeightsList),
-              const SizedBox(
-                height: 10,
-              ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    //v: Ojon and Week List
+                    OjonAndWeekListWidget(
+                        primaryWeight: primaryWeight,
+                        currentWeights: currentWeightsList),
+                    const SizedBox(
+                      height: 10,
+                    ),
 
-              //v: Graph List
-              GraphWidget(
-                primaryWeight: primaryWeight,
-                maxOjonList: maxOjonList,
-                minOjonList: minOjonList,
-                currentOjonList: currentOjonList,
-                isSetPrimaryWeight: isSetPrimaryWeight,
-                callback: (double w, double h) {
-                  mPrimaryScreenUpdate(w, h);
+                    //v: Graph List
+                    GraphWidget(
+                      primaryWeight: primaryWeight,
+                      maxOjonList: maxOjonList,
+                      minOjonList: minOjonList,
+                      currentOjonList: currentOjonList,
+                      isSetPrimaryWeight: isSetPrimaryWeight,
+                      callback: (double w, double h) {
+                        mPrimaryScreenUpdate(w, h);
 
-                  /* 
-                  setState(() {
-                    MyServices.mCalcAndSavePriBMI(
-                        sharedPreferences: sharedPreferences,
-                        weight: w,
-                        height: h);
-    
-                    primaryWeight = w;
-                    isSetPrimaryWeight = true;
-    
-                    //for existed weight
-                    MyServices.mSetLastUpdatedWeight(
-                        sharedPreferences: sharedPreferences, w: w);
-                    _lastUpdatedWeight = MyServices.mGetLastUpdatedWeight(
-                        sharedPreferences: sharedPreferences);
-                    _currentRoundValue = _lastUpdatedWeight.floor();
-                    MyServices.mSetFrucValueAsInt(
-                        priWeight: _lastUpdatedWeight,
-                        callback: (int value) {
-                          _currentFrucValueAsInt = value;
-                        });
-                  });
-                 */
-                },
+                        /* 
+                      setState(() {
+                        MyServices.mCalcAndSavePriBMI(
+                            sharedPreferences: sharedPreferences,
+                            weight: w,
+                            height: h);
+            
+                        primaryWeight = w;
+                        isSetPrimaryWeight = true;
+            
+                        //for existed weight
+                        MyServices.mSetLastUpdatedWeight(
+                            sharedPreferences: sharedPreferences, w: w);
+                        _lastUpdatedWeight = MyServices.mGetLastUpdatedWeight(
+                            sharedPreferences: sharedPreferences);
+                        _currentRoundValue = _lastUpdatedWeight.floor();
+                        MyServices.mSetFrucValueAsInt(
+                            priWeight: _lastUpdatedWeight,
+                            callback: (int value) {
+                              _currentFrucValueAsInt = value;
+                            });
+                      });
+                     */
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
-        ),
+          widget.momInfo.sessionEnd != null
+              ? InkWell(
+                  onTap: () {
+                    AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.warning,
+                            title: "Sorry! Initiate new pregnancy session.")
+                        .show();
+                  },
+                  child: Container(
+                    color: Colors.black38,
+                  ),
+                )
+              : const SizedBox(
+                  width: 0,
+                  height: 0,
+                ),
+        ],
       ),
     );
   }
@@ -340,8 +390,19 @@ class _OjonScreenState extends State<OjonScreen> {
     isSetPrimaryWeight = true;
     MyServices.mSetLastUpdatedWeight(
         sharedPreferences: sharedPreferences, w: w);
-    _lastUpdatedWeight =
-        MyServices.mGetLastUpdatedWeight(sharedPreferences: sharedPreferences);
+
+    //Update Primary Weight at 0th index in sqlite
+    await MySqfliteServices.mUpdateMomWeight(
+        momWeight: MomWeight.weight(
+            email: widget.email,
+            momId: widget.momId,
+            weekNo: 0,
+            weight: w,
+            timestamp: DateTime.now().millisecondsSinceEpoch));
+
+    /*  _lastUpdatedWeight =
+        MyServices.mGetLastUpdatedWeight(sharedPreferences: sharedPreferences); */
+    _lastUpdatedWeight = mGetLastUpdatedWeight();
     _currentRoundValue = _lastUpdatedWeight.floor();
     MyServices.mSetFrucValueAsInt(
         priWeight: _lastUpdatedWeight,
@@ -349,7 +410,8 @@ class _OjonScreenState extends State<OjonScreen> {
           _currentFrucValueAsInt = value;
         });
 
-    //get Graph data
+    //get Graph dataf
+
     final List<MaxMinWeightListModel> list =
         await MyServices.mGetMaxMinWeihtList(
             // oldWeightList: currentWeightsList,
@@ -366,5 +428,23 @@ class _OjonScreenState extends State<OjonScreen> {
     }
 
     setState(() {});
+  }
+
+  void mLoadWeights() async {
+    currentWeightsList =
+        await MySqfliteServices.mFetchMomWeights(momInfo: widget.momInfo);
+    setState(() {});
+  }
+
+  double mGetLastUpdatedWeight() {
+    double lastWeight = 0;
+    for (var element in currentWeightsList) {
+      if (element == '0') {
+        continue;
+      } else {
+        lastWeight = double.parse(element);
+      }
+    }
+    return lastWeight;
   }
 }

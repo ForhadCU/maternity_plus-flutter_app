@@ -17,8 +17,8 @@ class SlideTile1 extends StatefulWidget {
 }
 
 class _SlideTile1State extends State<SlideTile1> with TickerProviderStateMixin {
-  DateTime startDate = DateTime.now();
-  late String startDateStr;
+  DateTime sessionStart = DateTime.now();
+  late String sessionStartStr;
   late AnimationController _controller;
   late Animation<double> _animation;
   bool isTapped = false;
@@ -26,44 +26,26 @@ class _SlideTile1State extends State<SlideTile1> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-    _animation = Tween<double>(
-      begin: 60,
-      end: 100,
-    ).animate(_controller)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _controller.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          _controller.forward();
-        }
-        setState(() {});
-      });
-    _controller.forward();
-
-    startDateStr = '';
+    sessionStartStr = '';
+    mAnimation();
     loadDate();
   }
 
   _mSelectDate(BuildContext context) async {
-    DateTime? selected = startDate;
+    DateTime? selected = sessionStart;
     DateTime? _firstDate = DateTime.now().add(const Duration(days: -280));
     showDatePicker(
             context: context,
-            initialDate: startDate,
+            initialDate: sessionStart,
             firstDate: _firstDate,
             lastDate: DateTime.now())
         .then((value) {
       setState(() {
         selected = value;
-        if (selected != null && selected != startDate) {
-          startDate = selected!;
-          setUpdatedDate(startDate.toString());
-          startDateStr = CustomDateForamt.mFormateDate(startDate);
+        if (selected != null && selected != sessionStart) {
+          sessionStart = selected!;
+          setUpdatedDate(sessionStart.toString());
+          sessionStartStr = CustomDateForamt.mFormateDate(sessionStart);
         }
       });
     });
@@ -71,9 +53,8 @@ class _SlideTile1State extends State<SlideTile1> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -99,7 +80,6 @@ class _SlideTile1State extends State<SlideTile1> with TickerProviderStateMixin {
           InkWell(
             onTap: () {
               _mSelectDate(context);
-         
             },
             child: Container(
               height: 100,
@@ -160,7 +140,7 @@ class _SlideTile1State extends State<SlideTile1> with TickerProviderStateMixin {
             height: 18,
           ),
           CustomText(
-            text: startDateStr,
+            text: sessionStartStr,
             fontcolor: MyColors.textOnPrimary,
             fontWeight: FontWeight.w400,
             fontsize: 24,
@@ -175,27 +155,47 @@ class _SlideTile1State extends State<SlideTile1> with TickerProviderStateMixin {
     setState(() {
       //get stored value
       String d =
-          (_pref.getString(MyKeywords.startdate) ?? DateTime.now().toString());
-      startDate = DateTime.parse(d);
+          (_pref.getString(MyKeywords.sessionStart) ?? DateTime.now().toString());
+      sessionStart = DateTime.parse(d);
       //set value
       setDate(d);
-      startDateStr = CustomDateForamt.mFormateDate(DateTime.parse(d));
+      sessionStartStr = CustomDateForamt.mFormateDate(DateTime.parse(d));
     });
   }
 
   void setDate(String d) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setString(MyKeywords.startdate, d);
+      prefs.setString(MyKeywords.sessionStart, d);
     });
   }
 
   void setUpdatedDate(String d) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setString(MyKeywords.startdate, d);
-      prefs.setString(MyKeywords.enddate,
+      prefs.setString(MyKeywords.sessionStart, d);
+      prefs.setString(MyKeywords.expectedSessionEnd,
           DateTime.parse(d).add(const Duration(days: 280)).toString());
     });
+  }
+
+  void mAnimation() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _animation = Tween<double>(
+      begin: 60,
+      end: 110,
+    ).animate(_controller)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          _controller.forward();
+        }
+        setState(() {});
+      });
+    _controller.forward();
   }
 }

@@ -150,7 +150,7 @@ class _BabyOjonAndWeekListWidgetState extends State<BabyOjonAndWeekListWidget> {
                             return OjonDataListItem(
                                 week:
                                     "${widget.babyWeekMonthNoModelList[index].num} ${widget.babyWeekMonthNoModelList[index].text} ",
-                                ojon: widget.currentWeights[index] == "0.00"
+                                ojon: widget.currentWeights.isEmpty || widget.currentWeights[index] == "0.00" 
                                     ? "---"
                                     : widget.currentWeights[index]);
                             /* OjonDataListItem(

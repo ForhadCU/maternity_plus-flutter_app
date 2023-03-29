@@ -53,9 +53,13 @@ class _BabyGrowthItemViewState extends State<BabyGrowthItemView> {
                             groupValue: widget.babyGrowth.ans_status,
                             onChanged: (value) {
                               setState(() {
-                                widget.isAnsModifiable ? { widget.babyGrowth.ans_status =
-                                    int.parse(value.toString()) ,
-                                widget.callBack(value)} : null;
+                                widget.isAnsModifiable
+                                    ? {
+                                        widget.babyGrowth.ans_status =
+                                            int.parse(value.toString()),
+                                        widget.callBack(value)
+                                      }
+                                    : null;
                               });
                             }),
                         Text('হ্যা')
@@ -69,9 +73,13 @@ class _BabyGrowthItemViewState extends State<BabyGrowthItemView> {
                             groupValue: widget.babyGrowth.ans_status,
                             onChanged: (value) {
                               setState(() {
-                              widget.isAnsModifiable ? { widget.babyGrowth.ans_status =
-                                    int.parse(value.toString()),
-                                widget.callBack(value)} : null;
+                                widget.isAnsModifiable
+                                    ? {
+                                        widget.babyGrowth.ans_status =
+                                            int.parse(value.toString()),
+                                        widget.callBack(value)
+                                      }
+                                    : null;
                               });
                             }),
                         Text('না')

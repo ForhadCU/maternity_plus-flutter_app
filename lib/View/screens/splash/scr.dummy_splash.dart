@@ -1,20 +1,16 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
+import 'package:splash_screen/Model/model.mom_info.dart';
 import 'package:splash_screen/View/screens/splash/scr.dummy_splash2.dart';
-import 'package:splash_screen/View/widgets/dot_blink_loader.dart';
 import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
 import 'package:splash_screen/consts/const.keywords.dart';
 
-import '../../../Controller/services/authentication.dart';
 import '../launcherSlides/scr.launcher_slides.dart';
 import '../shagotom/scr.shagotom.dart';
 
@@ -29,6 +25,7 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
   late bool isLoading;
   late bool isSigningIn = false;
   late SharedPreferences _pref;
+   MomInfo? momInfo;
 
   @override
   void initState() {
@@ -41,7 +38,7 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
   @override
   void dispose() {
     super.dispose();
-    isLoading = false;
+    // isLoading = false;
   }
 
   @override
@@ -75,7 +72,7 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                  /*   Image.asset(
+                    /*   Image.asset(
                       "lib/assets/images/firstscreenlogo.png",
                       height: MyScreenSize.mGetHeight(context, 36),
                       fit: BoxFit.fill,
@@ -102,9 +99,9 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
     _pref = await SharedPreferences.getInstance();
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     String? status = _pref.getString(MyKeywords.loggedin);
-    late int _babyId;
+    int? _currentMomId = _pref.getInt(MyKeywords.momId);
 
-    await MySqfliteServices.mGetBabyId().then((value) => _babyId = value);
+    // await MySqfliteServices.mGetMomId().then((value) => _currentMomId = value);
 
     //Test
     /* Navigator.pushReplacement(
@@ -149,7 +146,7 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
         if (user != null) {
           print('User already signed in');
           //? check if the user start pregnancy previously
-          mFirstEntryCheck(status, _babyId);
+          mFirstEntryCheck(status, user.email, _currentMomId);
         } else {
           print("User not signed in yet");
           /* Navigator.pushReplacement(
@@ -203,18 +200,21 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
     });
   }
 
-  void mFirstEntryCheck(String? status, int _babyId) {
+  void mFirstEntryCheck(String? status, String? email, int? currentMomId) async {
     status == 'y'
         ? {
-            print('BabyId: $_babyId'),
-            Navigator.pushReplacement(
+            momInfo = await MySqfliteServices.mFetchMomInfo(email: email!, currentMomId: currentMomId!),
+            if(momInfo != null)
+            {
+              Navigator.pushReplacement(
                 context,
                 PageTransition(
                     child: ShagotomScreen(
-                      babyId: _babyId,
+                      momInfo:  momInfo!,
                     ),
                     type: PageTransitionType.rightToLeft,
                     duration: const Duration(milliseconds: 300)))
+            }
           }
         : Navigator.pushReplacement(
             context,

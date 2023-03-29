@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 class MyKeywords {
   static const String startdate = 'startdate';
   static const String enddate = 'enddate';
@@ -18,30 +16,40 @@ class MyKeywords {
   static const String runningMonths = 'runningMonths';
   static const String totalRemaingingDays = 'totalRemaingingDays';
   static const String weightList = 'weightList';
-  // static const String babyWeightList = 'babyWeightList';
-  static const String week_no = 'week_no';
+  static const String weekNo = 'weekNo';
   static const String title = 'title';
-  static const String changes_in_child = 'changes_in_child';
-  static const String changes_in_mom = 'changes_in_mom';
+  static const String changesInChild = 'changesInChild';
+  static const String changesInMom = 'changesInMom';
   static const String symptoms = 'symptoms';
   static const String instructions = 'instructions';
   static const String email = 'email';
+  static const String username = 'username';
   static const String uid = 'uid';
+  static const String sessionEnd = 'sessionEnd';
+  static const String expectedSessionEnd = 'expectedSessionEnd';
+  static const String sessionStart = 'sessionStart';
   static const String multiImgUrls = 'multiImgUrls';
   static const String singleImgUrls = 'singleImgUrls';
   static const String agreementStatus = 'agreementStatus';
+  static const String momId = 'momId';
   static const String encodedBabyCurrentWeightList =
       'encodedBabyCurrentWeightList';
-  static const String momnote = "momnote";
-  static const String momweight = "momweight";
-  static const String momsymptoms = "momsymptoms";
-  static const String weeklychanges = "weeklychanges";
-  static const String babydiary = "babydiary";
-  static const String babygrowth = "babygrowth";
-  static const String babyprimary = "babyprimary";
+  static const String phone = "phone";
+  static const String userImageUrl = "userImageUrl";
+
+  //c: Local Db Table
+  static const String momprimaryTable = "momprimary";
+  static const String momnoteTable = "momnote";
+  static const String momweightTable = "momweight";
+  static const String momsymptomsTable = "momsymptoms";
+  static const String weeklychangesTable = "weeklychanges";
+  static const String babydiaryTable = "babydiary";
+  static const String babygrowthQuesTable = "babygrowthQuestions";
+  static const String babygrowthResponseTable = "babygrowthResponses";
   static const String babyinfoTable = "babyinfo";
   static const String babyweightsAndHeightsTable = "babyweightsandheight";
-  //baby info
+
+  //c: baby info
   static const String babyName = "babyName";
   static const String dob = "dob";
   static const String weight = "weight";
@@ -58,8 +66,11 @@ class MyKeywords {
   static const String babyWeight = "babyWeight";
   static const String babyHeight = "babyHeight";
   static const String baby_id = "baby_id";
+  static const String activeStatus = "activeStatus";
+  static const String quesId = "ques_id";
+  static const String answerStatus = "answerStatus";
 
-  // value
+  //c: value
   static const String male = "male";
   static const String female = "female";
   static const String weekAsTag = "w";

@@ -12,13 +12,18 @@ import 'package:splash_screen/Controller/utils/util.date_format.dart';
 import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
 import 'package:splash_screen/Model/model.babygallery.dart';
 import 'package:splash_screen/Model/model.image_details.dart';
+import 'package:splash_screen/Model/model.mom_info.dart';
 import 'package:splash_screen/View/screens/baby%20gallery/widget/dlg_input.dart';
 import 'package:splash_screen/consts/const.colors.dart';
 import 'package:thumbnailer/thumbnailer.dart';
+import 'package:logger/logger.dart';
 
 class BabyGalleryScreen extends StatefulWidget {
-  final int babyid;
-  const BabyGalleryScreen({Key? key, required this.babyid}) : super(key: key);
+  final MomInfo momInfo;
+  final int? babyId;
+  const BabyGalleryScreen(
+      {Key? key, required this.momInfo, required this.babyId})
+      : super(key: key);
 
   @override
   State<BabyGalleryScreen> createState() => _BabyGalleryScreenState();
@@ -64,7 +69,7 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
 
       _mAuth.authStateChanges().listen((User? u) {
         if (u != null) {
-          print("User currently signed In");
+          Logger().d("User currently signed In");
           /*    //get user email from sharedPreferences and assign to variable */
           isSignedIn =
               true; // for giving a decision to the dialog if it make singin action or not
@@ -80,7 +85,7 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
             });
           });
         } else {
-          print("User is not signed in currently ");
+          Logger().d("User is not signed in currently ");
           setState(() {
             isSignedIn = false;
             _isLoading = false;
@@ -88,7 +93,7 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
         }
       });
     }).onError((error, stackTrace) {
-      print(
+      Logger().d(
           'Something went wrong during babyGallery Data retrieving from Sqflite, Error: $error');
     }); 
    }
@@ -112,14 +117,14 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
       resizeToAvoidBottomInset: true,
       floatingActionButton: FloatingActionButton(
         backgroundColor: MyColors.pink2,
-        onPressed: () =>
-            // v: input Dialog
-            _mShowDialog(context: context)
-        /* () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) {
-          return ThumnailTestScreen();
-        })) */
-        ,
+        onPressed: () => {
+          widget.babyId == null
+              ? vShowAlerDialog()
+              :
+
+              // v: input Dialog
+              _mShowDialog(context: context)
+        },
         child: Container(
           padding: const EdgeInsets.all(4),
           child: const Icon(
@@ -138,7 +143,12 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
             fontsize: 22,
             fontcolor: MyColors.textOnPrimary,
           )),
-      body: Column(
+      body: /* widget.babyId == null
+          ? Stack(
+              children: [Expanded(child: Container())],
+            )
+          :  */
+          Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
@@ -231,7 +241,7 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
                                                   padding: const EdgeInsets
                                                       .symmetric(horizontal: 2),
                                                   child: Text(
-                                                    "${DateTime.parse(imgDetailsModelList.date).year}Y ${DateTime.parse(imgDetailsModelList.date).month}M ${DateTime.parse(imgDetailsModelList.date).day}D",
+                                                    "${DateTime.parse(imgDetailsModelList.date).day}D ${DateTime.parse(imgDetailsModelList.date).month}M  ${DateTime.parse(imgDetailsModelList.date).year}Y",
                                                     // overflow: TextOverflow.clip,
                                                     textAlign: TextAlign.center,
                                                   ),
@@ -269,9 +279,14 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
                                 fontcolor: Colors.black45,
                               ),
                               InkWell(
-                                onTap: () =>
-                                    // v: input Dialog
-                                    _mShowDialog(context: context),
+                                onTap: () => {
+                                  widget.babyId == null
+                                      ? vShowAlerDialog()
+                                      :
+
+                                      // v: input Dialog
+                                      _mShowDialog(context: context)
+                                },
                                 child: const CustomText(
                                   text: 'এখানে ক্লিক',
                                   fontcolor: MyColors.pink2,
@@ -302,7 +317,7 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
         await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark place = placeMark[0];
     addr = "${place.subAdministrativeArea}";
-    print('Address: $addr');
+    Logger().d('Address: $addr');
   } */
 
   void _mShowDialog({required BuildContext context}) {
@@ -313,8 +328,8 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
           // MyServices.determinePosition();
 
           return InputDialog(
-              babyid: widget.babyid,
-              userEmail: email,
+              babyid: widget.babyId,
+              momInfo: widget.momInfo,
               isSignedIn: isSignedIn,
               callback: /* (String userEmail) {
               setState(() {
@@ -341,9 +356,9 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
                   _isLoading = false;
                   _listBabyGalleryModelList.add(babyGalleryModel);
                 });
-                // print(babyGalleryModel.imgDetailsModelList.length);
+                // Logger().d(babyGalleryModel.imgDetailsModelList.length);
                 /*  _listBabyGalleryModelList.add(babyGalleryModel);
-                  print(
+                  Logger().d(
                       'size: ${_listBabyGalleryModelList[1].imgDetailsModelList.length}'); */
 
                 /*  setState(() {
@@ -360,62 +375,70 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
   }
 
   void mLoadDatafromLocal() {
-    //m: send babyid as parm and get all gallery data
-    MySqfliteServices.mFetchBabyDiaryDataFromSqflite(
-            babyId: widget.babyid, email: email)
-        .then((value) {
-      // String previousDate = CustomDateForamt.mFormateDateDB(DateTime.now());
+    if (widget.babyId != null) {
+      //m: send babyid as parm and get all gallery data
+      MySqfliteServices.mFetchBabyDiaryDataFromSqflite(
+              babyId: widget.babyId!,
+              email: widget.momInfo.email,
+              momId: widget.momInfo.momId)
+          .then((value) {
+        // String previousDate = CustomDateForamt.mFormateDateDB(DateTime.now());
 
-      String previousDate = '';
-      List<ImageDetailsModel> _listImageDetailsModel = [];
-      _listBabyGalleryModelList.clear();
-      for (int i = 0; i < value.length; i++) {
-        print("date: ${value[i].date} image: ${value[i].imgUrl}");
-        if (value[i].date == previousDate) {
-          _listImageDetailsModel.add(ImageDetailsModel.imageFromCamera(
-              imgUrl: value[i].imgUrl,
-              date: value[i].date,
-              latitude: value[i].latitude,
-              longitude: value[i].longitude,
-              caption: value[i].caption,
-              timestamp: value[i].timestamp));
-          if (i == value.length - 1) {
-            //e: cleared previous _listImageDetailsModel
-            /*  _listBabyGalleryModelList.add(BabyGalleryModel.nConstructor2(
+        String previousDate = '';
+        List<ImageDetailsModel> _listImageDetailsModel = [];
+        _listBabyGalleryModelList.clear();
+        for (int i = 0; i < value.length; i++) {
+          Logger().d("date: ${value[i].date} image: ${value[i].imgUrl}");
+          if (value[i].date == previousDate) {
+            _listImageDetailsModel.add(ImageDetailsModel.imageFromCamera(
+                imgUrl: value[i].imgUrl,
+                date: value[i].date,
+                latitude: value[i].latitude,
+                longitude: value[i].longitude,
+                caption: value[i].caption,
+                timestamp: value[i].timestamp));
+            if (i == value.length - 1) {
+              //e: cleared previous _listImageDetailsModel
+              /*  _listBabyGalleryModelList.add(BabyGalleryModel.nConstructor2(
               imgDetailsModelList: _listImageDetailsModel,
               dateTime: previousDate,
             )); 
             _listImageDetailsModel.clear();
             */
-            //c: copy the previous _listImageDetailsModel into new list
-            //c: then put it to the _listBabyGalleryModelList
-            List<ImageDetailsModel> temp = List.from(_listImageDetailsModel);
-            _listBabyGalleryModelList.add(BabyGalleryModel.nConstructor2(
-              imgDetailsModelList: temp,
-              dateTime: previousDate,
-            ));
-            //c: now we can clear the previous list
-            _listImageDetailsModel.clear();
+              //c: copy the previous _listImageDetailsModel into new list
+              //c: then put it to the _listBabyGalleryModelList
+              List<ImageDetailsModel> temp = List.from(_listImageDetailsModel);
+              _listBabyGalleryModelList.add(BabyGalleryModel.nConstructor2(
+                imgDetailsModelList: temp,
+                dateTime: previousDate,
+              ));
+              //c: now we can clear the previous list
+              _listImageDetailsModel.clear();
+            }
+          } else {
+            if (_listImageDetailsModel.isNotEmpty) {
+              //c: [same] as abovementioned process
+              List<ImageDetailsModel> temp = List.from(_listImageDetailsModel);
+              _listBabyGalleryModelList.add(BabyGalleryModel.nConstructor2(
+                imgDetailsModelList: temp,
+                dateTime: previousDate,
+              ));
+              _listImageDetailsModel.clear();
+            }
+            previousDate = value[i].date;
+            i--;
           }
-        } else {
-          if (_listImageDetailsModel.isNotEmpty) {
-            //c: [same] as abovementioned process
-            List<ImageDetailsModel> temp = List.from(_listImageDetailsModel);
-            _listBabyGalleryModelList.add(BabyGalleryModel.nConstructor2(
-              imgDetailsModelList: temp,
-              dateTime: previousDate,
-            ));
-            _listImageDetailsModel.clear();
-          }
-          previousDate = value[i].date;
-          i--;
         }
-      }
+        setState(() {
+          _isLoading = false;
+        });
+        // Logger().d("babyGDataList : ${_listBabyGalleryModelList.length}");
+      }); /* .onError((error, stackTrace) => throw Exception(error)); */
+    } else {
       setState(() {
         _isLoading = false;
       });
-      // print("babyGDataList : ${_listBabyGalleryModelList.length}");
-    }).onError((error, stackTrace) => throw Exception(error));
+    }
   }
 
   Future<void> mLoad() async {
@@ -430,9 +453,9 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
       //call fetchDiaryData();
       FirestoreProvider.mFetchAllDiaryDatafromFirestore(email: _userEmail!)
           .then((value) {
-        // print('Model Size: ${value.length}');
+        // Logger().d('Model Size: ${value.length}');
         /* for (var item in value) {
-              print('ImgUrl: ${item.strgImgUri}');
+              Logger().d('ImgUrl: ${item.strgImgUri}');
             } */
         setState(() {
           _isLoading = !_isLoading;
@@ -441,7 +464,7 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
         });
       });
     } else {
-      print("User is not signed in currently ");
+      Logger().d("User is not signed in currently ");
       setState(() {
         isSignedIn = false;
         _isLoading = !_isLoading;
@@ -469,5 +492,13 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
   void mLoadAll() async {
     await mLoad();
     mLoadDatafromLocal();
+  }
+
+  vShowAlerDialog() {
+    return AwesomeDialog(
+            context: context,
+            dialogType: DialogType.warning,
+            title: "Sorry! You didn't add any baby yet.")
+        .show();
   }
 }

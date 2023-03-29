@@ -1,3 +1,5 @@
+import 'package:splash_screen/consts/const.keywords.dart';
+
 class ImageDetailsModel {
   // String? imgUri;
   // late List<String> imgUrlList;
@@ -7,6 +9,7 @@ class ImageDetailsModel {
   String? timestamp;
   String? caption;
   String? email;
+  int? momId;
   // File? imgFile;
   // Uint8List? strgImgUri;
   bool? imgFromCamera;
@@ -67,6 +70,7 @@ class ImageDetailsModel {
     caption = json['caption'];
     babyId = json['baby_id'];
     email = json['email'];
+    momId = json[MyKeywords.momId];
   }
 
   Map<String, dynamic> toJson() {
@@ -95,6 +99,7 @@ class ImageDetailsModel {
     map['caption'] = caption;
     map['baby_id'] = babyId;
     map['email'] = email;
+    map[MyKeywords.momId] = momId;
 
     return map;
   }

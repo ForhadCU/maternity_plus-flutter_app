@@ -12,20 +12,21 @@ import 'package:splash_screen/Controller/utils/util.date_format.dart';
 import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
 import 'package:splash_screen/Model/model.babygallery.dart';
 import 'package:splash_screen/Model/model.image_details.dart';
+import 'package:splash_screen/Model/model.mom_info.dart';
 import 'package:splash_screen/consts/const.colors.dart';
 import 'package:splash_screen/consts/const.keywords.dart';
 
 class InputDialog extends StatefulWidget {
   final Function callback;
   final bool isSignedIn;
-  final String? userEmail;
+  final MomInfo momInfo;
   final int? babyid;
 
   const InputDialog(
       {Key? key,
       required this.callback,
       required this.isSignedIn,
-      required this.userEmail,
+      required this.momInfo,
       required this.babyid})
       : super(key: key);
 
@@ -55,7 +56,7 @@ class _InputDialogState extends State<InputDialog> {
       map = value;
     });
     _isSignedIn = widget.isSignedIn;
-    _userEmail = widget.userEmail;
+    _userEmail = widget.momInfo.email;
     // print('IsSignedIn: ${widget.isSignedIn}');
   }
 
@@ -371,6 +372,7 @@ class _InputDialogState extends State<InputDialog> {
                       ),
                     ),
 
+                    // e: for later
                     //Sign in with google
                     Visibility(
                         visible: _isVisible,
@@ -784,7 +786,8 @@ _isVisible =
     });
     for (var element in _imgDetailModelList) {
       element.babyId = widget.babyid;
-      element.email = widget.userEmail;
+      element.email = widget.momInfo.email;
+      element.momId = widget.momInfo.momId;
       element.caption = _textEditingControllerCaption.value.text;
     }
     /* for (var i = 0; i < _imgDetailModelList.length; i++) {

@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:splash_screen/Controller/utils/util.custom_text.dart';
 import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
 import 'package:splash_screen/Model/model.ojon.dart';
@@ -36,6 +37,8 @@ class GraphWidget extends StatefulWidget {
 class _GraphWidgetState extends State<GraphWidget> {
   double titleTextSize = 18;
   bool isShowGraph = false;
+  var logger = Logger();
+
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +114,7 @@ class _GraphWidgetState extends State<GraphWidget> {
           //button for Extended view of Graph
           InkWell(
             onTap: () {
-              print('Clicked Graph View Button');
+              logger.d('Clicked Graph View Button');
               Navigator.push(
                   context,
                   MaterialPageRoute(

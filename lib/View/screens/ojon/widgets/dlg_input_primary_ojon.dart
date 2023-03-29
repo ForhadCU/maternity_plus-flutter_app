@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:splash_screen/Controller/services/service.my_service.dart';
 import 'package:splash_screen/Controller/utils/util.custom_text.dart';
 import 'package:splash_screen/consts/const.colors.dart';
@@ -19,6 +20,8 @@ class _InputPrimaryOjonDialogState extends State<InputPrimaryOjonDialog> {
   final TextEditingController cmCtrller = TextEditingController();
   final TextEditingController feetCtrller = TextEditingController();
   final TextEditingController inchCtrller = TextEditingController();
+  var logger = Logger();
+
 
   @override
   Widget build(BuildContext context) {
@@ -374,7 +377,7 @@ class _InputPrimaryOjonDialogState extends State<InputPrimaryOjonDialog> {
                           content: Text('Primary data has been saved')));
                       Navigator.pop(context);
                     } else {
-                      print("No data entry");
+                      logger.d("No data entry");
                     }
                   },
                   child: const Padding(

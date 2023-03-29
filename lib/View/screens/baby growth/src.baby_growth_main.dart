@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:splash_screen/Controller/services/service.my_service.dart';
+import 'package:splash_screen/Controller/services/sqflite_services.dart';
+import 'package:splash_screen/Model/model.baby_weights_heights_for_age.dart';
 import 'package:splash_screen/View/screens/baby%20growth/widgets/scr.baby_growth_tab_1.dart';
 import 'package:splash_screen/View/screens/baby%20weight%20height%20gain/scr.baby_ojon_height.dart';
+import 'package:splash_screen/View/widgets/dot_blink_loader.dart';
+import 'package:splash_screen/consts/const.keywords.dart';
 
 import '../../../Controller/utils/util.custom_text.dart';
 import '../../../consts/const.colors.dart';
 
 class BabyGrowthScreenMain extends StatefulWidget {
-  final babyId;
-  final runningMonths;
+  final int? babyId;
+  final int momId;
+  final String email;
   const BabyGrowthScreenMain(
-      {Key? key, required this.babyId, required this.runningMonths})
+      {Key? key,
+      required this.babyId,
+      required this.momId,
+      required this.email})
       : super(key: key);
 
   @override
@@ -22,13 +31,36 @@ class _BabyGrowthScreenMainState extends State<BabyGrowthScreenMain>
   late TabController _tabController;
   late SharedPreferences sharedPreferences;
   List<String> currentWeightsList = [];
+  int? babyRunningMonths;
+
+  int? babyRunningdays;
+
+  int? _currentWeightRoundValue;
+
+  int? _currentHeightRoundValue;
+
+  int? _currentWeightFrucValueAsInt;
+
+  int? _currentHeightFrucValueAsInt;
+
+  Map<String, dynamic>? weightListMap;
+
+  List<String>? heightList;
+
+  Map<String, dynamic>? babyAgeMap;
+
+  late BabyWeightsHeightsForAge modelForWeights;
+
+  late BabyWeightsHeightsForAge modelForHeights;
+
+  bool isLoading = true;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    print("Baby running month: ${widget.runningMonths}");
+    // print("Baby running month: ${widget.runningMonths}");
 
     // m: get user current data
 /*     MyServices.mGetSharedPrefIns().then((value) {
@@ -38,6 +70,8 @@ class _BabyGrowthScreenMainState extends State<BabyGrowthScreenMain>
             MyServices.mGetBabyWeightList(sharedPreferences: sharedPreferences);
       });
     }); */
+
+    mLoadData();
 
     _tabController = TabController(length: 2, vsync: this, initialIndex: 0)
       ..addListener(() {
@@ -73,49 +107,66 @@ class _BabyGrowthScreenMainState extends State<BabyGrowthScreenMain>
           )
         ],
       ),
-      body: Column(
-        
-        children: [
-          // v: Tab bar
-          Container(
-              decoration: const BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  offset: Offset(0, 2),
-                  blurRadius: 1,
-                ),
-              ], color: MyColors.pink2),
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: TabBar(
-                  controller: _tabController,
-                  indicatorColor: Colors.white,
-                  onTap: (index) {},
-                  tabs: const [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Tab(
-                        text: "শিশুর স্বাভাবিক বৃদ্ধি নিশ্চিতকরণ",
-                        height: 30,
+      body: isLoading
+          ? const Center(child: DotBlickLoader())
+          : Column(
+              children: [
+                // v: Tab bar
+                Container(
+                    decoration: const BoxDecoration(boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        offset: Offset(0, 2),
+                        blurRadius: 1,
                       ),
-                    ),
-                    Tab(
-                      text: "ওজন-উচ্চতা চার্ট",
-                      height: 30,
+                    ], color: MyColors.pink2),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: TabBar(
+                        controller: _tabController,
+                        indicatorColor: Colors.white,
+                        onTap: (index) {},
+                        tabs: const [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Tab(
+                              text: "শিশুর স্বাভাবিক বৃদ্ধি নিশ্চিতকরণ",
+                              height: 30,
+                            ),
+                          ),
+                          Tab(
+                            text: "ওজন-উচ্চতা চার্ট",
+                            height: 30,
+                          )
+                        ])),
+                // v: TabBarView
+                Expanded(
+                    child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    BabyGrowthQuestionScreen(
+                        runningMonths: babyRunningMonths,
+                        momId: widget.momId,
+                        email: widget.email,
+                        babyId: widget.babyId),
+                    BabyWeightHeightScreen(
+                      momId: widget.momId,
+                      babyId: widget.babyId,
+                      email: widget.email,
+                      currentHeightRoundValue: _currentHeightRoundValue,
+                      currentWeightRoundValue: _currentWeightRoundValue,
+                      currentWeightFrucValueAsInt: _currentWeightFrucValueAsInt,
+                      currentHeightFrucValueAsInt: _currentHeightFrucValueAsInt,
+                      weightListMap: weightListMap,
+                      babyAgeMap: babyAgeMap,
+                      heightList: heightList,
+                      modelForHeights: modelForHeights,
+                      modelForWeights: modelForWeights,
                     )
-                  ])),
-          // v: TabBarView
-          Expanded(
-              child: TabBarView(
-            controller: _tabController,
-            children: [
-              BabyGrowthTab1Screen(
-                  runningMonths: widget.runningMonths, babyId: widget.babyId),
-              const BabyWeightHeightScreen()
-              // Container()
-            ],
-          ))
-        ],
-      ),
+                    // Container()
+                  ],
+                ))
+              ],
+            ),
     );
   }
 
@@ -140,5 +191,66 @@ class _BabyGrowthScreenMainState extends State<BabyGrowthScreenMain>
         )
       ],
     );
+  }
+
+  void mLoadData() async {
+    if (widget.babyId != null) {
+      DateTime dob = await MySqfliteServices.mGetCurrentBabyDob(
+          momId: widget.momId, babyId: widget.babyId!, email: widget.email);
+      String gender = await MySqfliteServices.mGetCurrentBabyGender();
+
+      // baby_runningdays = 180;
+      babyRunningdays = MyServices.mGetRunningDays(dob: dob);
+      babyRunningMonths = (babyRunningdays! / 30).floor();
+
+      mGetGraphData(gender: gender);
+
+      babyAgeMap = MyServices.mGetBabyAge(runningday: babyRunningdays!);
+      Map<String, dynamic> map = await MyServices.mGetLastGivenWeight(
+          email: widget.email, momId: widget.momId, babyId: widget.babyId!);
+      var lastGivenWeight = map[MyKeywords.lastGivenWeight];
+      var lastGivenHeight = map[MyKeywords.lastGivenHeight];
+      // positionOfCurrentEntry = map[MyKeywords.indexOfLastGivenWeight] + 1;
+      _currentWeightRoundValue = lastGivenWeight.floor();
+      _currentHeightRoundValue = lastGivenHeight.floor();
+      MyServices.mSetFrucValueAsInt(
+          priWeight: lastGivenWeight,
+          callback: (int value) {
+            _currentWeightFrucValueAsInt = value;
+          });
+      MyServices.mSetFrucValueAsInt(
+          priWeight: lastGivenHeight,
+          callback: (int value) {
+            _currentHeightFrucValueAsInt = value;
+          });
+
+      // m: get weightlist
+      weightListMap = await MySqfliteServices.mGetBabyCurrentWeightHeightList(
+        babyId: widget.babyId,
+        email: widget.email,
+        momId: widget.momId,
+      );
+
+      // m: get heightList
+      heightList = await MySqfliteServices.mGetBabyCurrentHeightList();
+
+      // print(currentWeightsList);
+      isLoading = false;
+      setState(() {});
+    } else {
+      // c: If no baby existed, get default Graphdata for "male"
+      mGetGraphData(gender: MyKeywords.male);
+      isLoading = false;
+
+      setState(() {});
+    }
+  }
+
+  void mGetGraphData({required String gender}) {
+    final List<BabyWeightsHeightsForAge> list =
+        MyServices.mGetBabyWeightHeightForAgeLists(gender: gender);
+    modelForWeights = list[0];
+
+    modelForHeights = list[1];
   }
 }

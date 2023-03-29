@@ -1,3 +1,5 @@
+// ignore_for_file: sized_box_for_whitespace
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen/Controller/utils/util.custom_text.dart';
@@ -15,17 +17,27 @@ class SlideTile2 extends StatefulWidget {
   State<SlideTile2> createState() => _SlideTile2State();
 }
 
-class _SlideTile2State extends State<SlideTile2> {
-  late DateTime endDate;
-  late String endDateStr;
+class _SlideTile2State extends State<SlideTile2>
+    with SingleTickerProviderStateMixin {
+  late DateTime expectedSessionEnd;
+  late String expectedSessionEndStr;
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
+    mAnimation();
 
-    endDateStr = "";
-    loadEndDate();
-    // calculateEndDate();
+    expectedSessionEndStr = "";
+    loadexpectedSessionEnd();
+    // calculateexpectedSessionEnd();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -50,10 +62,21 @@ class _SlideTile2State extends State<SlideTile2> {
             onTap: () {
               _mSelectDate(context);
             },
-            child: Image.asset(
-              "lib/assets/images/ic_action_calendar_month_intro.png",
-              fit: BoxFit.fill,
-              height: MyScreenSize.mGetHeight(context, 14),
+            child: Container(
+              width: 100,
+              height: 100,
+              child: Center(
+                child: AnimatedContainer(
+                  height: _animation.value,
+                  width: _animation.value,
+                  duration: const Duration(milliseconds: 1000),
+                  child: Image.asset(
+                    "lib/assets/images/ic_action_calendar_month_intro.png",
+                    /* fit: BoxFit.fill,
+                    height: MyScreenSize.mGetHeight(context, 14), */
+                  ),
+                ),
+              ),
             ),
           ),
           const SizedBox(
@@ -77,7 +100,7 @@ class _SlideTile2State extends State<SlideTile2> {
             height: 18,
           ),
           CustomText(
-            text: endDateStr,
+            text: expectedSessionEndStr,
             fontcolor: MyColors.textOnPrimary,
             fontWeight: FontWeight.w400,
             fontsize: 24,
@@ -88,7 +111,7 @@ class _SlideTile2State extends State<SlideTile2> {
   }
 
   _mSelectDate(BuildContext context) {
-    DateTime? selectDate = endDate;
+    DateTime? selectDate = expectedSessionEnd;
     showDatePicker(
             context: context,
             initialDate: selectDate,
@@ -98,10 +121,10 @@ class _SlideTile2State extends State<SlideTile2> {
         .then((value) {
       setState(() {
         selectDate = value;
-        if (selectDate != null && selectDate != endDate) {
-          endDate = selectDate!;
-          setDate(endDate.toString());
-          endDateStr = CustomDateForamt.mFormateDate(endDate);
+        if (selectDate != null && selectDate != expectedSessionEnd) {
+          expectedSessionEnd = selectDate!;
+          setDate(expectedSessionEnd.toString());
+          expectedSessionEndStr = CustomDateForamt.mFormateDate(expectedSessionEnd);
         }
       });
     });
@@ -111,34 +134,49 @@ class _SlideTile2State extends State<SlideTile2> {
     SharedPreferences _pref = await SharedPreferences.getInstance();
 
     setState(() {
-      _pref.setString(MyKeywords.enddate, d);
+      _pref.setString(MyKeywords.expectedSessionEnd, d);
     });
   }
 
-  Future<DateTime> calculateEndDate() async {
+  Future<DateTime> calculateexpectedSessionEnd() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
     setState(() {
       String sDate =
-          _pref.getString(MyKeywords.startdate) ?? DateTime.now().toString();
-      endDate = DateTime.parse(sDate).add(const Duration(days: 280));
-      setDate(endDate.toString());
-      endDateStr = CustomDateForamt.mFormateDate(endDate);
+          _pref.getString(MyKeywords.sessionStart) ?? DateTime.now().toString();
+      expectedSessionEnd = DateTime.parse(sDate).add(const Duration(days: 280));
+      setDate(expectedSessionEnd.toString());
+      expectedSessionEndStr = CustomDateForamt.mFormateDate(expectedSessionEnd);
     });
-    return endDate;
+    return expectedSessionEnd;
   }
 
-  void loadEndDate() async {
+  void loadexpectedSessionEnd() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
-    calculateEndDate().then(
+    calculateexpectedSessionEnd().then(
       (value) {
         setState(() {
-          String d = _pref.getString(MyKeywords.enddate) ?? value.toString();
-          // calculateEndDate().toString();
-          endDate = DateTime.parse(d);
-          setDate(endDate.toString());
-          endDateStr = CustomDateForamt.mFormateDate(endDate);
+          String d = _pref.getString(MyKeywords.expectedSessionEnd) ?? value.toString();
+          // calculateexpectedSessionEnd().toString();
+          expectedSessionEnd = DateTime.parse(d);
+          setDate(expectedSessionEnd.toString());
+          expectedSessionEndStr = CustomDateForamt.mFormateDate(expectedSessionEnd);
         });
       },
     );
+  }
+
+  void mAnimation() {
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 800));
+    _animation = Tween<double>(begin: 60, end: 100).animate(_controller);
+    _animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _controller.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+      setState(() {});
+    });
+    _controller.forward();
   }
 }

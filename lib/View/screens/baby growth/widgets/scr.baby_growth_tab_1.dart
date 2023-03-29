@@ -1,24 +1,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
 import 'package:splash_screen/Model/model.baby_growth.dart';
 import 'package:splash_screen/View/screens/baby%20growth/widgets/dlg_google_signin.dart';
 import 'package:splash_screen/View/screens/baby%20growth/widgets/tabview.dart';
 import 'package:splash_screen/consts/const.colors.dart';
 
-class BabyGrowthTab1Screen extends StatefulWidget {
-  final runningMonths;
-  final babyId;
-  const BabyGrowthTab1Screen(
-      {Key? key, required this.runningMonths, required this.babyId})
+class BabyGrowthQuestionScreen extends StatefulWidget {
+  final int? runningMonths;
+  final int? babyId;
+  final int momId;
+  final String email;
+  const BabyGrowthQuestionScreen(
+      {Key? key,
+      required this.runningMonths,
+      required this.babyId,
+      required this.momId,
+      required this.email})
       : super(key: key);
 
   @override
-  State<BabyGrowthTab1Screen> createState() => _BabyGrowthTab1ScreenState();
+  State<BabyGrowthQuestionScreen> createState() =>
+      _BabyGrowthQuestionScreenState();
 }
 
-class _BabyGrowthTab1ScreenState extends State<BabyGrowthTab1Screen>
+class _BabyGrowthQuestionScreenState extends State<BabyGrowthQuestionScreen>
     with TickerProviderStateMixin {
   late List<BabyGrowthModel> _listBabyGrowthData;
   late TabController _tabController;
@@ -33,13 +38,13 @@ class _BabyGrowthTab1ScreenState extends State<BabyGrowthTab1Screen>
     //it will call when user want to take Cloud service
     // _mCheckUser();
 
-    _listBabyGrowthData = MyServices.mGetBabyGrowthDummyDataList();
+    // _listBabyGrowthData = MyServices.mGetBabyGrowthDummyDataList();
     /*  SqfliteServices.mIsDbTableEmpty(tableName: MaaData.TABLE_NAMES[5])
         .then((value) {}); */
-    // print('Running month: ${widget.runningMonths}');
+    // print('Running month: ${widget.runningMonths!}');
 
     _tabController =
-        TabController(length: 11, vsync: this, initialIndex: mGetInitialIndex())
+        TabController(length: 11, vsync: this, initialIndex: widget.babyId != null ? mGetInitialIndex() : 0)
           ..addListener(() {
             if (!_tabController.indexIsChanging) {
               // print('index is changing..');
@@ -59,51 +64,7 @@ class _BabyGrowthTab1ScreenState extends State<BabyGrowthTab1Screen>
 
   @override
   Widget build(BuildContext context) {
-    return /* Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: const CustomText(
-            text: 'Baby Growth',
-            fontcolor: MyColors.textOnPrimary,
-            fontsize: 22,
-          ),
-          backgroundColor: MyColors.pink2,
-          actions: [
-            InkWell(
-              onTap: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CustomText(
-                    text: 'Backup',
-                    fontcolor: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Icon(
-                    Icons.backup,
-                    color: Color.fromARGB(255, 216, 216, 216),
-                    size: 18,
-                  ),
-                  SizedBox(
-                    width: 16,
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-        body:  */ /* _isSignedInChecking
-            ? Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Color.fromARGB(255, 221, 213, 213)),
-                ),
-              )
-            : */
-        Column(
+    return Column(
       children: [
         Container(
           decoration: const BoxDecoration(
@@ -113,186 +74,22 @@ class _BabyGrowthTab1ScreenState extends State<BabyGrowthTab1Screen>
             ],
             color: MyColors.pink3,
           ),
-          child: TabBar(
-            isScrollable: true,
-            controller: _tabController,
-            indicatorColor: Colors.white,
-            onTap: (index) {
-              _activeTabIndex = index;
-            },
-            tabs: const [
-            Tab(
-                // text: MyServices.getBangNumFormat(1),
-                text: "১ মাস",
-                height: 24,
-              ),
-              Tab(
-                // text: MyServices.getBangNumFormat(3),
-                text: "৩ মাস",
-                height: 24,
-              ),
-              Tab(
-                // text: MyServices.getBangNumFormat(6),
-                text: "৬ মাস",
-                height: 24,
-              ),
-              Tab(
-                // text: MyServices.getBangNumFormat(9),
-                text: "৯ মাস",
-                height: 24,
-              ),
-              Tab(
-                // text: MyServices.getBangNumFormat(12),
-                text: "১ বছর",
-                height: 24,
-              ),
-              Tab(
-                // text: MyServices.getBangNumFormat(12),
-                text: "১.৫ বছর",
-                height: 24,
-              ),
-              Tab(
-                // text: MyServices.getBangNumFormat(12),
-                text: "২ বছর",
-                height: 24,
-              ),
-              Tab(
-                // text: MyServices.getBangNumFormat(12),
-                text: "৩ বছর",
-                height: 24,
-              ),
-              Tab(
-                // text: MyServices.getBangNumFormat(12),
-                text: "৪ বছর",
-                height: 24,
-              ),
-              Tab(
-                // text: MyServices.getBangNumFormat(12),
-                text: "৫ বছর",
-                height: 24,
-              ), Tab(
-                // text: MyServices.getBangNumFormat(12),
-                text: "৬ বছর",
-                height: 24,
-              ),
-            ],
-          ),
+          child: vTabBar(),
         ),
         Expanded(
-            child: TabBarView(
-          controller: _tabController,
-          children: [
-            BabyGrowthTabView(
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: true,
-              timestar: 1,
-              babyId: widget.babyId,
-              isAnsModifiable: widget.runningMonths < 3 ? true : false,
-            ),
-            BabyGrowthTabView(
-              babyId: widget.babyId,
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: widget.runningMonths >= 3 ? true : false,
-              isAnsModifiable:
-                  widget.runningMonths >= 3 && widget.runningMonths < 6
-                      ? true
-                      : false,
-              timestar: 2,
-            ),
-            BabyGrowthTabView(
-              babyId: widget.babyId,
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: widget.runningMonths >= 6 ? true : false,
-              isAnsModifiable:
-                  widget.runningMonths >= 6 && widget.runningMonths < 9
-                      ? true
-                      : false,
-
-              timestar: 3,
-            ),
-            BabyGrowthTabView(
-              babyId: widget.babyId,
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: widget.runningMonths >= 9 ? true : false,
-              isAnsModifiable:
-                  widget.runningMonths >= 9 && widget.runningMonths < 12
-                      ? true
-                      : false,
-              timestar: 4,
-            ),
-            BabyGrowthTabView(
-              babyId: widget.babyId,
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: widget.runningMonths >= 12 ? true : false,
-              isAnsModifiable: widget.runningMonths >= 12 ? true : false,
-
-              timestar: 5,
-            ),
-            BabyGrowthTabView(
-              babyId: widget.babyId,
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: widget.runningMonths >= 18 ? true : false,
-              isAnsModifiable: widget.runningMonths >= 18 ? true : false,
-
-              timestar: 6,
-            ),
-            BabyGrowthTabView(
-              babyId: widget.babyId,
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: widget.runningMonths >= 24 ? true : false,
-              isAnsModifiable: widget.runningMonths >= 24 ? true : false,
-
-              timestar: 7,
-            ),
-            BabyGrowthTabView(
-              babyId: widget.babyId,
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: widget.runningMonths >= 36 ? true : false,
-              isAnsModifiable: widget.runningMonths >= 36 ? true : false,
-
-              timestar: 8,
-            ),
-            BabyGrowthTabView(
-              babyId: widget.babyId,
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: widget.runningMonths >= 48 ? true : false,
-              isAnsModifiable: widget.runningMonths >= 48 ? true : false,
-
-              timestar: 9,
-            ),
-            BabyGrowthTabView(
-              babyId: widget.babyId,
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: widget.runningMonths >= 60 ? true : false,
-              isAnsModifiable: widget.runningMonths >= 60 ? true : false,
-
-              timestar: 10,
-            ),BabyGrowthTabView(
-              babyId: widget.babyId,
-              // listBabyGrowthData: _listBabyGrowthData,
-              isShown: widget.runningMonths >= 72 ? true : false,
-              isAnsModifiable: widget.runningMonths >= 72 ? true : false,
-
-              timestar: 11,
-            ),
-          ],
-        ))
+            child: widget.babyId != null ? vTabBarView1() : vTabBarView2()),
       ],
     );
-
-    //  BabyGrowthTabView(listBabyGrowthData: listBabyGrowthData),
-
-    // );
   }
 
   int mGetInitialIndex() {
-    if (widget.runningMonths >= 0 && widget.runningMonths < 3) {
+    if (widget.runningMonths! >= 0 && widget.runningMonths! < 3) {
       return 0;
-    } else if (widget.runningMonths >= 3 && widget.runningMonths < 6) {
+    } else if (widget.runningMonths! >= 3 && widget.runningMonths! < 6) {
       return 1;
-    } else if (widget.runningMonths >= 6 && widget.runningMonths < 9) {
+    } else if (widget.runningMonths! >= 6 && widget.runningMonths! < 9) {
       return 2;
-    } else if (widget.runningMonths >= 9 && widget.runningMonths < 12) {
+    } else if (widget.runningMonths! >= 9 && widget.runningMonths! < 12) {
       return 3;
     } else {
       return 4;
@@ -331,5 +128,312 @@ class _BabyGrowthTab1ScreenState extends State<BabyGrowthTab1Screen>
   void _mSetActiveTabIndex() {
     _activeTabIndex = _tabController.index;
     print('Index: $_activeTabIndex');
+  }
+
+  Widget vTabBarView1() {
+    return TabBarView(
+      controller: _tabController, 
+      children: [
+        BabyGrowthTabView(
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: true,
+          timestar: 1,
+          babyId: widget.babyId,
+          momId: widget.momId,
+          email: widget.email,
+          isAnsModifiable: widget.runningMonths! < 3 ? true : false,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: widget.runningMonths! >= 3 ? true : false,
+          isAnsModifiable:
+              widget.runningMonths! >= 3 && widget.runningMonths! < 6
+                  ? true
+                  : false,
+          timestar: 2,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: widget.runningMonths! >= 6 ? true : false,
+          isAnsModifiable:
+              widget.runningMonths! >= 6 && widget.runningMonths! < 9
+                  ? true
+                  : false,
+
+          timestar: 3,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: widget.runningMonths! >= 9 ? true : false,
+          isAnsModifiable:
+              widget.runningMonths! >= 9 && widget.runningMonths! < 12
+                  ? true
+                  : false,
+          timestar: 4,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: widget.runningMonths! >= 12 ? true : false,
+          isAnsModifiable: widget.runningMonths! >= 12 ? true : false,
+
+          timestar: 5,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: widget.runningMonths! >= 18 ? true : false,
+          isAnsModifiable: widget.runningMonths! >= 18 ? true : false,
+
+          timestar: 6,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: widget.runningMonths! >= 24 ? true : false,
+          isAnsModifiable: widget.runningMonths! >= 24 ? true : false,
+
+          timestar: 7,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: widget.runningMonths! >= 36 ? true : false,
+          isAnsModifiable: widget.runningMonths! >= 36 ? true : false,
+
+          timestar: 8,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: widget.runningMonths! >= 48 ? true : false,
+          isAnsModifiable: widget.runningMonths! >= 48 ? true : false,
+
+          timestar: 9,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: widget.runningMonths! >= 60 ? true : false,
+          isAnsModifiable: widget.runningMonths! >= 60 ? true : false,
+
+          timestar: 10,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: widget.runningMonths! >= 72 ? true : false,
+          isAnsModifiable: widget.runningMonths! >= 72 ? true : false,
+
+          timestar: 11,
+        ),
+      ],
+    );
+  }
+
+  Widget vTabBarView2() {
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        BabyGrowthTabView(
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          timestar: 1,
+          babyId: widget.babyId,
+          momId: widget.momId,
+          email: widget.email,
+          isAnsModifiable: false,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          isAnsModifiable: false,
+          timestar: 2,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          isAnsModifiable: false,
+
+          timestar: 3,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          isAnsModifiable: false,
+          timestar: 4,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          isAnsModifiable: false,
+
+          timestar: 5,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          isAnsModifiable: false,
+
+          timestar: 6,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          isAnsModifiable: false,
+
+          timestar: 7,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          isAnsModifiable: false,
+
+          timestar: 8,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          isAnsModifiable: false,
+
+          timestar: 9,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          isAnsModifiable: false,
+
+          timestar: 10,
+        ),
+        BabyGrowthTabView(
+          momId: widget.momId,
+          email: widget.email,
+          babyId: widget.babyId,
+          // listBabyGrowthData: _listBabyGrowthData,
+          isShown: false,
+          isAnsModifiable: false,
+
+          timestar: 11,
+        ),
+      ],
+    );
+  }
+
+  Widget vTabBar() {
+    return TabBar(
+      isScrollable: true,
+      controller: _tabController,
+      indicatorColor: Colors.white,
+      onTap: (index) {
+        _activeTabIndex = index;
+      },
+      tabs: const [
+        Tab(
+          // text: MyServices.getBangNumFormat(1),
+          text: "১ মাস",
+          height: 24,
+        ),
+        Tab(
+          // text: MyServices.getBangNumFormat(3),
+          text: "৩ মাস",
+          height: 24,
+        ),
+        Tab(
+          // text: MyServices.getBangNumFormat(6),
+          text: "৬ মাস",
+          height: 24,
+        ),
+        Tab(
+          // text: MyServices.getBangNumFormat(9),
+          text: "৯ মাস",
+          height: 24,
+        ),
+        Tab(
+          // text: MyServices.getBangNumFormat(12),
+          text: "১ বছর",
+          height: 24,
+        ),
+        Tab(
+          // text: MyServices.getBangNumFormat(12),
+          text: "১.৫ বছর",
+          height: 24,
+        ),
+        Tab(
+          // text: MyServices.getBangNumFormat(12),
+          text: "২ বছর",
+          height: 24,
+        ),
+        Tab(
+          // text: MyServices.getBangNumFormat(12),
+          text: "৩ বছর",
+          height: 24,
+        ),
+        Tab(
+          // text: MyServices.getBangNumFormat(12),
+          text: "৪ বছর",
+          height: 24,
+        ),
+        Tab(
+          // text: MyServices.getBangNumFormat(12),
+          text: "৫ বছর",
+          height: 24,
+        ),
+        Tab(
+          // text: MyServices.getBangNumFormat(12),
+          text: "৬ বছর",
+          height: 24,
+        ),
+      ],
+    );
   }
 }

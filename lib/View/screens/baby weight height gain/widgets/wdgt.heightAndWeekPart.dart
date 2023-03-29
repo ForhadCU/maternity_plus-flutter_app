@@ -152,7 +152,7 @@ class _BabyHeightAndWeekListWidgetState
                             return OjonDataListItem(
                                 week:
                                     "${widget.babyWeekMonthNoModelList[index].num} ${widget.babyWeekMonthNoModelList[index].text} ",
-                                ojon: widget.currentHeights[index] == "0.00"
+                                ojon: widget.currentHeights.isEmpty || widget.currentHeights[index] == "0.00"
                                     ? "---"
                                     : widget.currentHeights[index]);
                             /* OjonDataListItem(

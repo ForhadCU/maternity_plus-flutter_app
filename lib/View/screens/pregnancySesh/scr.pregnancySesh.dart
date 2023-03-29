@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,8 @@ import 'package:splash_screen/Controller/services/sqflite_services.dart';
 import 'package:splash_screen/Controller/utils/util.custom_text.dart';
 import 'package:splash_screen/Controller/utils/util.date_format.dart';
 import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
+import 'package:splash_screen/Model/model.mom_info.dart';
+import 'package:splash_screen/View/screens/shagotom/scr.shagotom.dart';
 import 'package:splash_screen/consts/const.colors.dart';
 import 'package:splash_screen/consts/const.data.bn.dart';
 import 'package:splash_screen/consts/const.keywords.dart';
@@ -16,7 +18,9 @@ import 'package:splash_screen/consts/const.keywords.dart';
 import '../../../Controller/services/service.my_service.dart';
 
 class PregnancySeshScreen extends StatefulWidget {
-  const PregnancySeshScreen({Key? key}) : super(key: key);
+  final MomInfo momInfo;
+  const PregnancySeshScreen({Key? key, required this.momInfo})
+      : super(key: key);
 
   @override
   State<PregnancySeshScreen> createState() => _PregnancySeshScreenState();
@@ -50,13 +54,15 @@ class _PregnancySeshScreenState extends State<PregnancySeshScreen> {
   late String startDateStr;
   late int genderSelectedRadio;
   late String gender;
+  late MomInfo _changableMomInfo;
 
 //>>
   @override
   void initState() {
     super.initState();
     genderSelectedRadio = 0;
-    MyServices.mGetSharedPrefIns().then((value) => _sharedPreferences = value);
+    // MyServices.mGetSharedPrefIns().then((value) => _sharedPreferences = value);
+    _changableMomInfo = widget.momInfo;
     _loadData();
   }
 
@@ -97,151 +103,15 @@ class _PregnancySeshScreenState extends State<PregnancySeshScreen> {
             )),
         body: SizedBox(
           height: MyScreenSize.mGetHeight(context, 100),
-          child: // v: Data input
-              isEnded
-                  ? SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            TextField(
-                              controller: _editingControllerBabyName,
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                labelText: 'Baby Name*',
-                                labelStyle: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            InkWell(
-                              splashColor: MyColors.pink3,
-                              onTap: () {
-                                _mSelectDate(context);
-                              },
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: TextField(
-                                      controller: _editingControllerDob,
-                                      keyboardType: TextInputType.text,
-                                      textInputAction: TextInputAction.next,
-                                      maxLines: 1,
-                                      enabled: false,
-                                      // readOnly: true,
-                                      decoration: InputDecoration(
-                                          contentPadding:
-                                              EdgeInsets.only(top: 2),
-                                          labelStyle:
-                                              TextStyle(color: Colors.black),
-                                          labelText: 'Date of birth*'),
-                                    ),
-                                  ),
-                                  Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                          padding: EdgeInsets.only(left: 24),
-                                          alignment: Alignment.centerLeft,
-                                          child: Icon(Icons.event)))
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            //v: Weight
-                            weight(),
-
-                            // v: Height
-                            height(),
-
-                            SizedBox(
-                              height: 30,
-                            ),
-                            // v: gender Selection
-                            genderSelection(),
-
-                            TextField(
-                              controller: _editingControllerHeadCircumstance,
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.next,
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                  labelStyle: TextStyle(color: Colors.black),
-                                  labelText: 'Head Circumstance'),
-                            ),
-                            TextField(
-                              controller: _editingControllerFatherName,
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                  labelStyle: TextStyle(color: Colors.black),
-                                  labelText: 'Father\'s name'),
-                            ),
-                            TextField(
-                              controller: _editingControllerMotherName,
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                  labelStyle: TextStyle(color: Colors.black),
-                                  labelText: 'Mother\'s name'),
-                            ),
-                            TextField(
-                              controller: _editingControllerDoctorName,
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                  labelStyle: TextStyle(color: Colors.black),
-                                  labelText: 'Doctor\'s name'),
-                            ),
-                            TextField(
-                              controller: _editingControllerNurseName,
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.done,
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                  labelStyle: TextStyle(color: Colors.black),
-                                  labelText: 'Nurse\'s name'),
-                            ),
-                            SizedBox(
-                              height: 24,
-                            ),
-                            ElevatedButton(
-                                onPressed: () async {
-                                  mActions();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: MyColors.pink3,
-                                    // padding: EdgeInsets.only(left: 24, right: 24)
-                                    fixedSize: Size(
-                                        MyScreenSize.mGetWidth(context, 50),
-                                        0)),
-                                child: CustomText(
-                                  text: 'Save',
-                                  fontcolor: Colors.white,
-                                ))
-                          ],
-                        ),
-                      ),
-                    )
-                  :
-                  // v: Primary screen
-                  primaryScreen(),
+          child: primaryScreen(),
         ));
   }
 
   void _loadData() async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
-    DateTime s = DateTime.parse(_pref.getString(MyKeywords.startdate)!);
-    DateTime e = DateTime.parse(_pref.getString(MyKeywords.enddate)!);
+    // DateTime s = DateTime.parse(_pref.getString(MyKeywords.startdate)!);
+    DateTime s = DateTime.parse(widget.momInfo.sessionStart);
+    // DateTime e = DateTime.parse(_pref.getString(MyKeywords.enddate)!);
+    DateTime e = DateTime.parse(widget.momInfo.expectedSessionEnd);
     DateTime t = DateTime.now();
 
     setState(() {
@@ -302,8 +172,10 @@ class _PregnancySeshScreenState extends State<PregnancySeshScreen> {
                         }
                       },
                       // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      inputFormatters: [  FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,2}'))],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,2}'))
+                      ],
                       textAlign: TextAlign.center,
                       keyboardType:
                           TextInputType.numberWithOptions(decimal: true),
@@ -586,8 +458,10 @@ class _PregnancySeshScreenState extends State<PregnancySeshScreen> {
                           : kgCtrller.clear(),
                       textAlign: TextAlign.center,
                       // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      inputFormatters: [  FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,2}'))],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,2}'))
+                      ],
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         hintText: '0.0',
@@ -617,6 +491,7 @@ class _PregnancySeshScreenState extends State<PregnancySeshScreen> {
   }
 
   void mActions() {
+    /* 
     // print("CmCtrl: ${cmCtrller.text}, WtCtrl: ${kgCtrller.text}");
     if (_editingControllerBabyName.text.isNotEmpty &&
         _editingControllerDob.text.isNotEmpty &&
@@ -652,6 +527,7 @@ class _PregnancySeshScreenState extends State<PregnancySeshScreen> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Fill the required* field")));
     }
+  */
   }
 
   Widget primaryScreen() {
@@ -976,9 +852,22 @@ class _PregnancySeshScreenState extends State<PregnancySeshScreen> {
         Expanded(
             child: InkWell(
           onTap: () async {
-            setState(() {
+            /* setState(() {
               isEnded = true;
-            });
+            }); */
+            print("object");
+            // c: update sessionEnd date into MomInfo Model
+            _changableMomInfo.sessionEnd = DateTime.now().toString();
+            var res = await MySqfliteServices.mUpdateMomInfo(
+                momInfo: _changableMomInfo);
+            if (res != 0) {
+              Navigator.of(context)
+                  .pushReplacement(MaterialPageRoute(builder: (context) {
+                return ShagotomScreen(momInfo: _changableMomInfo);
+              }));
+            } else {
+              print("Problem in updating mom info");
+            }
 
             // e: For later: save and send data for getting pregnancy report
             // save();

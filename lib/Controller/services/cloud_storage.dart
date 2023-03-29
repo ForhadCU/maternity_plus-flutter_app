@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart' as Path;
 
 class FirebaseStorageProvider {
@@ -20,7 +21,7 @@ class FirebaseStorageProvider {
           .putFile(imgFile);
       // await firebaseStorageRef.child("$email/$imgName").putFile(imgFile);
     } on firebase_core.FirebaseException catch (e) {
-      print("My Image exception : $e");
+      Logger().d("My Image exception : $e");
     }
     var downloadUrl = await snapshot.ref.getDownloadURL();
 
@@ -42,7 +43,7 @@ class FirebaseStorageProvider {
         .getData(100000000)
         .then((value) => {imageBytes = value})
         .catchError((error) {
-      print('Error in getting storage data: ${error.toString()}');
+      Logger().d('Error in getting storage data: ${error.toString()}');
     });
     return imageBytes;
   }

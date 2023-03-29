@@ -11,6 +11,7 @@ import 'package:splash_screen/View/screens/note/widget/sym_list_item.dart';
 import 'package:splash_screen/consts/const.colors.dart';
 
 class NoteSymptompsDialog extends StatefulWidget {
+  final int initialIndex;
   final String currentDate;
   final String note;
   final String symptomsIntensityStr;
@@ -22,7 +23,8 @@ class NoteSymptompsDialog extends StatefulWidget {
       required this.symptomsIntensityStr,
       required this.currentDate,
       required this.callback,
-      required this.note})
+      required this.note,
+      required this.initialIndex})
       : super(key: key);
 
   @override
@@ -41,15 +43,13 @@ class _NoteSymptompsDialogState extends State<NoteSymptompsDialog>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 2, vsync: this);
-    // _date = widget.currentDate;
+    tabController = TabController(
+        length: 2, vsync: this, initialIndex: widget.initialIndex);
     _editingControllerNote = TextEditingController(text: widget.note);
-    // sympDataModelList = widget.sympDataModelList;
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     tabController.dispose();
   }
@@ -60,7 +60,6 @@ class _NoteSymptompsDialogState extends State<NoteSymptompsDialog>
         insetPadding: const EdgeInsets.all(12),
         child: Container(
             height: MyScreenSize.mGetHeight(context, 60),
-            // decoration: BoxDecoration(color: MyColors.pink2),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Row(
                 children: [
@@ -118,11 +117,11 @@ class _NoteSymptompsDialogState extends State<NoteSymptompsDialog>
                   tabs: const [
                     Tab(
                       height: 24,
-                      text: "নোট",
+                      text: "লক্ষণ",
                     ),
                     Tab(
                       height: 24,
-                      text: "লক্ষণ",
+                      text: "নোট",
                     ),
                   ],
                 ),
@@ -133,25 +132,7 @@ class _NoteSymptompsDialogState extends State<NoteSymptompsDialog>
                   controller: tabController,
                   children: [
                     // first tab bar view widget
-                    Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.all(8),
-                      child: TextField(
-                        controller: _editingControllerNote,
-                        onTap: (() => _editingControllerNote.selection =
-                            TextSelection(
-                                baseOffset: 0,
-                                extentOffset:
-                                    _editingControllerNote.value.text.length)),
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.only(top: 4, bottom: 0),
-                          hintText: "এখানে আপনার নোট লিখুন",
-                          hintStyle: TextStyle(color: Colors.black38),
-                        ),
-                      ),
-                    ),
 
-                    // second tab bar view widget
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -222,6 +203,25 @@ class _NoteSymptompsDialogState extends State<NoteSymptompsDialog>
                               })),
                         )
                       ],
+                    ),
+
+                    // second tab bar view widget
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(8),
+                      child: TextField(
+                        controller: _editingControllerNote,
+                        onTap: (() => _editingControllerNote.selection =
+                            TextSelection(
+                                baseOffset: 0,
+                                extentOffset:
+                                    _editingControllerNote.value.text.length)),
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.only(top: 4, bottom: 0),
+                          hintText: "এখানে আপনার নোট লিখুন",
+                          hintStyle: TextStyle(color: Colors.black38),
+                        ),
+                      ),
                     ),
                   ],
                 ),
