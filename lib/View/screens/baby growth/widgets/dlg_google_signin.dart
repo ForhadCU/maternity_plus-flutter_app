@@ -1,10 +1,5 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
 
 class GoogleSignInDialog extends StatefulWidget {
   final Function callback;
@@ -21,11 +16,11 @@ class _GoogleSignInDialogState extends State<GoogleSignInDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        padding: EdgeInsets.only(top: 20, bottom: 20, left: 10, right: 10),
+        padding: const EdgeInsets.only(top: 20, bottom: 20, left: 10, right: 10),
         // height: MyScreenSize.mGetHeight(context, 20),
         child: _isSigningIn
             ? 
-             Row(
+             const Row(
             mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircularProgressIndicator(
@@ -50,14 +45,13 @@ class _GoogleSignInDialogState extends State<GoogleSignInDialog> {
                     _isSigningIn = true;
                   });
 
-                  // TODO: Add method call to the Google Sign-In authentication
                 /* 
                   setState(() {
                     _isSigningIn = false;
                   }); */
                 },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +61,7 @@ class _GoogleSignInDialogState extends State<GoogleSignInDialog> {
                         height: 35.0,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                        padding: EdgeInsets.only(left: 10),
                         child: Text(
                           'Sign in with Google',
                           style: TextStyle(

@@ -1,19 +1,18 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.date_format.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/Model/model.mom_info.dart';
-import 'package:splash_screen/View/screens/shagotom/scr.shagotom.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.date_format.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Model/model.mom_info.dart';
+import 'package:maa/View/screens/shagotom/scr.shagotom.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 import '../../../Controller/services/service.my_service.dart';
 
@@ -32,17 +31,17 @@ class _PregnancySeshScreenState extends State<PregnancySeshScreen> {
   String? card2Day, card2Month, card2Year;
   String? card3Day, card3Month, card3Year;
   late SharedPreferences _sharedPreferences;
-  TextEditingController _editingControllerBabyName = TextEditingController();
+  final TextEditingController _editingControllerBabyName = TextEditingController();
   TextEditingController _editingControllerDob =
       TextEditingController(text: "dd/mm/yyyy");
-  TextEditingController _editingControllerWeight = TextEditingController();
-  TextEditingController _editingControllerHeadCircumstance =
+  final TextEditingController _editingControllerWeight = TextEditingController();
+  final TextEditingController _editingControllerHeadCircumstance =
       TextEditingController();
-  TextEditingController _editingControllerFatherName = TextEditingController();
-  TextEditingController _editingControllerMotherName = TextEditingController();
-  TextEditingController _editingControllerDoctorName = TextEditingController();
-  TextEditingController _editingControllerNurseName = TextEditingController();
-  TextEditingController _editingControllerGender = TextEditingController();
+  final TextEditingController _editingControllerFatherName = TextEditingController();
+  final TextEditingController _editingControllerMotherName = TextEditingController();
+  final TextEditingController _editingControllerDoctorName = TextEditingController();
+  final TextEditingController _editingControllerNurseName = TextEditingController();
+  final TextEditingController _editingControllerGender = TextEditingController();
   final TextEditingController kgCtrller = TextEditingController();
   final TextEditingController poundCtrller = TextEditingController();
   final TextEditingController cmCtrller = TextEditingController();

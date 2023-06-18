@@ -1,4 +1,3 @@
-import 'package:splash_screen/consts/const.keywords.dart';
 
 class BabyGrowthModel {
   late String _question;
@@ -60,25 +59,25 @@ class BabyGrowthModel {
 
   //getter setter
 
-  get options => this._options;
+  get options => _options;
 
-  set options(value) => this._options = value;
-  get question => this._question;
+  set options(value) => _options = value;
+  get question => _question;
 
-  set question(value) => this._question = value;
-  get babyId => this._babyId;
+  set question(value) => _question = value;
+  get babyId => _babyId;
 
-  set babyId(value) => this._babyId = value;
+  set babyId(value) => _babyId = value;
 
-  get timestar => this._timestar;
+  get timestar => _timestar;
 
-  set timestar(value) => this._timestar = value;
+  set timestar(value) => _timestar = value;
 
-  get ques_id => this._quesId;
+  get ques_id => _quesId;
 
-  set ques_id(value) => this._quesId = value;
+  set ques_id(value) => _quesId = value;
 
-  get ans_status => this._ansStatus;
+  get ans_status => _ansStatus;
 
-  set ans_status(value) => this._ansStatus = value;
+  set ans_status(value) => _ansStatus = value;
 }

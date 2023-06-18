@@ -12,7 +12,7 @@ class DotBlickLoader extends StatefulWidget {
   final Icon dotIcon;
 
   const DotBlickLoader(
-      {this.dotOneColor = Colors.redAccent,
+      {super.key, this.dotOneColor = Colors.redAccent,
       this.dotTwoColor = Colors.green,
       this.dotThreeColor = Colors.blueAccent,
       this.duration = const Duration(milliseconds: 1000),
@@ -20,10 +20,10 @@ class DotBlickLoader extends StatefulWidget {
       this.dotIcon = const Icon(Icons.blur_on)});
 
   @override
-  _DotBlickLoaderState createState() => _DotBlickLoaderState();
+  DotBlickLoaderState createState() => DotBlickLoaderState();
 }
 
-class _DotBlickLoaderState extends State<DotBlickLoader>
+class DotBlickLoaderState extends State<DotBlickLoader>
     with SingleTickerProviderStateMixin {
   late Animation<double> animation_1;
   late Animation<double> animation_2;
@@ -137,7 +137,7 @@ class Dot extends StatelessWidget {
   final DotType? type;
   final Icon? icon;
 
-  const Dot({this.radius, this.color, this.type, this.icon});
+  const Dot({super.key, this.radius, this.color, this.type, this.icon});
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Model/model.baby_growth.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Model/model.baby_growth.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class BabyGrowthItemView extends StatefulWidget {
   final BabyGrowthModel babyGrowth;
@@ -23,14 +22,13 @@ class BabyGrowthItemView extends StatefulWidget {
 }
 
 class _BabyGrowthItemViewState extends State<BabyGrowthItemView> {
-  int _value = 0;
   @override
   Widget build(BuildContext context) {
     // print(widget.babyGrowth.ans_status);
     return Container(
-      padding: EdgeInsets.only(top: 8, bottom: 4, left: 8, right: 4),
-      margin: EdgeInsets.all(3),
-      decoration: BoxDecoration(color: MyColors.textOnPrimary, boxShadow: [
+      padding: const EdgeInsets.only(top: 8, bottom: 4, left: 8, right: 4),
+      margin: const EdgeInsets.all(3),
+      decoration: const BoxDecoration(color: MyColors.textOnPrimary, boxShadow: [
         BoxShadow(color: Colors.black12, offset: Offset(1, 1), blurRadius: 1)
       ]),
       child: Column(
@@ -38,7 +36,7 @@ class _BabyGrowthItemViewState extends State<BabyGrowthItemView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomText(text: widget.babyGrowth.question),
-          SizedBox(
+          const SizedBox(
             height: 12,
           ),
           widget.isShown
@@ -62,7 +60,7 @@ class _BabyGrowthItemViewState extends State<BabyGrowthItemView> {
                                     : null;
                               });
                             }),
-                        Text('হ্যা')
+                        const Text('হ্যা')
                       ],
                     ),
                     Row(
@@ -82,7 +80,7 @@ class _BabyGrowthItemViewState extends State<BabyGrowthItemView> {
                                     : null;
                               });
                             }),
-                        Text('না')
+                        const Text('না')
                       ],
                     ),
                   ],

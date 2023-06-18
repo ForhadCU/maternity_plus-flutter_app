@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 import '../../../../consts/const.colors.dart';
 import '../../../../consts/const.data.bn.dart';
@@ -26,7 +26,6 @@ class _SlideTile3State extends State<SlideTile3> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     runingWeek = 0;
     runingDay = 0;
@@ -106,19 +105,19 @@ class _SlideTile3State extends State<SlideTile3> {
   }
 
   void _calDayWeek() async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
+    SharedPreferences pref = await SharedPreferences.getInstance();
 
     setState(() {
       DateTime today = DateTime.now();
-      String? sDateStr = _pref.getString(MyKeywords.sessionStart);
-      String? eDateStr = _pref.getString(MyKeywords.expectedSessionEnd);
+      String? sDateStr = pref.getString(MyKeywords.sessionStart);
+      String? eDateStr = pref.getString(MyKeywords.expectedSessionEnd);
       DateTime from = DateTime.parse(sDateStr!);
       DateTime to = DateTime.parse(eDateStr!);
 // e: ...........
       // int totalDaysBetween = _mDiffBetweenDates(sDate, eDate);
       totalDay = MyServices.mGettotalDaysBtween(DateTime.now(), to);
       //Save totalday for later
-      _pref.setInt(MyKeywords.totaldays, totalDay);
+      pref.setInt(MyKeywords.totaldays, totalDay);
 
       int totalRunningDays = MyServices.mGettotalDaysBtween(from, today);
       runingWeek = (totalRunningDays / 7).floor();

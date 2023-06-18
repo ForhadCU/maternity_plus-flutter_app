@@ -7,22 +7,22 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:108205886977:android:d0b4b02ef39bba095dba00",
+        "mobilesdk_app_id": "1:108205886977:android:e3a429e403de650a5dba00",
         "android_client_info": {
-          "package_name": "com.example.splash_screen"
+          "package_name": "com.agamilabs.maa"
         }
       },
       "oauth_client": [
         {
-          "client_id": "108205886977-ubt79tmjaot7l44koji4d80vbfqi1eli.apps.googleusercontent.com",
+          "client_id": "108205886977-1fnb5bpigjvlu9etp598lgud8eqfbj5u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.splash_screen",
-            "certificate_hash": "4259fd1f916e11650ad5cad2b986262e31b2aaa3"
+            "package_name": "com.agamilabs.maa",
+            "certificate_hash": "510af03a8b9e63a318efdb70c4fccfecfacb87ce"
           }
         },
         {
-          "client_id": "108205886977-83cmk5eg300e4u8jn99h0i5jklsqujp3.apps.googleusercontent.com",
+          "client_id": "108205886977-o3454bsvl37p80t8r77dhauq9e0p1v00.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -39,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "108205886977-b608n1igic9p2sgv3sgbupm871qtm969.apps.googleusercontent.com",
+              "client_id": "108205886977-6c1vm0bbe3vb4jaj24q2tmm4mbmburnf.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.splashScreen"
+                "bundle_id": "com.agamilabs.splashScreen"
               }
             }
           ]

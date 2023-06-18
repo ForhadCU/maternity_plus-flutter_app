@@ -1,18 +1,19 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
+
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.date_format.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/Model/model.mom_info.dart';
-import 'package:splash_screen/View/screens/shagotom/scr.shagotom.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.date_format.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Model/model.mom_info.dart';
+import 'package:maa/View/screens/shagotom/scr.shagotom.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 class AddNewBaby extends StatefulWidget {
   final String email;
@@ -25,6 +26,7 @@ class AddNewBaby extends StatefulWidget {
 }
 
 class _AddNewBabyState extends State<AddNewBaby> {
+
   final TextEditingController _editingControllerBabyName =
       TextEditingController();
   TextEditingController _editingControllerDob =
@@ -80,7 +82,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
         appBar: AppBar(
             elevation: 0,
             backgroundColor: MyColors.pink2,
-            title: CustomText(
+            title: const CustomText(
               text: "আপনার শিশুর পরিচয় দিন",
               fontWeight: FontWeight.w400,
               fontsize: 22,
@@ -91,16 +93,16 @@ class _AddNewBabyState extends State<AddNewBaby> {
             child: Column(
               children: [
                 vInputBabyName(),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 vInputDob(),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 vInputWeight(),
                 vInputHeight(),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 vInputGenderSelection(),
@@ -109,7 +111,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
                 vInputMotherName(),
                 vInputDoctorName(),
                 vInputNurseName(),
-                SizedBox(
+                const SizedBox(
                   height: 24,
                 ),
                 vSaveButton(),
@@ -123,7 +125,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
 
   _mSelectDate(BuildContext context) async {
     selected = startDate;
-    DateTime? firstDate = DateTime.now().add(Duration(days: -(6*365 - 1)));
+    DateTime? firstDate = DateTime.now().add(const Duration(days: -(6*365 - 1)));
     // DateTime? firstDate = DateTime.now().add(Duration(days: (6*365 - 1)));
     // v: DatePicker
     showDatePicker(
@@ -148,7 +150,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           children: [
             CustomText(
               text: 'Weight*',
@@ -197,7 +199,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
                           extentOffset: _kgCtrller.value.text.length),
                       textAlign: TextAlign.center,
                       keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
@@ -276,7 +278,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
     );
   }
 
-  void mActions() {
+  void mActions() async {
     // Logger().d("CmCtrl: ${cmCtrller.text}, WtCtrl: ${kgCtrller.text}");
     MomInfo? momInfo;
     if (_editingControllerBabyName.text.isNotEmpty &&
@@ -284,7 +286,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
         _cmCtrller.text.isNotEmpty &&
         _kgCtrller.text.isNotEmpty &&
         genderSelectedRadio != 0) {
-      MySqfliteServices.mAddBabyInfo(
+     await MySqfliteServices.mAddBabyInfo(
               momId: widget.momId,
               email: widget.email,
               babyName: _editingControllerBabyName.text,
@@ -312,7 +314,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
           ).show();
           momInfo = await MySqfliteServices.mFetchMomInfo(
               email: widget.email, currentMomId: widget.momId);
-          await Future.delayed(Duration(milliseconds: 2500));
+          await Future.delayed(const Duration(milliseconds: 2500));
           Navigator.pop(context);
           mClearAllFields();
           Navigator.of(context)
@@ -324,14 +326,14 @@ class _AddNewBabyState extends State<AddNewBaby> {
       });
     } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Fill the required* field")));
+          .showSnackBar(const SnackBar(content: Text("Fill the required* field")));
     }
   }
 
   Widget vInputHeight() {
     return Column(
       children: [
-        Row(
+        const Row(
           children: [
             CustomText(
               text: 'Height*',
@@ -374,7 +376,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
                       ],
                       textAlign: TextAlign.center,
                       keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         hintText: '0.0',
                         hintStyle: TextStyle(
@@ -513,7 +515,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
   Widget vInputGenderSelection() {
     return Column(
       children: [
-        Row(
+        const Row(
           children: [
             Expanded(
                 child: CustomText(
@@ -529,7 +531,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
             Expanded(
                 child: RadioListTile(
                     activeColor: MyColors.pink3,
-                    title: CustomText(
+                    title: const CustomText(
                       text: ("Male"),
                     ),
                     value: 1,
@@ -545,7 +547,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
             Expanded(
                 child: RadioListTile(
               activeColor: MyColors.pink3,
-              title: CustomText(text: "Female"),
+              title: const CustomText(text: "Female"),
               value: 2,
               groupValue: genderSelectedRadio,
               onChanged: (changedValue) {
@@ -579,7 +581,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
               maxLines: 1,
               enabled: false,
               // readOnly: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   contentPadding: EdgeInsets.only(top: 2),
                   labelStyle: TextStyle(color: Colors.black),
                   labelText: 'Date of birth*'),
@@ -588,9 +590,9 @@ class _AddNewBabyState extends State<AddNewBaby> {
           Expanded(
               flex: 3,
               child: Container(
-                  padding: EdgeInsets.only(left: 24),
+                  padding: const EdgeInsets.only(left: 24),
                   alignment: Alignment.centerLeft,
-                  child: Icon(Icons.event)))
+                  child: const Icon(Icons.event)))
         ],
       ),
     );
@@ -603,7 +605,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.next,
       maxLines: 1,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Baby Name*',
         labelStyle: TextStyle(color: Colors.black),
       ),
@@ -617,7 +619,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.next,
       maxLines: 1,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           labelStyle: TextStyle(color: Colors.black),
           labelText: 'Head Circumstance'),
     );
@@ -630,7 +632,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.next,
       maxLines: 1,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           labelStyle: TextStyle(color: Colors.black),
           labelText: 'Father\'s name'),
     );
@@ -643,7 +645,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.next,
       maxLines: 1,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           labelStyle: TextStyle(color: Colors.black),
           labelText: 'Mother\'s name'),
     );
@@ -656,7 +658,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.next,
       maxLines: 1,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           labelStyle: TextStyle(color: Colors.black),
           labelText: 'Doctor\'s name'),
     );
@@ -669,7 +671,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.done,
       maxLines: 1,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           labelStyle: TextStyle(color: Colors.black),
           labelText: 'Nurse\'s name'),
     );
@@ -685,7 +687,7 @@ class _AddNewBabyState extends State<AddNewBaby> {
             backgroundColor: MyColors.pink3,
             // padding: EdgeInsets.only(left: 24, right: 24)
             fixedSize: Size(MyScreenSize.mGetWidth(context, 50), 0)),
-        child: CustomText(
+        child: const CustomText(
           text: 'Save',
           fontcolor: Colors.white,
         ));

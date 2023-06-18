@@ -13,20 +13,21 @@ class FirebaseStorageProvider {
       // required String imgName,
       required String email}) async {
     final firebaseStorageRef = FirebaseStorage.instance.ref();
-    var snapshot;
 
     try {
+      TaskSnapshot snapshot;
+
       snapshot = await firebaseStorageRef
           .child("$email/${Path.basename(imgFile.path)}")
           .putFile(imgFile);
       // await firebaseStorageRef.child("$email/$imgName").putFile(imgFile);
+      var downloadUrl = await snapshot.ref.getDownloadURL();
+      return snapshot;
     } on firebase_core.FirebaseException catch (e) {
       Logger().d("My Image exception : $e");
     }
-    var downloadUrl = await snapshot.ref.getDownloadURL();
 
-
-    return snapshot;
+    return null;
   }
 
   static Future<Uint8List?> mGetImgUrl(String imageFileName) async {
@@ -37,7 +38,7 @@ class FirebaseStorageProvider {
     // final firebaseStorageRef = FirebaseStorage.instance.ref();
 
     Uint8List? imageBytes;
-   await firebaseStorage
+    await firebaseStorage
         .ref()
         .child(imageFileName)
         .getData(100000000)

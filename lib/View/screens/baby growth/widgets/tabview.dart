@@ -1,12 +1,11 @@
-// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Model/model.baby_growth.dart';
-import 'package:splash_screen/View/screens/baby%20growth/widgets/itemview.dart';
-import 'package:splash_screen/View/widgets/dot_blink_loader.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Model/model.baby_growth.dart';
+import 'package:maa/View/screens/baby%20growth/widgets/itemview.dart';
+import 'package:maa/View/widgets/dot_blink_loader.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class BabyGrowthTabView extends StatefulWidget {
   // final List<BabyGrowthModel> listBabyGrowthData;
@@ -134,7 +133,7 @@ class _BabyGrowthTabViewState extends State<BabyGrowthTabView> {
           /* decoration: BoxDecoration(
               color: Colors.yellow,
               border: Border.all(width: 0.5, color: MyColors.pink3)), */
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -161,10 +160,10 @@ class _BabyGrowthTabViewState extends State<BabyGrowthTabView> {
           decoration: BoxDecoration(
               color: Colors.yellow,
               border: Border.all(width: 0.5, color: MyColors.pink3)),
-          padding: EdgeInsets.all(8),
-          child: Row(
+          padding: const EdgeInsets.all(8),
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
+            children: [
               Expanded(
                   child: CustomText(
                 text: "Sorry! You didn't add any baby yet.",

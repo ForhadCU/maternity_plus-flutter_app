@@ -1,22 +1,23 @@
-// ignore_for_file: prefer_const_constructors
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Model/model.baby_week_month_no.dart';
+import 'package:maa/Model/model.baby_weights_heights_for_age.dart';
+import 'package:maa/Model/model.height.dart';
+import 'package:maa/Model/model.ojon.dart';
+import 'package:maa/View/screens/baby%20weight%20height%20gain/widgets/dlg_secondary_height_input.dart';
+import 'package:maa/View/screens/baby%20weight%20height%20gain/widgets/dlg_secondary_ojon_input.dart';
+import 'package:maa/View/screens/baby%20weight%20height%20gain/widgets/wdgt.heightAndWeekPart.dart';
+import 'package:maa/View/screens/baby%20weight%20height%20gain/widgets/wdgt.heightGraphChart.dart';
+import 'package:maa/View/screens/baby%20weight%20height%20gain/widgets/wdgt.ojonAndWeekPart.dart';
+import 'package:maa/View/screens/baby%20weight%20height%20gain/widgets/wdgt.ojonGraphChart.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.keywords.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Model/model.baby_week_month_no.dart';
-import 'package:splash_screen/Model/model.baby_weights_heights_for_age.dart';
-import 'package:splash_screen/Model/model.height.dart';
-import 'package:splash_screen/Model/model.ojon.dart';
-import 'package:splash_screen/View/screens/baby%20weight%20height%20gain/widgets/dlg_secondary_height_input.dart';
-import 'package:splash_screen/View/screens/baby%20weight%20height%20gain/widgets/dlg_secondary_ojon_input.dart';
-import 'package:splash_screen/View/screens/baby%20weight%20height%20gain/widgets/wdgt.heightAndWeekPart.dart';
-import 'package:splash_screen/View/screens/baby%20weight%20height%20gain/widgets/wdgt.heightGraphChart.dart';
-import 'package:splash_screen/View/screens/baby%20weight%20height%20gain/widgets/wdgt.ojonAndWeekPart.dart';
-import 'package:splash_screen/View/screens/baby%20weight%20height%20gain/widgets/wdgt.ojonGraphChart.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
 
 class BabyWeightHeightScreen extends StatefulWidget {
   final int momId;
@@ -54,6 +55,8 @@ class BabyWeightHeightScreen extends StatefulWidget {
 }
 
 class _BabyWeightHeightScreenState extends State<BabyWeightHeightScreen> {
+  Logger logger = Logger();
+
   late List<double> minThirdStdDeviationOfWeightList; //[-3 SD]
   late List<double> maxThirdStdDeviationOfWeightList; //[+3 SD]
   late List<double> minSecondStdDeviationOfWeightList; //[-2 SD]
@@ -94,6 +97,7 @@ class _BabyWeightHeightScreenState extends State<BabyWeightHeightScreen> {
   late double lastGivenWeight;
   late double lastGivenHeight;
   late int positionOfCurrentEntry;
+  late Map<String, dynamic>? babyAgeMap;
 
   get vNotice1 => Column(
         children: [
@@ -101,10 +105,10 @@ class _BabyWeightHeightScreenState extends State<BabyWeightHeightScreen> {
             decoration: BoxDecoration(
                 color: Colors.yellow,
                 border: Border.all(width: 0.5, color: MyColors.pink3)),
-            padding: EdgeInsets.all(8),
-            child: Row(
+            padding: const EdgeInsets.all(8),
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
+              children: [
                 Expanded(
                     child: CustomText(
                   text: "Sorry! You didn't add any baby yet.",
@@ -123,8 +127,12 @@ class _BabyWeightHeightScreenState extends State<BabyWeightHeightScreen> {
   void initState() {
     super.initState();
 
+    mInitialization();
     babyWeekMonthNoModelList =
         MyServices.mGetBabyWeekMonthNo()[MyKeywords.intoBangFont];
+    mLoadData();
+
+    
   }
 
   // >>
@@ -153,74 +161,7 @@ class _BabyWeightHeightScreenState extends State<BabyWeightHeightScreen> {
                         babyWeekMonthNoModelList: babyWeekMonthNoModelList,
                         currentWeights: currentWeightsStringList,
                         callBack: () {
-                          widget.babyId == null
-                              ? null
-                              : showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return BabySecondaryOjonInputDialog(
-                                      currentRoundValue:
-                                          widget.currentWeightRoundValue!,
-                                      currentFrucValueAsInt:
-                                          widget.currentWeightFrucValueAsInt!,
-                                      babyAgeMap: widget.babyAgeMap!,
-                                      callback: (double updatedWeight) async {
-                                        widget.currentWeightRoundValue =
-                                            updatedWeight.floor();
-                                        MyServices.mSetFrucValueAsInt(
-                                            priWeight: updatedWeight,
-                                            callback: (int value) {
-                                              widget.currentWeightFrucValueAsInt =
-                                                  value;
-                                            });
-
-                                        //c: Update weight list
-                                        await MySqfliteServices
-                                                .mUpdateBabyCurrentWeightList(
-                                                    weight: updatedWeight,
-                                                    map: widget.babyAgeMap!)
-                                            .then((value) async {
-                                          var map = await MySqfliteServices
-                                              .mGetBabyCurrentWeightHeightList(
-                                            babyId: widget.babyId,
-                                            email: widget.email,
-                                            momId: widget.momId,
-                                          );
-                                          currentWeightsStringList =
-                                              map[MyKeywords.babyWeight];
-                                          /*  currentWeightsStringList =
-                                          await MySqfliteServices
-                                              .mGetBabyCurrentWeightList(); */
-
-                                          currentWeightsListForGraph = MyServices
-                                              .mMakeCurrentWeightsForGraph(
-                                                  currentWeightsStringList:
-                                                      currentWeightsStringList,
-                                                  babyWeekMonthNumStringList:
-                                                      MyServices
-                                                              .mGetBabyWeekMonthNo()[
-                                                          MyKeywords
-                                                              .listOfOnlyNum]);
-                                        });
-                                        //c: data for graph and fill the blank weeks with predictable weights
-                                        /*  List<double> currentWeightsToDouble =
-                                        MyServices.mMakeCurrentWeightsToDouble(
-                                            currentWeightsList:
-                                                currentWeightsStringList);
-                                    currentWeightsListForGraph.clear();
-                                    currentWeightsListForGraph =
-                                        await MyServices
-                                            .mGetCurrentBabyWeightListForGraph(
-                                                oldWeightList:
-                                                    currentWeightsToDouble,
-                                                positionOfCurrentEntry:
-                                                    positionOfCurrentEntry,
-                                                primaryWeight:
-                                                    currentWeightsToDouble[0]); */
-                                        setState(() {});
-                                      },
-                                    );
-                                  });
+                          widget.babyId == null ? null : vWeightInputDialog();
                         },
                       ),
                 const SizedBox(
@@ -393,7 +334,6 @@ class _BabyWeightHeightScreenState extends State<BabyWeightHeightScreen> {
   }
 
   void mLoadData() {
-    /* 
     if (widget.babyId != null) {
       MySqfliteServices.mGetCurrentBabyGender().then((value) async {
         gender = value;
@@ -407,8 +347,12 @@ class _BabyWeightHeightScreenState extends State<BabyWeightHeightScreen> {
           // print(value);
           dob = value;
           runningday = MyServices.mGetRunningDays(dob: dob);
-          widget.babyAgeMap = MyServices.mGetBabyAge(runningday: runningday);
-          MyServices.mGetLastGivenWeight().then((map) {
+          babyAgeMap = MyServices.mGetBabyAge(runningday: runningday);
+          MyServices.mGetLastGivenWeight(
+            babyId: widget.babyId!,
+            email: widget.email,
+            momId: widget.momId,
+          ).then((map) {
             lastGivenWeight = map[MyKeywords.lastGivenWeight];
             lastGivenHeight = map[MyKeywords.lastGivenHeight];
             // positionOfCurrentEntry = map[MyKeywords.indexOfLastGivenWeight] + 1;
@@ -427,16 +371,19 @@ class _BabyWeightHeightScreenState extends State<BabyWeightHeightScreen> {
           });
         });
         // m: get weightlist
-        await MySqfliteServices.mGetBabyCurrentWeightHeightList()
-            .then((value) => {
-                  currentWeightsStringList = value[MyKeywords.babyWeight],
-                  currentWeightsListForGraph.clear(),
-                  currentWeightsListForGraph =
-                      MyServices.mMakeCurrentWeightsForGraph(
-                          currentWeightsStringList: currentWeightsStringList,
-                          babyWeekMonthNumStringList: MyServices
-                              .mGetBabyWeekMonthNo()[MyKeywords.listOfOnlyNum]),
-                });
+        await MySqfliteServices.mGetBabyCurrentWeightHeightList(
+          babyId: widget.babyId,
+          email: widget.email,
+          momId: widget.momId,
+        ).then((value) => {
+              currentWeightsStringList = value[MyKeywords.babyWeight],
+              currentWeightsListForGraph.clear(),
+              currentWeightsListForGraph =
+                  MyServices.mMakeCurrentWeightsForGraph(
+                      currentWeightsStringList: currentWeightsStringList,
+                      babyWeekMonthNumStringList: MyServices
+                          .mGetBabyWeekMonthNo()[MyKeywords.listOfOnlyNum]),
+            });
         // m: get heightList
         await MySqfliteServices.mGetBabyCurrentHeightList().then((value) => {
               currentHeightsStringList = value,
@@ -459,8 +406,74 @@ class _BabyWeightHeightScreenState extends State<BabyWeightHeightScreen> {
         setState(() {});
       });
     }
-  */
   }
 
-  void mInitData() {}
+ 
+
+  vWeightInputDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return BabySecondaryOjonInputDialog(
+            currentRoundValue: widget.currentWeightRoundValue!,
+            currentFrucValueAsInt: widget.currentWeightFrucValueAsInt!,
+            babyAgeMap: widget.babyAgeMap!,
+            callback: (double updatedWeight) async {
+              widget.currentWeightRoundValue = updatedWeight.floor();
+              MyServices.mSetFrucValueAsInt(
+                  priWeight: updatedWeight,
+                  callback: (int value) {
+                    widget.currentWeightFrucValueAsInt = value;
+                  });
+
+              //c: Update weight list
+              await MySqfliteServices.mUpdateBabyCurrentWeightList(
+                      weight: updatedWeight, map: widget.babyAgeMap!)
+                  .then((value) async {
+                var map =
+                    await MySqfliteServices.mGetBabyCurrentWeightHeightList(
+                  babyId: widget.babyId,
+                  email: widget.email,
+                  momId: widget.momId,
+                );
+                currentWeightsStringList = map[MyKeywords.babyWeight];
+                /*  currentWeightsStringList =
+                                          await MySqfliteServices
+                                              .mGetBabyCurrentWeightList(); */
+
+                kDebugMode
+                    ? logger.d(
+                        "Current Baby Weight List: $currentWeightsStringList")
+                    : null;
+
+                currentWeightsListForGraph =
+                    MyServices.mMakeCurrentWeightsForGraph(
+                        currentWeightsStringList: currentWeightsStringList,
+                        babyWeekMonthNumStringList: MyServices
+                            .mGetBabyWeekMonthNo()[MyKeywords.listOfOnlyNum]);
+              });
+              //c: data for graph and fill the blank weeks with predictable weights
+              /*  List<double> currentWeightsToDouble =
+                                        MyServices.mMakeCurrentWeightsToDouble(
+                                            currentWeightsList:
+                                                currentWeightsStringList);
+                                    currentWeightsListForGraph.clear();
+                                    currentWeightsListForGraph =
+                                        await MyServices
+                                            .mGetCurrentBabyWeightListForGraph(
+                                                oldWeightList:
+                                                    currentWeightsToDouble,
+                                                positionOfCurrentEntry:
+                                                    positionOfCurrentEntry,
+                                                primaryWeight:
+                                                    currentWeightsToDouble[0]); */
+              setState(() {});
+            },
+          );
+        });
+  }
+
+  void mInitialization() {
+    babyAgeMap = widget.babyAgeMap;
+  }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Model/model.jiggasha.dart';
-import 'package:splash_screen/View/screens/jiggasha/widget/itemview.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Model/model.jiggasha.dart';
+import 'package:maa/View/screens/jiggasha/widget/itemview.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class JiggashaScreen extends StatefulWidget {
   const JiggashaScreen({

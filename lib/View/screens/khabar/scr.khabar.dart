@@ -1,11 +1,10 @@
-// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Model/model.kahbar.dart';
-import 'package:splash_screen/View/screens/khabar/widget/item.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Model/model.kahbar.dart';
+import 'package:maa/View/screens/khabar/widget/item.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
 
 class KhabarScreen extends StatelessWidget {
   const KhabarScreen({Key? key}) : super(key: key);
@@ -18,14 +17,14 @@ class KhabarScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        title: Text(
+        title: const Text(
           MaaData.responsibility,
           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 22),
         ),
         backgroundColor: MyColors.pink2,
       ),
       body: Container(
-        padding: EdgeInsets.all(6),
+        padding: const EdgeInsets.all(6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

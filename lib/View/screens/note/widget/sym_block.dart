@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
 
 class SympBlock extends StatelessWidget {
   final Color blockColor;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/View/screens/shagotom/widgets/wdgt.timestar_block.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/View/screens/shagotom/widgets/wdgt.timestar_block.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
 
 
 
@@ -39,7 +39,7 @@ class ScaleInstructionView extends StatelessWidget {
             Expanded(
                 flex: 12,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 14),
+                  padding: const EdgeInsets.only(left: 14),
                   child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: 5,
@@ -65,7 +65,7 @@ class ScaleInstructionView extends StatelessWidget {
             Expanded(
                 flex: 12,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 14),
+                  padding: const EdgeInsets.only(right: 14),
                   child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: 3,

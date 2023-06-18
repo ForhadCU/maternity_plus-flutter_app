@@ -1,9 +1,10 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class BabyPrimaryHeightInputDialog extends StatefulWidget {
   final Function callBack;
@@ -46,13 +47,13 @@ class _BabyPrimaryHeightInputDialogState extends State<BabyPrimaryHeightInputDia
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
+                const Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    padding: EdgeInsets.symmetric(horizontal: 14),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         CustomText(
                           text: 'ওজন',
                           fontcolor: Colors.grey,
@@ -160,13 +161,13 @@ class _BabyPrimaryHeightInputDialogState extends State<BabyPrimaryHeightInputDia
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
+                const Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    padding: EdgeInsets.symmetric(horizontal: 14),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         CustomText(
                           text: 'উচ্চতা',
                           fontcolor: Colors.grey,
@@ -375,7 +376,7 @@ class _BabyPrimaryHeightInputDialogState extends State<BabyPrimaryHeightInputDia
                           content: Text('Primary data has been saved')));
                       Navigator.pop(context);
                     } else {
-                      print("No data entry");
+                    kDebugMode ?  print("No data entry"): null;
                     }
                   },
                   child: const Padding(

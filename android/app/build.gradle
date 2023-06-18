@@ -28,14 +28,15 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     compileSdkVersion 33
+    ndkVersion "25.2.9519653"
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
 
     sourceSets {
@@ -44,9 +45,9 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.splash_screen"
+        applicationId "com.agamilabs.maa"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -59,6 +60,7 @@ android {
             
         }
     }
+    namespace 'com.agamilabs.maa'
 }
 
 flutter {
@@ -66,12 +68,12 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.firebase:firebase-analytics:17.2.2'
-        implementation platform('com.google.firebase:firebase-bom:31.0.2')
-            implementation 'com.google.firebase:firebase-appcheck-playintegrity'
-
-
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+//    implementation platform('com.google.firebase:firebase-bom:31.5.0')
+//    implementation "com.google.firebase:firebase-analytics-ktx:21.2.2"
+//    implementation "com.google.firebase:firebase-appcheck-ktx:17.0.0"
+////    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+//    implementation 'com.google.firebase:firebase-appcheck-playintegrity:17.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
 

@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Model/model.baby_growth.dart';
-import 'package:splash_screen/View/screens/baby%20growth/widgets/dlg_google_signin.dart';
-import 'package:splash_screen/View/screens/baby%20growth/widgets/tabview.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Model/model.baby_growth.dart';
+import 'package:maa/View/screens/baby%20growth/widgets/dlg_google_signin.dart';
+import 'package:maa/View/screens/baby%20growth/widgets/tabview.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class BabyGrowthQuestionScreen extends StatefulWidget {
   final int? runningMonths;
@@ -25,11 +26,8 @@ class BabyGrowthQuestionScreen extends StatefulWidget {
 
 class _BabyGrowthQuestionScreenState extends State<BabyGrowthQuestionScreen>
     with TickerProviderStateMixin {
-  late List<BabyGrowthModel> _listBabyGrowthData;
   late TabController _tabController;
-  bool _isSignedInChecking = true;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? _user;
   int _activeTabIndex = 0;
   @override
   void initState() {
@@ -43,17 +41,19 @@ class _BabyGrowthQuestionScreenState extends State<BabyGrowthQuestionScreen>
         .then((value) {}); */
     // print('Running month: ${widget.runningMonths!}');
 
-    _tabController =
-        TabController(length: 11, vsync: this, initialIndex: widget.babyId != null ? mGetInitialIndex() : 0)
-          ..addListener(() {
-            if (!_tabController.indexIsChanging) {
-              // print('index is changing..');
-              setState(() {
-                _activeTabIndex = _tabController.index;
-                print('Index: $_activeTabIndex');
-              });
-            }
+    _tabController = TabController(
+        length: 11,
+        vsync: this,
+        initialIndex: widget.babyId != null ? mGetInitialIndex() : 0)
+      ..addListener(() {
+        if (!_tabController.indexIsChanging) {
+          // print('index is changing..');
+          setState(() {
+            _activeTabIndex = _tabController.index;
+            kDebugMode ? print('Index: $_activeTabIndex') : null;
           });
+        }
+      });
   }
 
   @override
@@ -97,8 +97,6 @@ class _BabyGrowthQuestionScreenState extends State<BabyGrowthQuestionScreen>
   }
 
   void _mCheckUser() {
-    _user = _auth.currentUser;
-
     _auth.authStateChanges().listen((event) {
       if (event != null) {
         print('User currently signed in');
@@ -112,14 +110,10 @@ class _BabyGrowthQuestionScreenState extends State<BabyGrowthQuestionScreen>
               return GoogleSignInDialog(callback: () {});
             });
 
-        setState(() {
-          _isSignedInChecking = false;
-        });
+        setState(() {});
       } else {
         print('User is not signed in currently');
-        setState(() {
-          _isSignedInChecking = false;
-        });
+        setState(() {});
         //show dialgo for sign in
       }
     });
@@ -132,7 +126,7 @@ class _BabyGrowthQuestionScreenState extends State<BabyGrowthQuestionScreen>
 
   Widget vTabBarView1() {
     return TabBarView(
-      controller: _tabController, 
+      controller: _tabController,
       children: [
         BabyGrowthTabView(
           // listBabyGrowthData: _listBabyGrowthData,

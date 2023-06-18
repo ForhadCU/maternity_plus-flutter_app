@@ -1,8 +1,7 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class ListItemKhabar extends StatelessWidget {
   final String title;
@@ -22,12 +21,12 @@ class ListItemKhabar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: index == 0
-          ? Column(
+          ? const Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children: [
                 Image(image: AssetImage('lib/assets/images/triangle.png')),
                 SizedBox(
                   height: 4,
@@ -60,7 +59,7 @@ class ListItemKhabar extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontsize: 14,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 4,
                       ),
 
@@ -69,7 +68,7 @@ class ListItemKhabar extends StatelessWidget {
                         text: desc,
                         fontsize: 14,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 4,
                       ),
                       /* Divider(
@@ -95,7 +94,7 @@ class ListItemKhabar extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                       fontsize: 14,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 4,
                                     ),
 
@@ -104,12 +103,12 @@ class ListItemKhabar extends StatelessWidget {
                                       text: desc,
                                       fontsize: 14,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 2,
                                     ),
                                   ],
                                 )),
-                                SizedBox(
+                                const SizedBox(
                                   width: 8,
                                 ),
                                 Expanded(
@@ -135,7 +134,7 @@ class ListItemKhabar extends StatelessWidget {
                                         : Container(),
                                   ],
                                 )),
-                                SizedBox(width: 8,)
+                                const SizedBox(width: 8,)
                                 ,
                                 Expanded(
                                     child: Column(
@@ -148,7 +147,7 @@ class ListItemKhabar extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                       fontsize: 14,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 4,
                                     ),
 
@@ -157,7 +156,7 @@ class ListItemKhabar extends StatelessWidget {
                                       text: desc,
                                       fontsize: 14,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 2,
                                     ),
                                   ],

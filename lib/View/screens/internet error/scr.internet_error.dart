@@ -1,8 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:splash_screen/View/widgets/dot_blink_loader.dart';
+import 'package:maa/View/widgets/dot_blink_loader.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../../../Controller/services/service.my_service.dart';
 import '../../../Controller/utils/util.custom_text.dart';
 import '../../../consts/const.colors.dart';
 import '../../../consts/const.data.bn.dart';
@@ -35,7 +34,7 @@ class _InternetErrorScreenState extends State<InternetErrorScreen> {
                   controller: controller!,
                 ),
                 isLoading
-                    ? const Center(
+                    ?  const Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -46,7 +45,7 @@ class _InternetErrorScreenState extends State<InternetErrorScreen> {
                             Text(
                               "Please wait...",
                               style: TextStyle(color: Colors.black54),
-                            )
+                            ),
                           ],
                         ),
                       )

@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:splash_screen/Model/model.ojon.dart';
+import 'package:maa/Model/model.ojon.dart';
 
 class MaxMinWeightListModel {
   List<OjonModel> minWeightList;

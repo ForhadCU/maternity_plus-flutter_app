@@ -1,10 +1,9 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/consts/const.data.bn.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 class SlideTile0 extends StatefulWidget {
   final FocusNode focusNode1;
@@ -20,8 +19,8 @@ class SlideTile0 extends StatefulWidget {
 class _SlideTile0State extends State<SlideTile0> with TickerProviderStateMixin {
   FocusNode _focusNode1 = FocusNode();
   FocusNode _focusNode2 = FocusNode();
-  late TextEditingController _editingControllerEmail = TextEditingController();
-  TextEditingController _editingControllerPhone = TextEditingController();
+  TextEditingController _editingControllerEmail = TextEditingController();
+  final TextEditingController _editingControllerPhone = TextEditingController();
   String? userName;
   String? email;
   late final SharedPreferences sharedPreferences;
@@ -49,165 +48,158 @@ class _SlideTile0State extends State<SlideTile0> with TickerProviderStateMixin {
           // v: part 1
           Expanded(
               flex: 2,
-              child: Container(
-                // decoration: const BoxDecoration(color: Colors.blue),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        // v: Logo
-                        Expanded(
-                            child: Image(
-                          image: AssetImage(
-                              "lib/assets/images/firstscreenlogo.png"),
-                          fit: BoxFit.cover,
-                        ))
-                      ],
-                    )),
-                    Expanded(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // v: text 1
-                        const Text(
-                          MaaData.welcome,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 48,
-                              color: Colors.white),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        // v: text 2
-                        Text(
-                          userName ?? "",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              color: Colors.white),
-                        ),
-                      ],
-                    ))
-                  ],
-                ),
+              child: Row(
+                children: [
+                  const Expanded(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // v: Logo
+                      Expanded(
+                          child: Image(
+                        image: AssetImage(
+                            "lib/assets/images/firstscreenlogo.png"),
+                        fit: BoxFit.cover,
+                      ))
+                    ],
+                  )),
+                  Expanded(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // v: text 1
+                      const Text(
+                        MaaData.welcome,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 48,
+                            color: Colors.white),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      // v: text 2
+                      Text(
+                        userName ?? "",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Colors.white),
+                      ),
+                    ],
+                  ))
+                ],
               )),
           // v: part 2
           Expanded(
               flex: 3,
-              child: Container(
-                // decoration: const BoxDecoration(color: Colors.red),
-                // padding: EdgeInsets.only(top: 100),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              // v: Email Edittext
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: TextFormField(
-                                    controller: _editingControllerEmail,
-                                    focusNode: _focusNode1,
-                                    /*  onFieldSubmitted: (value) {
-                                      _focusNode2.requestFocus();
-                                    }, */
-                                    readOnly: true,
-                                    cursorColor: Colors.white,
-                                    style: const TextStyle(color: Colors.white),
-                                    decoration: InputDecoration(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            // v: Email Edittext
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: TextFormField(
+                                  controller: _editingControllerEmail,
+                                  focusNode: _focusNode1,
+                                  /*  onFieldSubmitted: (value) {
+                                    _focusNode2.requestFocus();
+                                  }, */
+                                  readOnly: true,
+                                  cursorColor: Colors.white,
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    enabledBorder: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.white)),
+                                    focusedBorder: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.white)),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    prefixIcon: const Icon(
+                                      Icons.email,
+                                      color: Colors.white,
+                                    ),
+                                    // label: const Text("Email address"),
+                                    labelText: "Email",
+                                    labelStyle:
+                                        const TextStyle(color: Colors.white),
+                                  ),
+                                ))
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            // v: Phone Edittext
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: TextFormField(
+                                  controller: _editingControllerPhone,
+                                  focusNode: _focusNode2,
+                                  /*   onFieldSubmitted: (value) {
+                                    _focusNode1.requestFocus();
+                                  }, */
+                                  onChanged: (value) {
+                                    sharedPreferences.setString(
+                                        MyKeywords.phone, value);
+                                  },
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true),
+                                  cursorColor: Colors.white,
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+
+                                      // alignLabelWithHint: true,
                                       enabledBorder: const OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white)),
+                                          borderSide: BorderSide(
+                                              color: Colors.white)),
                                       focusedBorder: const OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white)),
+                                          borderSide: BorderSide(
+                                              color: Colors.white)),
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       prefixIcon: const Icon(
-                                        Icons.email,
+                                        Icons.phone,
                                         color: Colors.white,
                                       ),
                                       // label: const Text("Email address"),
-                                      labelText: "Email",
+                                      labelText: "Phone",
                                       labelStyle:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ))
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              // v: Phone Edittext
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: TextFormField(
-                                    controller: _editingControllerPhone,
-                                    focusNode: _focusNode2,
-                                    /*   onFieldSubmitted: (value) {
-                                      _focusNode1.requestFocus();
-                                    }, */
-                                    onChanged: (value) {
-                                      sharedPreferences.setString(
-                                          MyKeywords.phone, value);
-                                    },
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                            decimal: true),
-                                    cursorColor: Colors.white,
-                                    style: const TextStyle(color: Colors.white),
-                                    decoration: InputDecoration(
+                                          const TextStyle(color: Colors.white)
+                                      /* labelStyle: TextStyle(
+                                        fontSize: _focusNode.hasFocus
+                                            ? 24
+                                            : 18.0, //I believe the size difference here is 6.0 to account padding
+                                        color: _focusNode.hasFocus
+                                            ? Colors.blue
+                                            : Colors.white), */
+                                      ),
+                                )),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
 
-                                        // alignLabelWithHint: true,
-                                        enabledBorder: const OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.white)),
-                                        focusedBorder: const OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.white)),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        prefixIcon: const Icon(
-                                          Icons.phone,
-                                          color: Colors.white,
-                                        ),
-                                        // label: const Text("Email address"),
-                                        labelText: "Phone",
-                                        labelStyle:
-                                            const TextStyle(color: Colors.white)
-                                        /* labelStyle: TextStyle(
-                                          fontSize: _focusNode.hasFocus
-                                              ? 24
-                                              : 18.0, //I believe the size difference here is 6.0 to account padding
-                                          color: _focusNode.hasFocus
-                                              ? Colors.blue
-                                              : Colors.white), */
-                                        ),
-                                  )),
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-
-                        /* Expanded(
-                            child: Container(
-                          color: Colors.yellow,
-                        )) */
-                      ],
-                    ),
-                  ],
-                ),
+                      /* Expanded(
+                          child: Container(
+                        color: Colors.yellow,
+                      )) */
+                    ],
+                  ),
+                ],
               ))
         ],
       ),

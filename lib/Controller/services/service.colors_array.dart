@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class MyColorArray {
   static Future<List<Color>> mGetTimestartColorArray() async {

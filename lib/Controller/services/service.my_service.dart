@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, unnecessary_new, unused_catch_clause
+// ignore_for_file: unused_local_variable, unused_catch_clause
 
 import 'dart:async';
 import 'dart:convert';
@@ -13,26 +13,24 @@ import 'package:logger/logger.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.date_format.dart';
-import 'package:splash_screen/Controller/utils/util.image.dart';
-import 'package:splash_screen/Model/model.baby_growth.dart';
-import 'package:splash_screen/Model/model.baby_week_month_no.dart';
-import 'package:splash_screen/Model/model.baby_weights_heights_for_age.dart';
-import 'package:splash_screen/Model/model.daiyetto.dart';
-import 'package:splash_screen/Model/model.emergency.dart';
-import 'package:splash_screen/Model/model.height.dart';
-import 'package:splash_screen/Model/model.image_details.dart';
-import 'package:splash_screen/Model/model.jiggasha.dart';
-import 'package:splash_screen/Model/model.kahbar.dart';
-import 'package:splash_screen/Model/model.max_min_weightlist.dart';
-import 'package:splash_screen/Model/model.ojon.dart';
-import 'package:splash_screen/Model/model.symp.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Controller/utils/util.date_format.dart';
+import 'package:maa/Controller/utils/util.image.dart';
+import 'package:maa/Model/model.baby_growth.dart';
+import 'package:maa/Model/model.baby_week_month_no.dart';
+import 'package:maa/Model/model.baby_weights_heights_for_age.dart';
+import 'package:maa/Model/model.daiyetto.dart';
+import 'package:maa/Model/model.emergency.dart';
+import 'package:maa/Model/model.height.dart';
+import 'package:maa/Model/model.image_details.dart';
+import 'package:maa/Model/model.jiggasha.dart';
+import 'package:maa/Model/model.kahbar.dart';
+import 'package:maa/Model/model.max_min_weightlist.dart';
+import 'package:maa/Model/model.ojon.dart';
+import 'package:maa/Model/model.symp.dart';
+import 'package:maa/consts/const.data.bn.dart';
+import 'package:maa/consts/const.keywords.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../Model/model.mom_info.dart';
 
 class MyServices {
   static String mMakeDoubleDigitNumString({required int inputNum}) {
@@ -194,29 +192,27 @@ class MyServices {
 
   static Future<List<ImageDetailsModel>?> mPickMultipleImageFromLocal() async {
     try {
-      ImagePicker _imgpicker = ImagePicker();
-      final List<XFile>? multipleImages = await _imgpicker.pickMultiImage();
+      ImagePicker imgpicker = ImagePicker();
+      final List<XFile> multipleImages = await imgpicker.pickMultiImage();
       List<ImageDetailsModel> imageDetailsModelList = [];
-      if (multipleImages != null) {
-        for (var i = 0; i < multipleImages.length; i++) {
-          String imgUrl = multipleImages[i].path;
-          // String newImgUrl;
-          // c: copy selected
-          await MyServices.mCopyImgFileToNewPath(imgFile: File(imgUrl))
-              .then((newImgUrl) => {
-                    imageDetailsModelList.add(ImageDetailsModel.imageFromLocal(
-                        imgUrl: newImgUrl,
-                        // e: main code
-                        date: CustomDateForamt.mFormateDateDB(DateTime.now()),
-                        // c: temp: for input img on different date to db
-                        /* date: CustomDateForamt.mFormateDateDB(
-                            DateTime.now().add(const Duration(days: 2))), */
-                        timestamp:
-                            DateTime.now().millisecondsSinceEpoch.toString()))
-                  });
-          // final imgFile = File(multipleImages[i].path);
-          // String imgStr = Utility.base64String(imgFile.readAsBytesSync());
-        }
+      for (var i = 0; i < multipleImages.length; i++) {
+        String imgUrl = multipleImages[i].path;
+        // String newImgUrl;
+        // c: copy selected
+        await MyServices.mCopyImgFileToNewPath(imgFile: File(imgUrl))
+            .then((newImgUrl) => {
+                  imageDetailsModelList.add(ImageDetailsModel.imageFromLocal(
+                      imgUrl: newImgUrl,
+                      // e: main code
+                      date: CustomDateForamt.mFormateDateDB(DateTime.now()),
+                      // c: temp: for input img on different date to db
+                      /* date: CustomDateForamt.mFormateDateDB(
+                          DateTime.now().add(const Duration(days: 2))), */
+                      timestamp:
+                          DateTime.now().millisecondsSinceEpoch.toString()))
+                });
+        // final imgFile = File(multipleImages[i].path);
+        // String imgStr = Utility.base64String(imgFile.readAsBytesSync());
       }
       return imageDetailsModelList;
     } on PlatformException catch (e) {
@@ -246,6 +242,8 @@ class MyServices {
     } on PlatformException catch (e) {
       Logger().d('Failed to pick image: $e');
     }
+
+    return null;
   }
 
   static Future<Map<String, dynamic>?> mPickImgCamera() async {
@@ -314,8 +312,8 @@ class MyServices {
   static Future<void> mShareApp() async {
     await FlutterShare.share(
         title: 'Share',
-        text: 'market://details?id=com.example.splash_screen',
-        linkUrl: 'market://details?id=com.example.splash_screen',
+        text: 'market://details?id=com.agamilabs.maa',
+        linkUrl: 'market://details?id=com.agamilabs.maa',
         // linkUrl: 'https://flutter.dev/',
         chooserTitle: 'Example Chooser Title');
   }
@@ -496,7 +494,7 @@ class MyServices {
     // Logger().d(sympIntensities.length);
     SympDataModel model;
     for (var i = 0; i < symptomNames.length; i++) {
-      list.add(new SympDataModel(
+      list.add( SympDataModel(
           sympName: symptomNames[i], sympIntesity: sympIntensities[i]));
     }
 
@@ -731,7 +729,7 @@ class MyServices {
     maxWeightList.add(maxOjon);
     // currentWeightList.add(currentOjon);
 
-    Logger().d("Current BMI: " + bmi.toString());
+    Logger().d("Current BMI: $bmi");
 
     if (bmi < 18.5) {
       //Under Weight
@@ -1550,8 +1548,8 @@ class MyServices {
 
   static Future<Map<String, dynamic>> mGetLastGivenWeight(
       {required int babyId, required String email, required int momId}) async {
-    late double lastWeight;
-    late double lastHeight;
+     double lastWeight=0;
+    double lastHeight=0;
     late int index;
     await MySqfliteServices.mGetBabyCurrentWeightHeightList(
             email: email, momId: momId, babyId: babyId)

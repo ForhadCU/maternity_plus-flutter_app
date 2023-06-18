@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/View/screens/ojon/widgets/item_ojondataList.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/View/screens/ojon/widgets/item_ojondataList.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class OjonAndWeekListWidget extends StatefulWidget {
   final double primaryWeight;

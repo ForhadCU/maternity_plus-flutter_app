@@ -1,9 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/View/screens/sign%20in/scr.sign_in.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/View/screens/sign%20in/scr.sign_in.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
 
 class SecondSplashScreen extends StatelessWidget {
   const SecondSplashScreen({Key? key}) : super(key: key);

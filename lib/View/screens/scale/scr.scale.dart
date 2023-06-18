@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
 
 
 import 'widgets/wdgt.scale_dynamic_blocks.dart';
@@ -167,10 +167,7 @@ class _ScalScreenState extends State<ScalScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CustomText(
-                                text: '${MaaData.running} ${MyServices.getBangNumFormat(widget.runningWeeks + 1)}' +
-                                    ' ${MaaData.week} (${MyServices.getBangNumFormat(widget.runningMonths)} ${MaaData.month}),' +
-                                    ' ${MyServices.getBangNumFormat(MyServices.getTimestarNum(widget.runningWeeks + 1).toInt())}' +
-                                    ' ${MaaData.valuelist1[1]}',
+                                text: '${MaaData.running} ${MyServices.getBangNumFormat(widget.runningWeeks + 1)} ${MaaData.week} (${MyServices.getBangNumFormat(widget.runningMonths)} ${MaaData.month}), ${MyServices.getBangNumFormat(MyServices.getTimestarNum(widget.runningWeeks + 1).toInt())} ${MaaData.valuelist1[1]}',
                                 fontcolor: MyColors.app1,
                                 fontsize: 15,
                                 fontWeight: FontWeight.w500,

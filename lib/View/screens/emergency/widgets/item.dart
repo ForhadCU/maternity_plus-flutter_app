@@ -1,7 +1,6 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
 
 class ListItemEmergency extends StatelessWidget {
   final String title;
@@ -14,7 +13,7 @@ class ListItemEmergency extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical:8),
+      padding: const EdgeInsets.symmetric(vertical:8),
       child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +29,7 @@ class ListItemEmergency extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontsize: 14,
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
 
@@ -39,7 +38,7 @@ class ListItemEmergency extends StatelessWidget {
               text: desc,
               fontsize: 14,
             ),
-            SizedBox(
+            const SizedBox(
               height: 4,
             ),
 
@@ -47,10 +46,10 @@ class ListItemEmergency extends StatelessWidget {
             imgUrl != ''
                 ? Image(image: AssetImage(imgUrl!))
                 : Container(),
-            SizedBox(
+            const SizedBox(
               height: 4,
             ),
-            Divider(
+            const Divider(
               height: 1,
               thickness: 1,
               color: Colors.grey,

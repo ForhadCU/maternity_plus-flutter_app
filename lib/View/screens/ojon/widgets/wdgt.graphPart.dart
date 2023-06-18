@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/Model/model.ojon.dart';
-import 'package:splash_screen/View/screens/ojon/widgets/dlg_input_primary_ojon.dart';
-import 'package:splash_screen/View/screens/ojon/widgets/wdgt.graphChart.dart';
-import 'package:splash_screen/View/screens/ojon/widgets/wdgt.landscapeGraph.dart';
-import 'package:splash_screen/View/screens/ojon/widgets/wdgt.viewGraphBtn.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Model/model.ojon.dart';
+import 'package:maa/View/screens/ojon/widgets/dlg_input_primary_ojon.dart';
+import 'package:maa/View/screens/ojon/widgets/wdgt.graphChart.dart';
+import 'package:maa/View/screens/ojon/widgets/wdgt.landscapeGraph.dart';
+import 'package:maa/View/screens/ojon/widgets/wdgt.viewGraphBtn.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class GraphWidget extends StatefulWidget {
   final Function callback;

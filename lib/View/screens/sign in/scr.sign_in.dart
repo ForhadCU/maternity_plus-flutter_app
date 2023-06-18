@@ -1,18 +1,22 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:async';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
+import 'package:maa/Controller/services/authentication/with_google.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/View/screens/launcherSlides/scr.launcher_slides.dart';
+import 'package:maa/View/widgets/dot_blink_loader.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.keywords.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/services/authentication.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/View/screens/launcherSlides/scr.launcher_slides.dart';
-import 'package:splash_screen/View/widgets/dot_blink_loader.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -22,6 +26,8 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  Logger logger = Logger();
+
   late StreamSubscription subscription;
   bool isLoading = true;
   late bool isSigningIn = false;
@@ -35,7 +41,7 @@ class _SignInScreenState extends State<SignInScreen> {
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
-      print("Connectivity Result: ${result.toString()}");
+      if (kDebugMode) logger.d("Connectivity Result: ${result.toString()}");
     });
   }
 
@@ -127,65 +133,73 @@ class _SignInScreenState extends State<SignInScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                !isSigningIn
-                    ? RawMaterialButton(
-                        onPressed: () async {
-                          setState(() {
-                            // isSigningIn = true;
-                            Navigator.pop(context);
-                          });
-                          Authentication.signInWithGoogle(context: context)
-                              .then((value) {
-                            if (value != null) {
-                              mSaveCradential(value);
+                if (!isSigningIn)
+                  RawMaterialButton(
+                    onPressed: () async {
+                      // print("G button Clicked");
+                      setState(() {
+                        // isSigningIn = true;
+                        Navigator.pop(context);
+                      });
 
-                              Navigator.pushReplacement(
-                                  context,
-                                  PageTransition(
-                                      child: const LauncherSlidesScreen(
-                                          // isSignedIn: true,
-                                          ),
-                                      type: PageTransitionType.rightToLeft,
-                                      duration:
-                                          const Duration(milliseconds: 0)));
-                            } else {
-                              print('Null Credential');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text("Not Signed in. Try again!")));
-                              mShowSigninDialog();
-                            }
+                /*      await SignInWithEmailPass(
+                          email: "user@gmail.com", pass: "123456").mSignIn(); */
 
-                            // checkData();
-                            /* setState(() {
+                      // Authentication.signInWithGoogle(bc: context)
+                    await  SignInWithGoogle(buildContext: context)
+                          .mSignIn()
+                          .then((value) {
+                        if (value != null) {
+                          mSaveCradential(value);
+
+                          Navigator.pushReplacement(
+                              context,
+                              PageTransition(
+                                  child: const LauncherSlidesScreen(
+                                      // isSignedIn: true,
+                                      ),
+                                  type: PageTransitionType.rightToLeft,
+                                  duration: const Duration(milliseconds: 0)));
+                        } else {
+                          if (kDebugMode) {
+                            logger.w('Null Credential');
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("Not Signed in. Try again!")));
+                          mShowSigninDialog();
+                        }
+
+                        // checkData();
+                        /* setState(() {
                                     /*   _userEmail = value!.email!;
                               _isVisible = !_isVisible;
                               _isSignedIn = true;
                               _isGoogleBtnLoading = !_isGoogleBtnLoading; */
                                   }); */
-                          }).onError((error, stackTrace) {
-                            print(error);
-                            mShowSigninDialog();
-                          });
-                        },
-                        elevation: 2.0,
-                        constraints: const BoxConstraints(
-                            maxHeight: 40,
-                            minHeight: 40,
-                            maxWidth: 40,
-                            minWidth: 40),
-                        shape: const CircleBorder(),
-                        fillColor: Colors.white,
-                        child: const Image(
-                          image: AssetImage("lib/assets/images/ic_google.png"),
-                        ),
-                      )
-                    : const DotBlickLoader(
-                        dotOneColor: MyColors.pink3,
-                        dotTwoColor: MyColors.pink4,
-                        dotThreeColor: MyColors.pink5,
-                      )
+                      }).onError((error, stackTrace) {
+                        print(error);
+                        mShowSigninDialog();
+                      }); 
+                    },
+                    elevation: 2.0,
+                    constraints: const BoxConstraints(
+                        maxHeight: 40,
+                        minHeight: 40,
+                        maxWidth: 40,
+                        minWidth: 40),
+                    shape: const CircleBorder(),
+                    fillColor: Colors.white,
+                    child: const Image(
+                      image: AssetImage("lib/assets/images/ic_google.png"),
+                    ),
+                  )
+                else
+                  const DotBlickLoader(
+                    dotOneColor: MyColors.pink3,
+                    dotTwoColor: MyColors.pink4,
+                    dotThreeColor: MyColors.pink5,
+                  )
               ],
             )
           ],

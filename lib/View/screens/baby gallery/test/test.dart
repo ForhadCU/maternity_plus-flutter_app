@@ -2,9 +2,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/Model/model.babygallery.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Model/model.babygallery.dart';
 import 'package:thumbnailer/thumbnailer.dart';
 
 class Test extends StatefulWidget {
@@ -16,7 +15,7 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
-  List<BabyGalleryModel> _babyGalleryModelList = [];
+  final List<BabyGalleryModel> _babyGalleryModelList = [];
 
   @override
   void initState() {

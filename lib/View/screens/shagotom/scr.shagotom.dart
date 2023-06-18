@@ -1,46 +1,41 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-// import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:bottom_sheet/bottom_sheet.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:path_provider_android/path_provider_android.dart';
-import 'package:path_provider_ios/path_provider_ios.dart';
+import 'package:maa/Controller/services/service.colors_array.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.date_format.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Model/model.current_baby_info.dart';
+import 'package:maa/Model/model.mom_info.dart';
+import 'package:maa/View/screens/add%20new%20baby/scr.add_new_baby.dart';
+import 'package:maa/View/screens/baby%20gallery/scr.baby_gallery.dart';
+import 'package:maa/View/screens/baby%20growth/src.baby_growth_main.dart';
+// import 'package:maa/View/screens/baby%20growth/scr.baby_growth2.dart';
+import 'package:maa/View/screens/dayetto/scr.dayetto.dart';
+import 'package:maa/View/screens/emergency/scr.emergency.dart';
+import 'package:maa/View/screens/internet%20error/scr.internet_error.dart';
+import 'package:maa/View/screens/jiggasha/scr.jiggasha.dart';
+import 'package:maa/View/screens/khabar/scr.khabar.dart';
+import 'package:maa/View/screens/launcherSlides/scr.launcher_slides.dart';
+import 'package:maa/View/screens/note/scr.note.dart';
+import 'package:maa/View/screens/ojon/scr.ojon.dart';
+import 'package:maa/View/screens/pregnancySesh/scr.pregnancySesh.dart';
+import 'package:maa/View/screens/shagotom/widgets/dlg_about_us.dart';
+import 'package:maa/View/screens/shagotom/widgets/wdgt.shaptahikPoriborton.dart';
+import 'package:maa/View/screens/shaptahik%20poriborton/scr.shaptahik_porib.dart';
+import 'package:maa/View/screens/switch%20baby%20account/scr.switch_baby_acc.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
+import 'package:maa/consts/const.keywords.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/services/service.colors_array.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.date_format.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/Model/model.current_baby_info.dart';
-import 'package:splash_screen/Model/model.mom_info.dart';
-import 'package:splash_screen/View/screens/add%20new%20baby/scr.add_new_baby.dart';
-import 'package:splash_screen/View/screens/baby%20gallery/scr.baby_gallery.dart';
-import 'package:splash_screen/View/screens/baby%20growth/src.baby_growth_main.dart';
-// import 'package:splash_screen/View/screens/baby%20growth/scr.baby_growth2.dart';
-import 'package:splash_screen/View/screens/dayetto/scr.dayetto.dart';
-import 'package:splash_screen/View/screens/emergency/scr.emergency.dart';
-import 'package:splash_screen/View/screens/internet%20error/scr.internet_error.dart';
-import 'package:splash_screen/View/screens/jiggasha/scr.jiggasha.dart';
-import 'package:splash_screen/View/screens/khabar/scr.khabar.dart';
-import 'package:splash_screen/View/screens/launcherSlides/scr.launcher_slides.dart';
-import 'package:splash_screen/View/screens/note/scr.note.dart';
-import 'package:splash_screen/View/screens/ojon/scr.ojon.dart';
-import 'package:splash_screen/View/screens/pregnancySesh/scr.pregnancySesh.dart';
-import 'package:splash_screen/View/screens/shagotom/widgets/dlg_about_us.dart';
-import 'package:splash_screen/View/screens/shagotom/widgets/wdgt.shaptahikPoriborton.dart';
-import 'package:splash_screen/View/screens/shaptahik%20poriborton/scr.shaptahik_porib.dart';
-import 'package:splash_screen/View/screens/switch%20baby%20account/scr.switch_baby_acc.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
 
 import '../scale/scr.scale.dart';
 import 'widgets/wdgt.ek_nojore.dart';
@@ -87,8 +82,9 @@ class _ShagotomScreenState extends State<ShagotomScreen> {
   void initState() {
     super.initState();
 
-    if (Platform.isAndroid) PathProviderAndroid.registerWith();
-    if (Platform.isIOS) PathProviderIOS.registerWith();
+    // if (Platform.isAndroid) PathProviderAndroid.registerWith();
+    // if (Platform.isIOS) PathProviderIOS.registerWith();
+
 
     _mValueInit(); //initailize declared variable
     _mLoadData(); //load data from SharedPref
@@ -408,7 +404,7 @@ class _ShagotomScreenState extends State<ShagotomScreen> {
   Widget vDrawerItems(BuildContext context) {
     return Container(
       color: Colors.white,
-      width: MediaQuery.sizeOf(context).width / 100 * 60,
+      width: MediaQuery.of(context).size.width / 100 * 60,
       child: ListView(
         children: [
           vDrawerHeader(),

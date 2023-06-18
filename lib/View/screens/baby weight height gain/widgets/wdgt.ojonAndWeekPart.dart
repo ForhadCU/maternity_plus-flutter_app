@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/Model/model.baby_week_month_no.dart';
-import 'package:splash_screen/View/screens/ojon/widgets/item_ojondataList.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Model/model.baby_week_month_no.dart';
+import 'package:maa/View/screens/ojon/widgets/item_ojondataList.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class BabyOjonAndWeekListWidget extends StatefulWidget {
   // final List<double> currentWeights;
@@ -66,13 +66,13 @@ class _BabyOjonAndWeekListWidgetState extends State<BabyOjonAndWeekListWidget> {
                 color: MyColors.col,
                 child: Column(children: [
                   //List heading
-                  Row(
+                  const Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             CustomText(
                               text: "সপ্তাহ/মাস নং",
                               fontcolor: MyColors.textOnPrimary,
@@ -85,7 +85,7 @@ class _BabyOjonAndWeekListWidgetState extends State<BabyOjonAndWeekListWidget> {
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             CustomText(
                               text: "কেজি",
                               fontcolor: MyColors.textOnPrimary,
@@ -108,9 +108,9 @@ class _BabyOjonAndWeekListWidgetState extends State<BabyOjonAndWeekListWidget> {
                   ),
                   //List Body
                   //static
-                  Row(
+                  const Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const [
+                    children: [
                       /* 
                     Expanded(
                       child: Row(
@@ -176,7 +176,7 @@ class _BabyOjonAndWeekListWidgetState extends State<BabyOjonAndWeekListWidget> {
                 widget.callBack();
               },
               backgroundColor: MyColors.pink2,
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ),
         ],

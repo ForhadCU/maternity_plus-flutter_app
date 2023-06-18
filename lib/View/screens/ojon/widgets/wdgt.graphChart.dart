@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Model/model.ojon.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Model/model.ojon.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'wdgt.landscapeGraph.dart';
@@ -32,7 +32,6 @@ class OjonGraphChartState extends State<OjonGraphChart> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     ojon = widget.maxOjonList[40];
   }

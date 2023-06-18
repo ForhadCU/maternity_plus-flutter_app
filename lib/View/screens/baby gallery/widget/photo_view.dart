@@ -1,12 +1,12 @@
 
-// import 'package:splash_screen/common/data/tu_chong_repository.dart';
-// import 'package:splash_screen/common/data/tu_chong_source.dart';
-// import 'package:splash_screen/common/text/my_extended_text_selection_controls.dart';
-// import 'package:splash_screen/common/text/my_special_text_span_builder.dart';
-// import 'package:splash_screen/common/utils/vm_helper.dart';
-// import 'package:splash_screen/common/widget/item_builder.dart';
-// import 'package:splash_screen/common/widget/pic_grid_view.dart';
-// // import 'package:splash_screen/common/widget/push_to_refresh_header.dart';
+// import 'package:maa/common/data/tu_chong_repository.dart';
+// import 'package:maa/common/data/tu_chong_source.dart';
+// import 'package:maa/common/text/my_extended_text_selection_controls.dart';
+// import 'package:maa/common/text/my_special_text_span_builder.dart';
+// import 'package:maa/common/utils/vm_helper.dart';
+// import 'package:maa/common/widget/item_builder.dart';
+// import 'package:maa/common/widget/pic_grid_view.dart';
+// // import 'package:maa/common/widget/push_to_refresh_header.dart';
 // import 'package:extended_image/extended_image.dart';
 // import 'package:extended_text/extended_text.dart';
 // // import 'package:ff_annotation_route_core/ff_annotation_route_core.dart';

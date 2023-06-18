@@ -1,14 +1,14 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.date_format.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/Model/model.current_baby_info.dart';
-import 'package:splash_screen/Model/model.mom_info.dart';
-import 'package:splash_screen/View/screens/shagotom/scr.shagotom.dart';
-import 'package:splash_screen/View/widgets/dot_blink_loader.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Controller/utils/util.date_format.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Model/model.current_baby_info.dart';
+import 'package:maa/Model/model.mom_info.dart';
+import 'package:maa/View/screens/shagotom/scr.shagotom.dart';
+import 'package:maa/View/widgets/dot_blink_loader.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class SwitchBabyAccountScreen extends StatefulWidget {
   final CurrentBabyInfo currentBabyInfo;
@@ -104,7 +104,7 @@ class _SwitchBabyAccountScreenState extends State<SwitchBabyAccountScreen> {
                   mAction(inactiveBabyInfo);
                 },
                 title: Text(inactiveBabyInfo.babyName),
-                titleAlignment: ListTileTitleAlignment.center,
+                // titleAlignment: ListTileTitleAlignment.center,
                 subtitle: Text(
                     "Date of Birth: ${CustomDateForamt.mFormateDate2(DateTime.parse(inactiveBabyInfo.dob))}"),
                 leading: Icon(
@@ -142,7 +142,7 @@ class _SwitchBabyAccountScreenState extends State<SwitchBabyAccountScreen> {
   Widget vCurrentBaby() {
     return ListTile(
       title: Text(widget.currentBabyInfo.babyName),
-      titleAlignment: ListTileTitleAlignment.center,
+      // titleAlignment: ListTileTitleAlignment.center,
       subtitle: Text(
           "Date of Birth: ${CustomDateForamt.mFormateDate2(DateTime.parse(widget.currentBabyInfo.dob))}"),
       leading: Icon(

@@ -1,4 +1,4 @@
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 class MomInfo {
   late int momId;

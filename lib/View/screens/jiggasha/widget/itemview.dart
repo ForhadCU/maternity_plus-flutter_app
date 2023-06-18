@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class JiggashaItemView extends StatefulWidget {
   final String question;
   final String answer;
-  bool isShowAns;
+  late bool isShowAns;
   final Function callback;
+
   JiggashaItemView(
       {Key? key,
       required this.callback,
@@ -23,6 +24,7 @@ class JiggashaItemView extends StatefulWidget {
 class _JiggashaItemViewState extends State<JiggashaItemView> {
   // bool isShowAns = false;
   int clickNo = 0;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(

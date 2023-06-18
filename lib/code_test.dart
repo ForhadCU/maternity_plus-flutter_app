@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 
 void main() async {
   Bloc.observer = MyBlocObserver();
@@ -8,7 +9,9 @@ void main() async {
 
   // c: listener for myCubit
   final subscriptionMyCubit = myCubit.stream.listen((event) {
-    print(event);
+    if (kDebugMode) {
+      print(event);
+    }
   });
   // c: listener for myCubit1
   final subscriptionMyCubit1 = myCubit1.stream.listen((event) {
@@ -48,6 +51,7 @@ class MyCubit extends Cubit<String> {
     } else {
       emit('Negative Number');
     }
+    return null;
   }
 }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:splash_screen/Model/model.mom_info.dart';
+import 'package:maa/Model/model.mom_info.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalenderPart extends StatefulWidget {
@@ -15,7 +15,6 @@ class CalenderPart extends StatefulWidget {
 class _CalenderPartState extends State<CalenderPart> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

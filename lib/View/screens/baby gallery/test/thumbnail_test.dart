@@ -1,16 +1,18 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
 import 'package:thumbnailer/thumbnailer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// example app demonstrating thumbnailer plugin
 class ThumnailTestScreen extends StatefulWidget {
+  const ThumnailTestScreen({super.key});
+
   @override
-  _ThumnailTestScreenState createState() => _ThumnailTestScreenState();
+  ThumnailTestScreenState createState() => ThumnailTestScreenState();
 }
 
-class _ThumnailTestScreenState extends State<ThumnailTestScreen> {
+class ThumnailTestScreenState extends State<ThumnailTestScreen> {
   @override
   void initState() {
     print('ThumbnailScreen start...');

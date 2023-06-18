@@ -1,11 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
 
 class AboutUsDialog extends StatefulWidget {
   const AboutUsDialog({Key? key}) : super(key: key);
@@ -103,7 +102,7 @@ class _AboutUsDialogState extends State<AboutUsDialog> {
                     ),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: MyColors.pink1,
+                          backgroundColor: MyColors.pink1,
                         ),
                         onPressed: () {
                           Navigator.pop(context);

@@ -1,16 +1,21 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Model/model.mom_info.dart';
-import 'package:splash_screen/View/screens/splash/scr.dummy_splash2.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Model/model.mom_info.dart';
+import 'package:maa/View/screens/splash/scr.dummy_splash2.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.keywords.dart';
 
+import '../../../Controller/utils/util.my_scr_size.dart';
+import '../../../firebase_options.dart';
 import '../launcherSlides/scr.launcher_slides.dart';
 import '../shagotom/scr.shagotom.dart';
 
@@ -25,14 +30,26 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
   late bool isLoading;
   late bool isSigningIn = false;
   late SharedPreferences _pref;
-   MomInfo? momInfo;
+  MomInfo? momInfo;
+
+  late FirebaseApp app;
+  late FirebaseAuth auth;
 
   @override
   void initState() {
     super.initState();
-    print("1st");
+    if (kDebugMode) {
+      print("1st");
+    }
     isLoading = true;
-    checkData();
+
+    Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    ).then((value) {
+      app = value;
+      auth = FirebaseAuth.instanceFor(app: app);
+      checkData();
+    });
   }
 
   @override
@@ -69,24 +86,30 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
             Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    /*   Image.asset(
-                      "lib/assets/images/firstscreenlogo.png",
-                      height: MyScreenSize.mGetHeight(context, 36),
-                      fit: BoxFit.fill,
-                    ),
-                    const SizedBox(
-                      height: 28,
-                    ), */
-                    const Text("Animated launcher icon",
+                child: Animate(
+                  effects: [FadeEffect(), ScaleEffect()],
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image.asset(
+                        "lib/assets/images/firstscreenlogo.png",
+                        height: MyScreenSize.mGetHeight(context, 36),
+                        fit: BoxFit.fill,
+                      ),
+                      const SizedBox(
+                        height: 28,
+                      ),
+                      const Text(
+                        "মা",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 28,
-                            color: MyColors.textOnPrimary))
-                  ],
+                          fontWeight: FontWeight.w700,
+                          fontSize: 28,
+                          color: MyColors.textOnPrimary,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               )
             : Container(),
@@ -97,9 +120,9 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
 
   void checkData() async {
     _pref = await SharedPreferences.getInstance();
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    // FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     String? status = _pref.getString(MyKeywords.loggedin);
-    int? _currentMomId = _pref.getInt(MyKeywords.momId);
+    int? currentMomId = _pref.getInt(MyKeywords.momId);
 
     // await MySqfliteServices.mGetMomId().then((value) => _currentMomId = value);
 
@@ -140,15 +163,19 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
               type: PageTransitionType.rightToLeft,
               duration: const Duration(milliseconds: 300))); */
 
-      //Orginal Code
+      //Original Code
       // print('Status: $status');
-      firebaseAuth.authStateChanges().listen((User? user) {
+      auth.authStateChanges().listen((User? user) {
         if (user != null) {
-          print('User already signed in');
+          if (kDebugMode) {
+            print('User already signed in');
+          }
           //? check if the user start pregnancy previously
-          mFirstEntryCheck(status, user.email, _currentMomId);
+          mFirstEntryCheck(context, status, user.email, currentMomId);
         } else {
-          print("User not signed in yet");
+          if (kDebugMode) {
+            print("User not signed in yet");
+          }
           /* Navigator.pushReplacement(
               context,
               PageTransition(
@@ -176,8 +203,10 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
           }); */
         }
       }).onError((error, stackTrace) {
-        print(
-            'Something went wrong during babyGallery Data retrieving from Sqflite, Error: $error');
+        if (kDebugMode) {
+          print(
+              'Something went wrong during babyGallery Data retrieving from Sqflite, Error: $error');
+        }
       });
       /*   status == 'y'
           ? {
@@ -200,32 +229,57 @@ class _DummySplashScreenState extends State<DummySplashScreen> {
     });
   }
 
-  void mFirstEntryCheck(String? status, String? email, int? currentMomId) async {
-    status == 'y'
-        ? {
-            momInfo = await MySqfliteServices.mFetchMomInfo(email: email!, currentMomId: currentMomId!),
-            if(momInfo != null)
-            {
-              Navigator.pushReplacement(
-                context,
-                PageTransition(
-                    child: ShagotomScreen(
-                      momInfo:  momInfo!,
-                    ),
-                    type: PageTransitionType.rightToLeft,
-                    duration: const Duration(milliseconds: 300)))
-            }
-          }
-        : Navigator.pushReplacement(
-            context,
-            PageTransition(
-                child:
-                    const /* LauncherSlidesScreen(
-                    // isSignedIn: true,
-                    ) */
-                    LauncherSlidesScreen(),
-                type: PageTransitionType.rightToLeft,
-                duration: const Duration(milliseconds: 300)));
+  void mFirstEntryCheck(
+      BuildContext bc, String? status, String? email, int? currentMomId) async {
+    if (status == 'y') {
+      MySqfliteServices.mFetchMomInfo(
+              email: email!, currentMomId: currentMomId!)
+          .then((momInfo) {
+        if (momInfo != null) {
+          Navigator.pushReplacement(
+              context,
+              PageTransition(
+                  child: ShagotomScreen(
+                    momInfo: momInfo!,
+                  ),
+                  type: PageTransitionType.rightToLeft,
+                  duration: const Duration(milliseconds: 300)));
+        }
+      });
+    } else {
+      Navigator.pushReplacement(
+          context,
+          PageTransition(
+              child: const LauncherSlidesScreen(),
+              type: PageTransitionType.rightToLeft,
+              duration: const Duration(milliseconds: 300)));
+    }
+    // status == 'y'
+    //     ? {
+    //         momInfo = await MySqfliteServices.mFetchMomInfo(
+    //             email: email!, currentMomId: currentMomId!),
+    //         if (momInfo != null)
+    //           {
+    //             Navigator.pushReplacement(
+    //                 context,
+    //                 PageTransition(
+    //                     child: ShagotomScreen(
+    //                       momInfo: momInfo!,
+    //                     ),
+    //                     type: PageTransitionType.rightToLeft,
+    //                     duration: const Duration(milliseconds: 300)))
+    //           }
+    //       }
+    //     : Navigator.pushReplacement(
+    //         context,
+    //         PageTransition(
+    //             child:
+    //                 const /* LauncherSlidesScreen(
+    //                 // isSignedIn: true,
+    //                 ) */
+    //                 LauncherSlidesScreen(),
+    //             type: PageTransitionType.rightToLeft,
+    //             duration: const Duration(milliseconds: 300)));
   }
 
   void mShowSignInDialog() {

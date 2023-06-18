@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/consts/const.colors.dart';
 
 class SymptomsCard extends StatelessWidget {
   final String currentDate;

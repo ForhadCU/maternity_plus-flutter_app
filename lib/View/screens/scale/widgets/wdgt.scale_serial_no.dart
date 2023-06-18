@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/View/screens/shagotom/widgets/wdgt.timestar_block.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/View/screens/shagotom/widgets/wdgt.timestar_block.dart';
 
 
 
@@ -25,7 +25,7 @@ class ScaleSerialNo extends StatelessWidget {
                     1.85,
                   ),
                   text: index < 9
-                      ? '0' + (index + 1).toString()
+                      ? '0${index + 1}'
                       : (index + 1).toString(),
                   textRotate: true,
                   contentAlignment: Alignment.topLeft,

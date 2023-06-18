@@ -1,16 +1,13 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 import 'dart:io';
 
-// import 'package:audioplayers/audioplayers.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/View/screens/shagotom/widgets/wdgt.lebeltext.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
-import 'package:http/http.dart' as http;
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/View/screens/shagotom/widgets/wdgt.lebeltext.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
 
 class ShaptahikPoribortonView extends StatefulWidget {
   final int runningDays;
@@ -54,7 +51,7 @@ class _ShaptahikPoribortonViewState extends State<ShaptahikPoribortonView> {
     isPlaying = false;
 
     audioPlayer.onPlayerStateChanged.listen((PlayerState playerState) {
-      print("PlayerState is: ${playerState}");
+      print("PlayerState is: $playerState");
       if (playerState == PlayerState.playing) {
         setState(() {
           isPlaying = true;

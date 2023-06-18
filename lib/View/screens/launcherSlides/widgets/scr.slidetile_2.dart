@@ -1,11 +1,9 @@
-// ignore_for_file: sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.date_format.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.date_format.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 import '../../../../consts/const.colors.dart';
 import '../../../../consts/const.data.bn.dart';
@@ -62,7 +60,7 @@ class _SlideTile2State extends State<SlideTile2>
             onTap: () {
               _mSelectDate(context);
             },
-            child: Container(
+            child: SizedBox(
               width: 100,
               height: 100,
               child: Center(
@@ -131,18 +129,18 @@ class _SlideTile2State extends State<SlideTile2>
   }
 
   void setDate(String d) async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
+    SharedPreferences pref = await SharedPreferences.getInstance();
 
     setState(() {
-      _pref.setString(MyKeywords.expectedSessionEnd, d);
+      pref.setString(MyKeywords.expectedSessionEnd, d);
     });
   }
 
   Future<DateTime> calculateexpectedSessionEnd() async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
+    SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       String sDate =
-          _pref.getString(MyKeywords.sessionStart) ?? DateTime.now().toString();
+          pref.getString(MyKeywords.sessionStart) ?? DateTime.now().toString();
       expectedSessionEnd = DateTime.parse(sDate).add(const Duration(days: 280));
       setDate(expectedSessionEnd.toString());
       expectedSessionEndStr = CustomDateForamt.mFormateDate(expectedSessionEnd);
@@ -151,11 +149,11 @@ class _SlideTile2State extends State<SlideTile2>
   }
 
   void loadexpectedSessionEnd() async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
+    SharedPreferences pref = await SharedPreferences.getInstance();
     calculateexpectedSessionEnd().then(
       (value) {
         setState(() {
-          String d = _pref.getString(MyKeywords.expectedSessionEnd) ?? value.toString();
+          String d = pref.getString(MyKeywords.expectedSessionEnd) ?? value.toString();
           // calculateexpectedSessionEnd().toString();
           expectedSessionEnd = DateTime.parse(d);
           setDate(expectedSessionEnd.toString());

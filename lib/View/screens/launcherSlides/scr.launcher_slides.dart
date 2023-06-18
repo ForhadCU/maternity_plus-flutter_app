@@ -1,18 +1,17 @@
-// ignore_for_file: avoid_logger.d
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Model/model.mom_info.dart';
-import 'package:splash_screen/Model/model.mom_weight.dart';
-import 'package:splash_screen/Model/model.splash_slides.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Model/model.mom_info.dart';
+import 'package:maa/Model/model.mom_weight.dart';
+import 'package:maa/Model/model.splash_slides.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 import '../shagotom/scr.shagotom.dart';
 import 'widgets/scr.slidetile_0.dart';
@@ -104,15 +103,17 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
                   ],
                 ),
               ),
-              bottomSheet: /* slideIndex != 3 ? */
-                  Container(
+              bottomSheet: Container(
+                padding: const EdgeInsets.only(
+                  bottom: 5,
+                ),
                 color: MyColors.pink2,
-
                 // margin: EdgeInsets.symmetric(vertical: 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Divider(height: 1, thickness: 1, color: Colors.grey),
+                    const SizedBox(height: 5,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -128,8 +129,9 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
                                 child: const Text(
                                   "",
                                   style: TextStyle(
-                                      color: MyColors.textOnPrimary,
-                                      fontWeight: FontWeight.w600),
+                                    color: MyColors.textOnPrimary,
+                                    // fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               )
                             : ElevatedButton(
@@ -143,8 +145,8 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
                                   elevation: 1,
                                   backgroundColor: MyColors.pink2,
                                 ),
-                                child: Row(
-                                  children: const [
+                                child: const Row(
+                                  children: [
                                     Icon(
                                       Icons.arrow_back_ios,
                                       color: Colors.white,
@@ -152,9 +154,10 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
                                     Text(
                                       MaaData.previous,
                                       style: TextStyle(
-                                          fontSize: 18,
-                                          color: MyColors.textOnPrimary,
-                                          fontWeight: FontWeight.w600),
+                                        fontSize: 18,
+                                        color: MyColors.textOnPrimary,
+                                        // fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -169,7 +172,8 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
                         ),
 
                         //part: Shongrokkhon Button
-                        /* _isSaving ? const DotBlickLoader() : */ ElevatedButton(
+                        /* _isSaving ? const DotBlickLoader() : */
+                        ElevatedButton(
                           onPressed: () {
                             slideIndex == 3
                                 ? {
@@ -194,9 +198,10 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
                               Text(
                                 slideIndex == 3 ? MaaData.save : MaaData.next,
                                 style: const TextStyle(
-                                    fontSize: 18,
-                                    color: MyColors.textOnPrimary,
-                                    fontWeight: FontWeight.w600),
+                                  fontSize: 18,
+                                  color: MyColors.textOnPrimary,
+                                  // fontWeight: FontWeight.w600,
+                                ),
                               ),
                               const SizedBox(
                                 width: 2,
@@ -220,15 +225,14 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
   }
 
   _mRouteToMain() async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
-    final db = await MySqfliteServices.dbInit();
+    SharedPreferences pref = await SharedPreferences.getInstance();
     bool quesDataExisted;
 
-    String sessionStart = _pref.getString(MyKeywords.sessionStart)!;
-    String email = _pref.getString(MyKeywords.email)!;
-    String uid = _pref.getString(MyKeywords.uid)!;
-    String expectedSessionEnd = _pref.getString(MyKeywords.expectedSessionEnd)!;
-    String? phone = _pref.getString(MyKeywords.phone);
+    String sessionStart = pref.getString(MyKeywords.sessionStart)!;
+    String email = pref.getString(MyKeywords.email)!;
+    String uid = pref.getString(MyKeywords.uid)!;
+    String expectedSessionEnd = pref.getString(MyKeywords.expectedSessionEnd)!;
+    String? phone = pref.getString(MyKeywords.phone);
 
     await MySqfliteServices.mIsDbTableEmpty(
             tableName: MyKeywords.momprimaryTable)
@@ -280,12 +284,12 @@ class _LauncherSlidesScreenState extends State<LauncherSlidesScreen> {
                         Navigator.pop(context),
 
                         // c: Save current status and momId
-                        _pref.setString(MyKeywords.loggedin, 'y'),
-                        _pref.setInt(MyKeywords.momId, value),
+                        pref.setString(MyKeywords.loggedin, 'y'),
+                        pref.setInt(MyKeywords.momId, value),
 
                         // c: Clear previous SharedPreference data
-                        _pref.remove(MyKeywords.sessionStart),
-                        _pref.remove(MyKeywords.expectedSessionEnd),
+                        pref.remove(MyKeywords.sessionStart),
+                        pref.remove(MyKeywords.expectedSessionEnd),
 
                         //Go to Shagotom Screen
                         Navigator.pushReplacement(

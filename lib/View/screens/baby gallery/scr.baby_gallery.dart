@@ -6,15 +6,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.date_format.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/Model/model.babygallery.dart';
-import 'package:splash_screen/Model/model.image_details.dart';
-import 'package:splash_screen/Model/model.mom_info.dart';
-import 'package:splash_screen/View/screens/baby%20gallery/widget/dlg_input.dart';
-import 'package:splash_screen/consts/const.colors.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.date_format.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Model/model.babygallery.dart';
+import 'package:maa/Model/model.image_details.dart';
+import 'package:maa/Model/model.mom_info.dart';
+import 'package:maa/View/screens/baby%20gallery/widget/dlg_input.dart';
+import 'package:maa/consts/const.colors.dart';
 import 'package:thumbnailer/thumbnailer.dart';
 import 'package:logger/logger.dart';
 
@@ -385,12 +385,12 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
         // String previousDate = CustomDateForamt.mFormateDateDB(DateTime.now());
 
         String previousDate = '';
-        List<ImageDetailsModel> _listImageDetailsModel = [];
+        List<ImageDetailsModel> listImageDetailsModel = [];
         _listBabyGalleryModelList.clear();
         for (int i = 0; i < value.length; i++) {
           Logger().d("date: ${value[i].date} image: ${value[i].imgUrl}");
           if (value[i].date == previousDate) {
-            _listImageDetailsModel.add(ImageDetailsModel.imageFromCamera(
+            listImageDetailsModel.add(ImageDetailsModel.imageFromCamera(
                 imgUrl: value[i].imgUrl,
                 date: value[i].date,
                 latitude: value[i].latitude,
@@ -407,23 +407,23 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
             */
               //c: copy the previous _listImageDetailsModel into new list
               //c: then put it to the _listBabyGalleryModelList
-              List<ImageDetailsModel> temp = List.from(_listImageDetailsModel);
+              List<ImageDetailsModel> temp = List.from(listImageDetailsModel);
               _listBabyGalleryModelList.add(BabyGalleryModel.nConstructor2(
                 imgDetailsModelList: temp,
                 dateTime: previousDate,
               ));
               //c: now we can clear the previous list
-              _listImageDetailsModel.clear();
+              listImageDetailsModel.clear();
             }
           } else {
-            if (_listImageDetailsModel.isNotEmpty) {
+            if (listImageDetailsModel.isNotEmpty) {
               //c: [same] as abovementioned process
-              List<ImageDetailsModel> temp = List.from(_listImageDetailsModel);
+              List<ImageDetailsModel> temp = List.from(listImageDetailsModel);
               _listBabyGalleryModelList.add(BabyGalleryModel.nConstructor2(
                 imgDetailsModelList: temp,
                 dateTime: previousDate,
               ));
-              _listImageDetailsModel.clear();
+              listImageDetailsModel.clear();
             }
             previousDate = value[i].date;
             i--;
@@ -446,37 +446,6 @@ class _BabyGalleryScreenState extends State<BabyGalleryScreen> {
     email = sharedPreferences.getString('email')!;
   }
 
-  void _mUpdateUI() {
-    // c: Valid for single image selection
-    /* 
-    if (_userEmail != null) {
-      //call fetchDiaryData();
-      FirestoreProvider.mFetchAllDiaryDatafromFirestore(email: _userEmail!)
-          .then((value) {
-        // Logger().d('Model Size: ${value.length}');
-        /* for (var item in value) {
-              Logger().d('ImgUrl: ${item.strgImgUri}');
-            } */
-        setState(() {
-          _isLoading = !_isLoading;
-
-          _listBabyGalleryModelList = value;
-        });
-      });
-    } else {
-      Logger().d("User is not signed in currently ");
-      setState(() {
-        isSignedIn = false;
-        _isLoading = !_isLoading;
-      });
-      //for giving a decision to the dialog if it make singin action or not
-      /*      //check SharedPreference either email is stored or not
-              //if stored then get email and call  */
-
-      // user = ;
-    }
-   */
-  }
 
   // m: Widgets
   Widget vCircProgress() {

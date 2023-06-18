@@ -25,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -58,7 +55,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBVtJXRvFxVXSAmdKI-sZ-grWBFSd-A3FI',
-    appId: '1:108205886977:android:d0b4b02ef39bba095dba00',
+    appId: '1:108205886977:android:e3a429e403de650a5dba00',
     messagingSenderId: '108205886977',
     projectId: 'maaapp-ab769',
     storageBucket: 'maaapp-ab769.appspot.com',
@@ -66,12 +63,23 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAU5ZbaqzvxsukilTAyRp8nPdM2DZB09rM',
-    appId: '1:108205886977:ios:60f8708a63604f815dba00',
+    appId: '1:108205886977:ios:086dc9cc1bc18ae25dba00',
     messagingSenderId: '108205886977',
     projectId: 'maaapp-ab769',
     storageBucket: 'maaapp-ab769.appspot.com',
-    androidClientId: '108205886977-ubt79tmjaot7l44koji4d80vbfqi1eli.apps.googleusercontent.com',
-    iosClientId: '108205886977-b608n1igic9p2sgv3sgbupm871qtm969.apps.googleusercontent.com',
-    iosBundleId: 'com.example.splashScreen',
+    androidClientId: '108205886977-1fnb5bpigjvlu9etp598lgud8eqfbj5u.apps.googleusercontent.com',
+    iosClientId: '108205886977-kf70r2csvi6a4vaiuedb6bd8ldvif2vj.apps.googleusercontent.com',
+    iosBundleId: 'com.agamilabs.maa',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAU5ZbaqzvxsukilTAyRp8nPdM2DZB09rM',
+    appId: '1:108205886977:ios:086dc9cc1bc18ae25dba00',
+    messagingSenderId: '108205886977',
+    projectId: 'maaapp-ab769',
+    storageBucket: 'maaapp-ab769.appspot.com',
+    androidClientId: '108205886977-1fnb5bpigjvlu9etp598lgud8eqfbj5u.apps.googleusercontent.com',
+    iosClientId: '108205886977-kf70r2csvi6a4vaiuedb6bd8ldvif2vj.apps.googleusercontent.com',
+    iosBundleId: 'com.agamilabs.maa',
   );
 }

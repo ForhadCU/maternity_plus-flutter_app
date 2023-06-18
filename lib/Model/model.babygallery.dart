@@ -1,4 +1,4 @@
-import 'package:splash_screen/Model/model.image_details.dart';
+import 'package:maa/Model/model.image_details.dart';
 
 class BabyGalleryModel {
   late String imgUrl; //c: for testing grid view

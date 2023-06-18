@@ -1,21 +1,23 @@
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Model/model.baby_growth.dart';
+import 'package:maa/Model/model.current_baby_info.dart';
+import 'package:maa/Model/model.image_details.dart';
+import 'package:maa/Model/model.mom_info.dart';
+import 'package:maa/Model/model.mom_weight.dart';
+import 'package:maa/Model/model.note.dart';
+import 'package:maa/Model/model.symp_details.dart';
+import 'package:maa/consts/const.data.bn.dart';
+import 'package:maa/consts/const.keywords.dart';
 import 'package:path/path.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Model/model.baby_growth.dart';
-import 'package:splash_screen/Model/model.image_details.dart';
-import 'package:splash_screen/Model/model.current_baby_info.dart';
-import 'package:splash_screen/Model/model.mom_info.dart';
-import 'package:splash_screen/Model/model.mom_weight.dart';
-import 'package:splash_screen/Model/model.note.dart';
-import 'package:splash_screen/Model/model.symp_details.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
 import 'package:sqflite/sqflite.dart';
 
+Logger logger = Logger();
+
 class MySqfliteServices {
-  final logger = Logger();
   static Future<Database> dbInit() async {
     //initiate db
     var databasePath = await getDatabasesPath();
@@ -146,6 +148,8 @@ class MySqfliteServices {
       // c: create object list for weight
       list.add(
         CurrentBabyInfo.weightAndHeight(
+            email: email,
+            momId: momId,
             babyId: babyId,
             ageNum: ageNum,
             ageTag: ageTag,
@@ -162,9 +166,13 @@ class MySqfliteServices {
       n = await db.insert(MyKeywords.babyweightsAndHeightsTable,
           list[i].weightsAndHeightsToJson(),
           conflictAlgorithm: ConflictAlgorithm.ignore);
+
+      /*  kDebugMode
+          ? logger.d("Store Index: $n \n ${list[i].weightsAndHeightsToJson()}")
+          : null; */
     }
 
-    Logger().d("Done.");
+    kDebugMode ? logger.w("DONE. Added baby's initial info") : null;
 
     return i;
 
@@ -201,7 +209,8 @@ class MySqfliteServices {
     return heightList;
   }
 
-  static Future<Map<String, dynamic>> mGetBabyCurrentWeightHeightList({required babyId, required email, required momId}) async {
+  static Future<Map<String, dynamic>> mGetBabyCurrentWeightHeightList(
+      {required babyId, required email, required momId}) async {
     final db = await MySqfliteServices.dbInit();
     List<String> babyWeightList = [];
     List<String> babyHeightList = [];
@@ -213,12 +222,14 @@ class MySqfliteServices {
           "SELECT ${MyKeywords.babyWeight}, ${MyKeywords.babyHeight} FROM ${MyKeywords.babyweightsAndHeightsTable} WHERE ${MyKeywords.baby_id} = ?",
           [id]);
     }); */
+    kDebugMode ? logger.d("babyId: $babyId email: $email momId: $momId") : null;
 
-     mapResults = await db.rawQuery(
-          "SELECT ${MyKeywords.babyWeight}, ${MyKeywords.babyHeight} FROM ${MyKeywords.babyweightsAndHeightsTable} WHERE ${MyKeywords.email} = ? AND ${MyKeywords.momId} = ? AND ${MyKeywords.baby_id} = ?",
-          [email, momId, babyId]);
+    mapResults = await db.rawQuery(
+        "SELECT ${MyKeywords.babyWeight}, ${MyKeywords.babyHeight} FROM ${MyKeywords.babyweightsAndHeightsTable} WHERE ${MyKeywords.email} = ? AND ${MyKeywords.momId} = ? AND ${MyKeywords.baby_id} = ?",
+        [email, momId, babyId]);
 
     // Logger().d("Here Current id is: $id");
+    kDebugMode ? logger.d("Response: $mapResults") : null;
 
     List.generate(mapResults.length, (index) {
       babyWeightList.add(mapResults[index][MyKeywords.babyWeight].toString());
@@ -416,7 +427,7 @@ class MySqfliteServices {
               .ignore, // ignores conflictAlgo due to duplicate entries
         );
       }
-      // Logger().d(insertedRowNum);
+      Logger().d(insertedRowNum);
     }
   }
 
@@ -930,10 +941,11 @@ class MySqfliteServices {
     var res = await db.rawQuery(
         "SELECT ${MyKeywords.weight} FROM ${MyKeywords.momweightTable} WHERE ${MyKeywords.email} = ? AND ${MyKeywords.momId} = ? ",
         [momInfo.email, momInfo.momId]);
-    Logger().d("momWeights: ${res.first[MyKeywords.weight]}, Length: ${res.length}");
+    Logger().d(
+        "momWeights: ${res.first[MyKeywords.weight]}, Length: ${res.length}");
     List.generate(res.length,
         (index) => list.add(res.first[MyKeywords.weight].toString()));
-    
+
     return list;
   }
 }

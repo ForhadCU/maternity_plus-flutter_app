@@ -1,4 +1,4 @@
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 class CurrentBabyInfo {
   late String babyName;
@@ -31,6 +31,8 @@ class CurrentBabyInfo {
       required this.nurseName});
 
   CurrentBabyInfo.weightAndHeight({
+    required this.email,
+    required this.momId,
     required this.babyId,
     required this.ageNum,
     required this.ageTag,
@@ -68,6 +70,8 @@ class CurrentBabyInfo {
 
   Map<String, dynamic> weightsAndHeightsToJson() {
     Map<String, dynamic> json = {};
+    json[MyKeywords.email] = email;
+    json[MyKeywords.momId] = momId;
     json[MyKeywords.baby_id] = babyId;
     json[MyKeywords.ageNum] = ageNum;
     json[MyKeywords.ageTag] = ageTag;

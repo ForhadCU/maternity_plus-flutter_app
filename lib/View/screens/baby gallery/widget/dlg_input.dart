@@ -1,20 +1,20 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields
 
 import 'dart:io';
 
 import 'package:bottom_sheet/bottom_sheet.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/services/authentication.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.date_format.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/Model/model.babygallery.dart';
-import 'package:splash_screen/Model/model.image_details.dart';
-import 'package:splash_screen/Model/model.mom_info.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/Controller/services/authentication/with_google.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.date_format.dart';
+import 'package:maa/Controller/utils/util.my_scr_size.dart';
+import 'package:maa/Model/model.babygallery.dart';
+import 'package:maa/Model/model.image_details.dart';
+import 'package:maa/Model/model.mom_info.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 class InputDialog extends StatefulWidget {
   final Function callback;
@@ -35,18 +35,15 @@ class InputDialog extends StatefulWidget {
 }
 
 class _InputDialogState extends State<InputDialog> {
-  String _imageString = '';
   List<ImageDetailsModel> _imgDetailModelList = [];
-  late BabyGalleryModel _babyGalleryModel;
   late File _imgFile;
   late Map<String, dynamic> map = {};
-  TextEditingController _textEditingControllerCaption =
+  final TextEditingController _textEditingControllerCaption =
       TextEditingController(text: '');
   bool _isVisible = false;
-  late bool _isSignedIn;
-  String? _userEmail;
   bool _isUploadBtnLoading = false;
   bool _isGoogleBtnLoading = false;
+
   // bool _isShowNewBabyContents = false;
 
   @override
@@ -55,8 +52,6 @@ class _InputDialogState extends State<InputDialog> {
     MyServices.determinePosition().then((value) {
       map = value;
     });
-    _isSignedIn = widget.isSignedIn;
-    _userEmail = widget.momInfo.email;
     // print('IsSignedIn: ${widget.isSignedIn}');
   }
 
@@ -78,7 +73,7 @@ class _InputDialogState extends State<InputDialog> {
       },
       child: Dialog(
         clipBehavior: Clip.hardEdge,
-        insetPadding: EdgeInsets.all(16),
+        insetPadding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -86,7 +81,7 @@ class _InputDialogState extends State<InputDialog> {
               Container(
                 height: MyScreenSize.mGetHeight(context, 8),
                 color: MyColors.pink1,
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomText(
@@ -99,7 +94,7 @@ class _InputDialogState extends State<InputDialog> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   children: [
                     //v: Caption
@@ -107,13 +102,13 @@ class _InputDialogState extends State<InputDialog> {
                       controller: _textEditingControllerCaption,
                       maxLines: 3,
                       maxLength: 200,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           label: CustomText(
                             text: 'Caption',
                           ),
                           border: OutlineInputBorder()),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16,
                     ),
                     // v: Image preview
@@ -131,7 +126,7 @@ class _InputDialogState extends State<InputDialog> {
                               itemBuilder: ((context, index) {
                                 return Padding(
                                         padding:
-                                            EdgeInsets.symmetric(horizontal: 4),
+                                            const EdgeInsets.symmetric(horizontal: 4),
                                         child: /* Utility.imageFromBase64String(
                                       _imgDetailModelList[index].imgUrl) ,*/
                                             Image.file(
@@ -156,12 +151,12 @@ class _InputDialogState extends State<InputDialog> {
                           ? Utility.imageFromBase64String(_imageString)
                           : null,
                     ), */
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
                     Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -215,7 +210,7 @@ class _InputDialogState extends State<InputDialog> {
                                   }
                                 });
                               },
-                              child: TextField(
+                              child: const TextField(
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     enabled: false,
@@ -235,7 +230,7 @@ class _InputDialogState extends State<InputDialog> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 32,
                           ),
                           // v: Camera button
@@ -268,7 +263,7 @@ class _InputDialogState extends State<InputDialog> {
                                   }
                                 });
                               },
-                              child: TextField(
+                              child: const TextField(
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     enabled: false,
@@ -291,12 +286,12 @@ class _InputDialogState extends State<InputDialog> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16,
                     ),
                     Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -304,23 +299,24 @@ class _InputDialogState extends State<InputDialog> {
                           Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: MyColors.pink3),
+                                backgroundColor: MyColors.pink3,
+                              ),
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: CustomText(
+                              child: const CustomText(
                                 text: 'Discard',
                                 fontcolor: Colors.white,
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 32,
                           ),
                           // v: save button
                           Expanded(
                             child: _isUploadBtnLoading
-                                ? Row(
+                                ? const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       CircularProgressIndicator(
@@ -330,7 +326,8 @@ class _InputDialogState extends State<InputDialog> {
                                   )
                                 : ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        backgroundColor: MyColors.pink3),
+                                      backgroundColor: MyColors.pink3,
+                                    ),
                                     onPressed: () {
                                       _imgDetailModelList.isNotEmpty
                                           ?
@@ -354,20 +351,23 @@ class _InputDialogState extends State<InputDialog> {
                                               // Navigator.pop(context)
                                             }
                                           : ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: CustomText(
-                                              text: 'Pick a photo',
-                                            )));
+                                              .showSnackBar(
+                                              const SnackBar(
+                                                content: CustomText(
+                                                  text: 'Pick a photo',
+                                                ),
+                                              ),
+                                            );
 
                                       // c: [Deprecated] Save to Cloud
                                       // mSaveToCloud();
                                     },
-                                    child: CustomText(
+                                    child: const CustomText(
                                       text: 'Save',
                                       fontcolor: Colors.white,
                                     ),
                                   ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -375,56 +375,56 @@ class _InputDialogState extends State<InputDialog> {
                     // e: for later
                     //Sign in with google
                     Visibility(
-                        visible: _isVisible,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Divider(
-                              height: 1,
-                              thickness: 0.8,
-                              color: Colors.black12,
+                      visible: _isVisible,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Divider(
+                            height: 1,
+                            thickness: 0.8,
+                            color: Colors.black12,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomText(
+                                  text: 'Please Sign in with Google',
+                                  fontcolor: Colors.black45,
+                                ),
+                              ],
                             ),
-                            Container(
-                              margin: EdgeInsets.only(top: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomText(
-                                    text: 'Please Sign in with Google',
-                                    fontcolor: Colors.black45,
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 10, bottom: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  _isGoogleBtnLoading
-                                      ? Container(
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                      : RawMaterialButton(
-                                          onPressed: () async {
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 10, bottom: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _isGoogleBtnLoading
+                                    ? const CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      )
+                                    : RawMaterialButton(
+                                        onPressed: () async {
+                                          setState(() {
+                                            _isGoogleBtnLoading =
+                                                !_isGoogleBtnLoading;
+                                          });
+                                          /*  Authentication.signInWithGoogle(
+                                            bc: context,
+                                          ) */
+                                          SignInWithGoogle(
+                                                  buildContext: context)
+                                              .mSignIn()
+                                              .then((value) {
                                             setState(() {
+                                              _isVisible = !_isVisible;
                                               _isGoogleBtnLoading =
                                                   !_isGoogleBtnLoading;
                                             });
-                                            Authentication.signInWithGoogle(
-                                                    context: context)
-                                                .then((value) {
-                                              setState(() {
-                                                _userEmail = value!.email!;
-                                                _isVisible = !_isVisible;
-                                                _isSignedIn = true;
-                                                _isGoogleBtnLoading =
-                                                    !_isGoogleBtnLoading;
-                                              });
-                                            });
-                                            /*  if (user?.email != null &&
+                                          });
+                                          /*  if (user?.email != null &&
                                             _imgFile != null) {
                                           FirebaseStorageProvider
                                               .mAddImageToFirebaseStorage(
@@ -439,26 +439,28 @@ class _InputDialogState extends State<InputDialog> {
                                                       _textEditingControllerCaption
                                                           .text); */
                                         } */
-                                          },
-                                          elevation: 2.0,
-                                          constraints: BoxConstraints(
-                                              maxWidth: 40,
-                                              minWidth: 40,
-                                              maxHeight: 40,
-                                              minHeight: 40),
-                                          shape: CircleBorder(),
-                                          fillColor: Colors.white,
-                                          // constraints: BoxConstraints(maxw),
-                                          child: Image(
-                                            image: AssetImage(
-                                              "lib/assets/images/ic_google.png",
-                                            ),
-                                          )),
-                                ],
-                              ),
+                                        },
+                                        elevation: 2.0,
+                                        constraints: const BoxConstraints(
+                                            maxWidth: 40,
+                                            minWidth: 40,
+                                            maxHeight: 40,
+                                            minHeight: 40),
+                                        shape: const CircleBorder(),
+                                        fillColor: Colors.white,
+                                        // constraints: BoxConstraints(maxw),
+                                        child: const Image(
+                                          image: AssetImage(
+                                            "lib/assets/images/ic_google.png",
+                                          ),
+                                        ),
+                                      ),
+                              ],
                             ),
-                          ],
-                        ))
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -483,12 +485,12 @@ class _InputDialogState extends State<InputDialog> {
         builder: (BuildContext _context, ScrollController scrollController,
                 double bottomSheetOffset) =>
             Container(
-              margin: EdgeInsets.only(top: 25, left: 8, bottom: 6),
+              margin: const EdgeInsets.only(top: 25, left: 8, bottom: 6),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
+                  const Row(
                     children: [
                       CustomText(
                         text: 'Save to',
@@ -496,7 +498,7 @@ class _InputDialogState extends State<InputDialog> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 25,
                   ),
                   InkWell(
@@ -600,22 +602,22 @@ class _InputDialogState extends State<InputDialog> {
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               // vertical: 6,
                               horizontal: 14),
-                          child: Icon(
+                          child: const Icon(
                             Icons.phone_android_rounded,
                             color: MyColors.pink4,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.all(2),
-                          child: CustomText(text: 'Local album'),
+                          margin: const EdgeInsets.all(2),
+                          child: const CustomText(text: 'Local album'),
                         )
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   InkWell(
@@ -625,7 +627,7 @@ class _InputDialogState extends State<InputDialog> {
 
 // _mShowBabyInputDialog();
 
-/* 
+/*
 Navigator.pop(
 _context);
 //save to cloud
@@ -693,17 +695,17 @@ _isVisible =
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               // vertical: 6,
                               horizontal: 14),
-                          child: Icon(
+                          child: const Icon(
                             Icons.cloud_circle_rounded,
                             color: MyColors.pink4,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.all(2),
-                          child: CustomText(text: 'Cloud album'),
+                          margin: const EdgeInsets.all(2),
+                          child: const CustomText(text: 'Cloud album'),
                         ),
                       ],
                     ),
@@ -798,7 +800,7 @@ _isVisible =
     } */
     MySqfliteServices.mAddBabyGalleryDataToLocal(_imgDetailModelList)
         .then((value) => {
-              print("Num of image inserted in to local db: $value "),
+             kDebugMode ? print("Num of image inserted in to local db: $value "): null,
               mCallBack(),
             })
         .onError((error, stackTrace) {
@@ -811,8 +813,8 @@ _isVisible =
     Navigator.pop(context);
   }
 
-  //* For BabyData Sync
-  /* Column(
+//* For BabyData Sync
+/* Column(
 mainAxisSize: MainAxisSize.min,
 children: [
   Container(
@@ -926,7 +928,7 @@ children: [
 ],
 ) */
 
-  /* void _mShowBabyInputDialog() {
+/* void _mShowBabyInputDialog() {
     AwesomeDialog(
       context: context,
       animType: AnimType.scale,

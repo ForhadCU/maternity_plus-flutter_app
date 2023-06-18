@@ -1,13 +1,11 @@
-// ignore_for_file: sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/Controller/utils/util.date_format.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/Controller/utils/util.date_format.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 class SlideTile1 extends StatefulWidget {
   const SlideTile1({Key? key}) : super(key: key);
@@ -33,11 +31,11 @@ class _SlideTile1State extends State<SlideTile1> with TickerProviderStateMixin {
 
   _mSelectDate(BuildContext context) async {
     DateTime? selected = sessionStart;
-    DateTime? _firstDate = DateTime.now().add(const Duration(days: -280));
+    DateTime? firstDate = DateTime.now().add(const Duration(days: -280));
     showDatePicker(
             context: context,
             initialDate: sessionStart,
-            firstDate: _firstDate,
+            firstDate: firstDate,
             lastDate: DateTime.now())
         .then((value) {
       setState(() {
@@ -81,7 +79,7 @@ class _SlideTile1State extends State<SlideTile1> with TickerProviderStateMixin {
             onTap: () {
               _mSelectDate(context);
             },
-            child: Container(
+            child: SizedBox(
               height: 100,
               width: 100,
               child: Center(
@@ -151,11 +149,11 @@ class _SlideTile1State extends State<SlideTile1> with TickerProviderStateMixin {
   }
 
   void loadDate() async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
+    SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       //get stored value
       String d =
-          (_pref.getString(MyKeywords.sessionStart) ?? DateTime.now().toString());
+          (pref.getString(MyKeywords.sessionStart) ?? DateTime.now().toString());
       sessionStart = DateTime.parse(d);
       //set value
       setDate(d);

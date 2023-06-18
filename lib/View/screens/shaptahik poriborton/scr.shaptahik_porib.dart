@@ -1,13 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/services/service.my_service.dart';
-import 'package:splash_screen/Controller/services/sqflite_services.dart';
-import 'package:splash_screen/Controller/utils/util.custom_text.dart';
-import 'package:splash_screen/View/screens/shaptahik%20poriborton/widget/custom_tab_view.dart';
-import 'package:splash_screen/consts/const.colors.dart';
-import 'package:splash_screen/consts/const.data.bn.dart';
-import 'package:splash_screen/consts/const.keywords.dart';
+import 'package:maa/Controller/services/service.my_service.dart';
+import 'package:maa/Controller/services/sqflite_services.dart';
+import 'package:maa/Controller/utils/util.custom_text.dart';
+import 'package:maa/View/screens/shaptahik%20poriborton/widget/custom_tab_view.dart';
+import 'package:maa/consts/const.colors.dart';
+import 'package:maa/consts/const.data.bn.dart';
+import 'package:maa/consts/const.keywords.dart';
 
 class ShaptahikPoribortonScreen extends StatefulWidget {
   final int presentWeeks;
@@ -132,36 +132,28 @@ class _ShaptahikPoribortonScreenState extends State<ShaptahikPoribortonScreen>
                 },
                 tabs: [
                   Tab(
-                    text: MyServices.getBangNumFormat(
+                    text: '${MyServices.getBangNumFormat(
                             MyServices.mGetWeekNoFromString(
-                                tab1Data[MyKeywords.weekNo])) +
-                        ' ' +
-                        MaaData.week,
+                                tab1Data[MyKeywords.weekNo]))} ${MaaData.week}',
                     height: 24,
                   ),
                   Tab(
-                    text: MyServices.getBangNumFormat(
+                    text: '${MyServices.getBangNumFormat(
                             MyServices.mGetWeekNoFromString(
-                                tab2Data[MyKeywords.weekNo])) +
-                        ' ' +
-                        MaaData.week,
+                                tab2Data[MyKeywords.weekNo]))} ${MaaData.week}',
                     // text: tab2Data[MyKeywords.weekNo],
                     height: 24,
                   ),
                   Tab(
-                    text: MyServices.getBangNumFormat(
+                    text: '${MyServices.getBangNumFormat(
                             MyServices.mGetWeekNoFromString(
-                                tab3Data[MyKeywords.weekNo])) +
-                        ' ' +
-                        MaaData.week,
+                                tab3Data[MyKeywords.weekNo]))} ${MaaData.week}',
                     height: 24,
                   ),
                   Tab(
-                    text: MyServices.getBangNumFormat(
+                    text: '${MyServices.getBangNumFormat(
                             MyServices.mGetWeekNoFromString(
-                                tab4Data[MyKeywords.weekNo])) +
-                        ' ' +
-                        MaaData.week,
+                                tab4Data[MyKeywords.weekNo]))} ${MaaData.week}',
                     height: 24,
                   ),
                 ]),

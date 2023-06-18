@@ -1,6 +1,6 @@
-import 'package:splash_screen/Model/model.note.dart';
-import 'package:splash_screen/Model/model.ojon.dart';
-import 'package:splash_screen/Model/model.symp_details.dart';
+import 'package:maa/Model/model.note.dart';
+import 'package:maa/Model/model.ojon.dart';
+import 'package:maa/Model/model.symp_details.dart';
 
 class ReportDataModel {
   late List<NoteModel> listNoteModel;

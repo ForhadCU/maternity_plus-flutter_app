@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:splash_screen/Controller/utils/util.my_scr_size.dart';
 
 class Utility {
   static Image imageFromBase64String(String base64String) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:splash_screen/Model/model.ojon.dart';
+import 'package:maa/Model/model.ojon.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class GraphLandScape extends StatefulWidget {
