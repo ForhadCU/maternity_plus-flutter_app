@@ -25,6 +25,8 @@ class MyColors {
   static const Color sympBlock1 = Color(0xff0d47a1);
   static const Color sympBlock2 = Color(0xffffea00);
   static const Color sympBlock3 = Color(0xffCC0000);
+  static const Color noInternetImageBG = Color(0xffE7F4EA);
+
   static const List<Color> abc = [
     Color(0xffFF8800),
     Color(0xff669900),

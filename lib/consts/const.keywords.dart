@@ -36,6 +36,9 @@ class MyKeywords {
       'encodedBabyCurrentWeightList';
   static const String phone = "phone";
   static const String userImageUrl = "userImageUrl";
+  static const String choose = "CHOOSE";
+  static const String input = "INPUT";
+
 
   //c: Local Db Table
   static const String momprimaryTable = "momprimary";
