@@ -65,8 +65,10 @@ class _SwitchBabyAccountScreenState extends State<SwitchBabyAccountScreen> {
                     height: 6,
                   ),
                   vCurrentBaby(),
-                  Divider(thickness: 1.5, color: MyColors.pink6,)
-                  ,
+                  Divider(
+                    thickness: 1.5,
+                    color: MyColors.pink6,
+                  ),
                   SizedBox(
                     height: 12,
                   ),
@@ -123,7 +125,7 @@ class _SwitchBabyAccountScreenState extends State<SwitchBabyAccountScreen> {
   }
 
   void mLoadData() async {
-    _listInactiveBabyInfo = await MySqfliteServices.mFetchInactiveBabyInfo(
+    _listInactiveBabyInfo = await MySqfliteServices.mFetchAllInactiveBabiesInfo(
       momId: widget.momInfo.momId,
       email: widget.momInfo.email,
     );

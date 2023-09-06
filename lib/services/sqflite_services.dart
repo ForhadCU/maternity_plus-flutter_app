@@ -185,8 +185,7 @@ class MySqfliteServices {
           : null; */
     }
 
-
-   /*  await MySqfliteServices.mFetchCurrentBabyWeightHeightTable(
+    /*  await MySqfliteServices.mFetchCurrentBabyWeightHeightTable(
         email, momId, babyId); */
 
     kDebugMode ? logger.w("DONE. Added baby's initial info") : null;
@@ -318,7 +317,8 @@ class MySqfliteServices {
 
     return isUpdate;
   }
-   static Future<bool> mUpdateBabyHeight(
+
+  static Future<bool> mUpdateBabyHeight(
       {required String email,
       required int momId,
       required int babyId,
@@ -338,7 +338,7 @@ class MySqfliteServices {
 
       // see is this updated
 
-   /*    await mFetchCurrentBabyWeightHeightTable(
+      /*    await mFetchCurrentBabyWeightHeightTable(
         email,
         momId,
         babyId,
@@ -939,7 +939,30 @@ class MySqfliteServices {
     return currentBabyInfo;
   }
 
-  static Future<List<CurrentBabyInfo>> mFetchInactiveBabyInfo(
+  static Future<List<CurrentBabyInfo>> mFetchAllBabiesInfo(
+      {required int momId, required String email}) async {
+    final db = await MySqfliteServices.dbInit();
+    late List<CurrentBabyInfo> listCurrentBabyInfo;
+
+    /* var r = await db.rawQuery(
+      
+        "SELECT * FROM ${MyKeywords.babyinfoTable} WHERE ${MyKeywords.momId} = ? AND ${MyKeywords.email} = ? AND ${MyKeywords.activeStatus} = ? ",
+        [momId, email, 0]);
+    Logger().d(r.length);
+    listCurrentBabyInfo =
+        List.generate(r.length, (index) => CurrentBabyInfo.fromjson(r[index])); */
+    var r = await db.rawQuery(
+        "SELECT * FROM ${MyKeywords.babyinfoTable} WHERE ${MyKeywords.momId} = ? AND ${MyKeywords.email} = ? ",
+        [momId, email]);
+    Logger().d(r.length);
+    listCurrentBabyInfo =
+        List.generate(r.length, (index) => CurrentBabyInfo.fromjson(r[index]));
+    /* for (var element in listCurrentBabyInfo) {
+      logger.d("Babies: ${element.babyName}");
+    } */
+
+    return listCurrentBabyInfo;
+  }  static Future<List<CurrentBabyInfo>> mFetchAllInactiveBabiesInfo(
       {required int momId, required String email}) async {
     final db = await MySqfliteServices.dbInit();
     late List<CurrentBabyInfo> listCurrentBabyInfo;
@@ -951,6 +974,10 @@ class MySqfliteServices {
     Logger().d(r.length);
     listCurrentBabyInfo =
         List.generate(r.length, (index) => CurrentBabyInfo.fromjson(r[index]));
+   
+    /* for (var element in listCurrentBabyInfo) {
+      logger.d("Babies: ${element.babyName}");
+    } */
 
     return listCurrentBabyInfo;
   }
@@ -1050,13 +1077,12 @@ class MySqfliteServices {
     final db = await MySqfliteServices.dbInit();
     logger.d("email is: $email momId: $momId, babyId: $babyId");
 
-      var map = await db.rawQuery(
+    var map = await db.rawQuery(
         "SELECT * FROM ${MyKeywords.babyweightsAndHeightsTable} WHERE ${MyKeywords.email} = ? AND ${MyKeywords.momId} = ? AND ${MyKeywords.baby_id} = ?",
         [
           email,
           momId,
           babyId,
-          
         ]);
 /*     logger.w("email is : $email, babyId is: $babyId");
     var map = await db.rawQuery(

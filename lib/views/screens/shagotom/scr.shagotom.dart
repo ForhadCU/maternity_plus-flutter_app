@@ -81,7 +81,7 @@ class _ShagotomScreenState extends State<ShagotomScreen> {
 
   late ConnectivityCheckerViewModel _connectivityCheckerViewModel;
   late ConnectivityCheckerService _connectivityCheckerService;
-  late List<CurrentBabyInfo>? _numOfInactiveBaby;
+  late List<CurrentBabyInfo>? _babyInfoList;
   double _horizonatalPadding = 18;
   double _verticalPadding = 8;
 
@@ -231,7 +231,7 @@ class _ShagotomScreenState extends State<ShagotomScreen> {
         email: email!, momId: widget.momInfo.momId);
     _currentBabyInfo != null ? babyId = _currentBabyInfo!.babyId : null;
     logger.i("Baby id: $babyId ");
-    _numOfInactiveBaby = await MySqfliteServices.mFetchInactiveBabyInfo(
+    _babyInfoList = await MySqfliteServices.mFetchAllBabiesInfo(
         momId: widget.momInfo.momId, email: widget.momInfo.email);
     setState(() {
       remainingDaysForEkNojoreView = pref.getInt(MyKeywords.totaldays)!;
@@ -297,7 +297,7 @@ class _ShagotomScreenState extends State<ShagotomScreen> {
     totalRemaingingDays = 0;
     timestarColorList = [];
     remainingDaysForEkNojoreView = 0;
-    _numOfInactiveBaby = [];
+    _babyInfoList = [];
   }
 
   void mShowExitDialog() {
@@ -1027,7 +1027,7 @@ class _ShagotomScreenState extends State<ShagotomScreen> {
           ])),
     );
 
-   /*  return ListTile(
+    /*  return ListTile(
       title: Text(
         "নতুন বেবী যোগ করুন",
         style: TextStyle(fontSize: 13, color: Colors.black.withOpacity(.8)),
@@ -1123,7 +1123,7 @@ class _ShagotomScreenState extends State<ShagotomScreen> {
 
   Widget vItemBabySwitch() {
     return Visibility(
-      visible: _numOfInactiveBaby!.isEmpty ? false : true,
+      visible: _babyInfoList!.isEmpty ? false : true,
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
@@ -1132,7 +1132,7 @@ class _ShagotomScreenState extends State<ShagotomScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Sorry! You didn't add any baby yet.")));
           } else {
-            if (_numOfInactiveBaby!.isEmpty) {
+            if (_babyInfoList!.length < 2) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content:
                       Text("Sorry! You have not more than a baby to switch.")));
@@ -1160,15 +1160,22 @@ class _ShagotomScreenState extends State<ShagotomScreen> {
               ),
               Column(
                 children: [
-                  Text(
-                    "সুইচ বেবী একাউন্ট",
-                    style: TextStyle(
-                        fontSize: 13, color: Colors.black.withOpacity(.8)),
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  _numOfInactiveBaby!.isEmpty
+                  Visibility(
+                      visible: _babyInfoList!.length > 1 ? true : false,
+                      child: Column(
+                        children: [
+                          Text(
+                            "সুইচ বেবী একাউন্ট",
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.black.withOpacity(.8)),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                        ],
+                      )),
+                  _babyInfoList!.isEmpty
                       ? Container()
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
